@@ -1,18 +1,18 @@
-# Hello World PhoneGap Template [![bitHound Score][bithound-img]][bithound-url]
+# Mobile Wallet PhoneGap app
 
-A PhoneGap Hello World template
+Mobile Wallet PhoneGap app
 
 ## Usage
 
 #### PhoneGap CLI
 
-The hello-world template is the default when you create a new application using the [phonegap-cli][phonegap-cli-url].
+The mobile-wallet
 
-    phonegap create my-app
+    phonegap create mobile-wallet
 
 Create an app using this template specifically:
 
-    phonegap create my-app --template hello-world
+    phonegap create mobile-wallet --template hello-world
 
 To see a list of other available PhoneGap templates:
 
