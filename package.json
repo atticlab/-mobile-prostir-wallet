@@ -1,0 +1,21 @@
+{
+  "name": "mobile-wallet",
+  "version": "0.0.2",
+  "description": "> wallet-mobile attic lab progect",
+  "repository": {
+    "type": "git",
+    "url": "http://bitbucket.attic.pw/scm/smar/mobile-wallet.git"
+  },
+  "author": "AtticLab Team",
+  "license": "Apache-2.0.0",
+  "keywords": [
+    "ecosystem:phonegap",
+    "ecosystem:cordova",
+    "cordova:template",
+    "phonegap:template"
+  ],
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "https://github.com/phonegap/phonegap-app-hello-world"
+}

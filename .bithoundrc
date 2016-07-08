@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    "www/spec/lib/**",
+    "**/deps/**",
+    "**/node_modules/**",
+    "bower_components/**"
+  ],
+  "test": [
+    "**/test/**",
+    "**/tests/**",
+    "**/spec/**",
+    "**/specs/**"
+  ]
+}
