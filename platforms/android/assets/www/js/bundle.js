@@ -1602,7 +1602,7 @@
 			},
 
 			view: function view(ctrl) {
-				return { tag: "header", attrs: { id: "topnav" }, children: [{ tag: "div", attrs: { class: "topbar-main" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "logo" }, children: [{ tag: "a", attrs: { href: "/", config: m.route, class: "logo" }, children: [{ tag: "i", attrs: { class: "md md-equalizer" } }, " ", { tag: "span", attrs: {}, children: ["Web Wallet"] }, " "] }] }, { tag: "div", attrs: { class: "menu-extras" }, children: [{ tag: "ul", attrs: { class: "nav navbar-nav navbar-right pull-right" }, children: [{ tag: "li", attrs: { class: "dropdown" }, children: [{ tag: "a", attrs: { href: "", class: "dropdown-toggle waves-effect waves-light profile", "data-toggle": "dropdown", "aria-expanded": "true" }, children: [{ tag: "img", attrs: { src: "./assets/img/avatar-1.jpg", alt: "user-img", class: "img-circle" } }] }, { tag: "ul", attrs: { class: "dropdown-menu" }, children: [{ tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "#", onclick: Auth.logout }, children: [{ tag: "i", attrs: { class: "ti-power-off m-r-5" } }, " Logout"] }] }] }] }] }, { tag: "div", attrs: { class: "menu-item" }, children: [{ tag: "a", attrs: { onclick: ctrl.toggleVisible.bind(ctrl), class: ctrl.visible() ? 'open navbar-toggle' : 'navbar-toggle' }, children: [{ tag: "div", attrs: { class: "lines" }, children: [{ tag: "span", attrs: {} }, { tag: "span", attrs: {} }, { tag: "span", attrs: {} }] }] }] }] }] }] }, { tag: "div", attrs: { class: "navbar-custom" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { id: "navigation", style: ctrl.visible() ? 'display:block;' : '' }, children: [{ tag: "ul", attrs: { class: "navigation-menu" }, children: [{ tag: "li", attrs: { class: "has-submenu active" }, children: [{ tag: "a", attrs: { href: "/", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-dashboard" } }, "Dashboard"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/transfer", config: m.route }, children: [{ tag: "i", attrs: { class: "fa fa-money" } }, "Transfer Money"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/invoice", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-payment" } }, "Create invoice"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/settings", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-settings" } }, "Settings"] }] }] }] }] }] }] };
+				return { tag: "header", attrs: { id: "topnav" }, children: [{ tag: "div", attrs: { class: "topbar-main" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "logo" }, children: [{ tag: "a", attrs: { href: "/", config: m.route, class: "logo" }, children: [{ tag: "i", attrs: { class: "md md-equalizer" } }, " ", { tag: "span", attrs: {}, children: ["Web Wallet"] }, " "] }] }, { tag: "div", attrs: { class: "menu-extras" }, children: [{ tag: "ul", attrs: { class: "nav navbar-nav navbar-right pull-right" }, children: [{ tag: "li", attrs: { class: "dropdown" }, children: [{ tag: "a", attrs: { href: "", class: "dropdown-toggle waves-effect waves-light profile", "data-toggle": "dropdown", "aria-expanded": "true" }, children: [{ tag: "img", attrs: { src: "./assets/img/avatar-1.jpg", alt: "user-img", class: "img-circle" } }] }, { tag: "ul", attrs: { class: "dropdown-menu" }, children: [{ tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "#", onclick: Auth.logout }, children: [{ tag: "i", attrs: { class: "ti-power-off m-r-5" } }, " Logout"] }] }] }] }] }, { tag: "div", attrs: { class: "menu-item" }, children: [{ tag: "a", attrs: { onclick: ctrl.toggleVisible.bind(ctrl), class: ctrl.visible() ? 'open navbar-toggle' : 'navbar-toggle' }, children: [{ tag: "div", attrs: { class: "lines" }, children: [{ tag: "span", attrs: {} }, { tag: "span", attrs: {} }, { tag: "span", attrs: {} }] }] }] }] }] }] }, { tag: "div", attrs: { class: "navbar-custom" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { id: "navigation", style: ctrl.visible() ? 'display:block;' : '' }, children: [{ tag: "ul", attrs: { class: "navigation-menu" }, children: [{ tag: "li", attrs: { class: "has-submenu active" }, children: [{ tag: "a", attrs: { href: "/", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-dashboard" } }, "Dashboard"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/transfer", config: m.route }, children: [{ tag: "i", attrs: { class: "fa fa-money" } }, "Transfer Money"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/invoice", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-payment" } }, "Create invoice"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/settings", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-settings" } }, "Settings"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/scanner", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-settings" } }, "Scan code"] }] }] }] }] }] }] };
 			}
 		};
 
@@ -1671,9 +1671,79 @@
 			"/invoice": require('./pages/Invoice.js'),
 			"/sign": require('./pages/Sign.js'),
 			"/transfer": require('./pages/Transfer.js'),
-			"/settings": require('./pages/Settings.js')
+			"/settings": require('./pages/Settings.js'),
+			"/scanner": require('./pages/Scanner.js')
 		});
-	}, { "./pages/Home.js": 7, "./pages/Invoice.js": 8, "./pages/Login.js": 9, "./pages/Logout.js": 10, "./pages/Settings.js": 11, "./pages/Sign.js": 12, "./pages/Transfer.js": 13 }], 6: [function (require, module, exports) {
+
+		var app = {
+			// Application Constructor
+			initialize: function initialize() {
+				this.bindEvents();
+			},
+			// Bind Event Listeners
+			//
+			// Bind any events that are required on startup. Common events are:
+			// `load`, `deviceready`, `offline`, and `online`.
+			bindEvents: function bindEvents() {
+				document.addEventListener('deviceready', this.onDeviceReady, false);
+				document.getElementById('scan').addEventListener('click', this.scan, false);
+				document.getElementById('encode').addEventListener('click', this.encode, false);
+			},
+
+			// deviceready Event Handler
+			//
+			// The scope of `this` is the event. In order to call the `receivedEvent`
+			// function, we must explicity call `app.receivedEvent(...);`
+			onDeviceReady: function onDeviceReady() {
+				app.receivedEvent('deviceready');
+			},
+
+			// Update DOM on a Received Event
+			receivedEvent: function receivedEvent(id) {
+				var parentElement = document.getElementById(id);
+				var listeningElement = parentElement.querySelector('.listening');
+				var receivedElement = parentElement.querySelector('.received');
+
+				listeningElement.setAttribute('style', 'display:none;');
+				receivedElement.setAttribute('style', 'display:block;');
+
+				console.log('Received Event: ' + id);
+			},
+
+			scan: function scan() {
+				console.log('scanning');
+
+				var scanner = cordova.require("cordova/plugin/BarcodeScanner");
+
+				scanner.scan(function (result) {
+
+					alert("We got a barcode\n" + "Result: " + result.text + "\n" + "Format: " + result.format + "\n" + "Cancelled: " + result.cancelled);
+
+					console.log("Scanner result: \n" + "text: " + result.text + "\n" + "format: " + result.format + "\n" + "cancelled: " + result.cancelled + "\n");
+					document.getElementById("info").innerHTML = result.text;
+					console.log(result);
+					/*
+      if (args.format == "QR_CODE") {
+      window.plugins.childBrowser.showWebPage(args.text, { showLocationBar: false });
+      }
+      */
+				}, function (error) {
+					console.log("Scanning failed: ", error);
+				});
+			},
+
+			encode: function encode() {
+				var scanner = cordova.require("cordova/plugin/BarcodeScanner");
+
+				scanner.encode(scanner.Encode.TEXT_TYPE, "http://www.nhl.com", function (success) {
+					alert("encode success: " + success);
+				}, function (fail) {
+					alert("encoding failed: " + fail);
+				});
+			}
+
+		};
+	}, { "./pages/Home.js": 7, "./pages/Invoice.js": 8, "./pages/Login.js": 9, "./pages/Logout.js": 10, "./pages/Scanner.js": 11, "./pages/Settings.js": 12, "./pages/Sign.js": 13, "./pages/Transfer.js": 14 }], 6: [function (require, module, exports) {
 		var Conf = require('../config/Config.js');
 
 		var Auth = module.exports = {
@@ -2093,7 +2163,7 @@
 			},
 
 			view: function view(ctrl) {
-				return { tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "text-center" }, children: [{ tag: "a", attrs: { href: "index.html", class: "logo logo-lg" }, children: [{ tag: "i", attrs: { class: "md md-equalizer" } }, " ", { tag: "span", attrs: {}, children: ["SmartMoney"] }, " "] }] }, { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.login.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "text", required: "", placeholder: "Username", name: "login", value: "" } }, { tag: "i", attrs: { class: "md md-account-circle form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "", placeholder: "Password", name: "password", value: "" } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group text-right m-t-20" }, children: [{ tag: "div", attrs: { class: "col-lg-5 col-xs-6 text-left" }, children: [{ tag: "a", attrs: { href: "/sign", config: m.route, style: "margin-top: 8px;display: block;" }, children: ["Create an account"] }] }, { tag: "div", attrs: { class: "col-lg-7 col-xs-6" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom w-md waves-effect waves-light", type: "submit" }, children: ["Log In"] }] }] }] }] };
+				return { tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "text-center" }, children: [{ tag: "a", attrs: { href: "index.html", class: "logo logo-lg" }, children: [{ tag: "i", attrs: { class: "md md-equalizer" } }, " ", { tag: "span", attrs: {}, children: ["SmartMoney"] }, " "] }] }, { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.login.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "text", required: "", placeholder: "Username", name: "login", value: "valerchik666" } }, { tag: "i", attrs: { class: "md md-account-circle form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "", placeholder: "Password", name: "password", value: "123123" } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group text-right m-t-20" }, children: [{ tag: "div", attrs: { class: "col-lg-5 col-xs-6 text-left" }, children: [{ tag: "a", attrs: { href: "/sign", config: m.route, style: "margin-top: 8px;display: block;" }, children: ["Create an account"] }] }, { tag: "div", attrs: { class: "col-lg-7 col-xs-6" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom w-md waves-effect waves-light", type: "submit" }, children: ["Log In"] }] }] }] }] };
 			}
 		};
 	}, { "../components/Navbar.js": 3, "../models/Auth.js": 6 }], 10: [function (require, module, exports) {
@@ -2108,6 +2178,58 @@
 			view: function view(ctrl) {}
 		};
 	}, { "../models/Auth.js": 6 }], 11: [function (require, module, exports) {
+		var Conf = require('../config/Config.js');
+		var Navbar = require('../components/Navbar.js');
+		var Auth = require('../models/Auth.js');
+
+		var Scanner = module.exports = {
+
+			controller: function controller() {
+				var ctrl = this;
+
+				if (!Auth.exists()) {
+					return m.route('/');
+				}
+
+				this.scanCode = function () {
+					cordova.plugins.barcodeScanner.scan(function (result) {
+						var params = JSON.parse(result.text);
+
+						switch (params.number.toString()) {
+							case '1':
+								{
+									var getString = '?address=' + params.address;
+									getString += '&amount=' + params.amount;
+									getString += '&number=' + params.number;
+									getString += '&asset=' + params.asset;
+									return m.route('/transfer' + getString);
+								}break;
+							default:
+								{
+									$.Notification.notify('error', 'top center', 'Error', 'Unknown function number');
+									return;
+								}break;
+						}
+					}, function (error) {
+						$.Notification.notify('error', 'top center', 'Error', 'Scanning failed: ' + error);
+						return;
+					}, {
+						"preferFrontCamera": false, // iOS and Android
+						"showFlipCameraButton": true, // iOS and Android
+						"prompt": "Place a barcode inside the scan area", // supported on Android only
+						"formats": "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+						"orientation": "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
+					});
+				};
+			},
+
+			view: function view(ctrl) {
+				return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "h2", attrs: {}, children: ["Scan QR-Code"] }, { tag: "div", attrs: { class: "row" }, children: [{ tag: "div", attrs: { class: "col-lg-6" }, children: [{ tag: "div", attrs: { class: "panel panel-primary" }, children: [{ tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-sm-7" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom w-md waves-effect waves-light",
+													onclick: ctrl.scanCode.bind(ctrl)
+												}, children: ["Scan"] }] }] }] }] }] }] }] }];
+			}
+		};
+	}, { "../components/Navbar.js": 3, "../config/Config.js": 4, "../models/Auth.js": 6 }], 12: [function (require, module, exports) {
 		var Conf = require('../config/Config.js');
 		var Navbar = require('../components/Navbar.js');
 		var Auth = require('../models/Auth.js');
@@ -2167,7 +2289,7 @@
 															type: "submit" }, children: ["Save"] }] }] }] }] }] }] }] }] }] }];
 			}
 		};
-	}, { "../components/Navbar.js": 3, "../config/Config.js": 4, "../models/Auth.js": 6 }], 12: [function (require, module, exports) {
+	}, { "../components/Navbar.js": 3, "../config/Config.js": 4, "../models/Auth.js": 6 }], 13: [function (require, module, exports) {
 		var Qr = require('../../node_modules/qrcode-npm/qrcode');
 		var Navbar = require('../components/Navbar.js');
 		var Auth = require('../models/Auth.js');
@@ -2244,7 +2366,7 @@
 				return { tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "text-center" }, children: [{ tag: "a", attrs: { href: "index.html", class: "logo logo-lg" }, children: [{ tag: "i", attrs: { class: "md md-equalizer" } }, " ", { tag: "span", attrs: {}, children: ["SmartMoney"] }, " "] }] }, { tag: "h4", attrs: { class: "text-center" }, children: ["Sign up new account"] }, { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.signup.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "text", required: "required", placeholder: "Username", name: "login", pattern: "[A-Za-z0-9_-]{3,}", title: "Characters and numbers allowed" } }, { tag: "i", attrs: { class: "md md-account-circle form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "required", placeholder: "Password", name: "password", pattern: ".{6,}", title: "6 characters minimum" } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "required", placeholder: "Retype Password", name: "repassword", pattern: ".{6,}", title: "6 characters minimum" } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group text-right m-t-20" }, children: [{ tag: "div", attrs: { class: "col-sm-5 text-right" }, children: [{ tag: "a", attrs: { href: "/login", config: m.route, style: "margin-top: 8px;display: block;" }, children: ["Already registered?"] }] }, { tag: "div", attrs: { class: "col-sm-7" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom w-md waves-effect waves-light" }, children: ["Sign up"] }] }] }] }] };
 			}
 		};
-	}, { "../../node_modules/qrcode-npm/qrcode": 1, "../components/Navbar.js": 3, "../models/Auth.js": 6 }], 13: [function (require, module, exports) {
+	}, { "../../node_modules/qrcode-npm/qrcode": 1, "../components/Navbar.js": 3, "../models/Auth.js": 6 }], 14: [function (require, module, exports) {
 		var Conf = require('../config/Config.js');
 		var Navbar = require('../components/Navbar.js');
 		var Auth = require('../models/Auth.js');
@@ -2254,9 +2376,9 @@
 			controller: function controller() {
 				var ctrl = this;
 
-				this.infoAsset = m.prop('');
-				this.infoAmount = m.prop('');
-				this.infoAccount = m.prop('');
+				this.infoAsset = m.route.param("asset") ? m.prop(m.route.param("asset")) : m.prop('');
+				this.infoAmount = m.route.param("amount") ? m.prop(m.route.param("amount")) : m.prop('');
+				this.infoAccount = m.route.param("address") ? m.prop(m.route.param("address")) : m.prop('');
 
 				if (!Auth.exists()) {
 					return m.route('/');
@@ -2265,8 +2387,8 @@
 				this.getInvoice = function (e) {
 					e.preventDefault();
 
-					var code = e.target.code.value;
-					if (!code || code < 0) {
+					var code = e.target.code.value ? e.target.code.value.toString() : null;
+					if (!code || code.length != 6) {
 						$.Notification.notify('error', 'top center', 'Error', 'Invalid invoice code');
 						return;
 					}
@@ -2383,7 +2505,7 @@
 			view: function view(ctrl) {
 				return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "row" }, children: [{ tag: "h2", attrs: {}, children: ["Transfer"] }, { tag: "form", attrs: { class: "col-sm-4", onsubmit: ctrl.processPayment.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "panel panel-primary" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: ["Transfer money"] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "label", attrs: {}, children: ["Account ID"] }, { tag: "input", attrs: { name: "account", required: "required", oninput: m.withAttr("value", ctrl.infoAccount), pattern: ".{56}", title: "Account ID should have 56 symbols", class: "form-control", value: ctrl.infoAccount() } }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "label", attrs: {}, children: ["Amount"] }, { tag: "input", attrs: { name: "amount", required: "required", oninput: m.withAttr("value", ctrl.infoAmount), class: "form-control", value: ctrl.infoAmount() } }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "label", attrs: {}, children: ["Asset"] }, { tag: "select", attrs: { name: "asset", required: "required", class: "form-control" }, children: [Auth.balances().map(function (b) {
 													return { tag: "option", attrs: { value: b.asset }, children: [b.asset] };
-												})] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "button", attrs: { class: "btn btn-primary" }, children: ["Transfer"] }] }] }] }] }, { tag: "form", attrs: { class: "col-sm-4", onsubmit: ctrl.getInvoice.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "panel panel-primary" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: ["Request invoice"] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "label", attrs: {}, children: ["Invoice code"] }, { tag: "input", attrs: { type: "number", name: "code", required: "required", class: "form-control" } }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "button", attrs: { class: "btn btn-primary" }, children: ["Request"] }] }] }] }] }, { tag: "div", attrs: { class: "clearfix" } }] }] }] }];
+												})] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "button", attrs: { class: "btn btn-primary" }, children: ["Transfer"] }] }] }] }] }, { tag: "form", attrs: { class: "col-sm-4", onsubmit: ctrl.getInvoice.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "panel panel-primary" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: ["Request invoice"] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "label", attrs: {}, children: ["Invoice code"] }, { tag: "input", attrs: { type: "text", name: "code", required: "required", class: "form-control" } }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "button", attrs: { class: "btn btn-primary" }, children: ["Request"] }] }] }] }] }, { tag: "div", attrs: { class: "clearfix" } }] }] }] }];
 			}
 		};
 	}, { "../components/Navbar.js": 3, "../config/Config.js": 4, "../models/Auth.js": 6 }] }, {}, [5]);

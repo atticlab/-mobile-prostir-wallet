@@ -7,9 +7,9 @@ var Invoice = module.exports = {
   controller: function () {
     var ctrl = this;
 
-    this.infoAsset    = m.prop('');
-    this.infoAmount   = m.prop('');
-    this.infoAccount  = m.prop('');
+    this.infoAsset    = m.route.param("asset") ? m.prop(m.route.param("asset")) : m.prop('');
+    this.infoAmount   = m.route.param("amount") ? m.prop(m.route.param("amount")) : m.prop('');
+    this.infoAccount  = m.route.param("address") ? m.prop(m.route.param("address")) : m.prop('');
 
     if (!Auth.exists()) {
       return m.route('/');
@@ -18,8 +18,8 @@ var Invoice = module.exports = {
     this.getInvoice = function (e) {
       e.preventDefault();
 
-      var code = e.target.code.value;
-      if (!code || code < 0) {
+      var code = e.target.code.value ? e.target.code.value.toString() : null;
+      if (!code || code.length != 6) {
         $.Notification.notify('error', 'top center', 'Error', 'Invalid invoice code');
         return;
       }
@@ -179,7 +179,7 @@ var Invoice = module.exports = {
                 <div class="panel-body">
                   <div class="form-group">
                       <label>Invoice code</label>
-                      <input type="number" name="code" required="required" class="form-control"/>
+                      <input type="text" name="code" required="required" class="form-control"/>
                   </div>
                   <div class="form-group">
                     <button class="btn btn-primary">Request</button>

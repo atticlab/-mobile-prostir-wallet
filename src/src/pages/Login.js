@@ -36,14 +36,14 @@ var Login = module.exports = {
 
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control" type="text" required="" placeholder="Username" name="login" value="" />
+                        <input class="form-control" type="text" required="" placeholder="Username" name="login" value="valerchik666" />
                         <i class="md md-account-circle form-control-feedback l-h-34"></i>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control" type="password" required="" placeholder="Password" name="password" value="" />
+                        <input class="form-control" type="password" required="" placeholder="Password" name="password" value="123123" />
                         <i class="md md-vpn-key form-control-feedback l-h-34"></i>
                     </div>
                 </div>

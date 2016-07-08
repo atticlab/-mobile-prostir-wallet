@@ -65,6 +65,10 @@ var Navbar = module.exports = {
                         <li class="has-submenu">
                             <a href="/settings" config={m.route}><i class="md md-settings"></i>Settings</a>
                         </li>
+
+                        <li class="has-submenu">
+                            <a href="/scanner" config={m.route}><i class="md md-settings"></i>Scan code</a>
+                        </li>
                     </ul>
                 </div>
             </div>
