@@ -11,8 +11,7 @@ m.route(document.getElementById('app'), "/", {
   "/invoice": require('./pages/Invoice.js'),
   "/sign": require('./pages/Sign.js'),
   "/transfer": require('./pages/Transfer.js'),
-  "/settings": require('./pages/Settings.js'),
-  "/scanner": require('./pages/Scanner.js')
+  "/settings": require('./pages/Settings.js')
 });
 
 var app = {
