@@ -16,11 +16,10 @@ var Scanner = module.exports = {
                 function (result) {
                     var params = JSON.parse(result.text);
 
-                    switch(params.number.toString()) {
-                        case '1' : {
-                            var getString = '?address='+params.address;
+                    switch(parseInt(params.t)) {
+                        case 1 : {
+                            var getString = '?account='+params.account;
                             getString += '&amount='+params.amount;
-                            getString += '&number='+params.number;
                             getString += '&asset='+params.asset;
                             return m.route('/transfer'+getString);
                         } break;

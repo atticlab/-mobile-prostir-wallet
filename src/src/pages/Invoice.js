@@ -43,7 +43,8 @@ var Invoice = module.exports = {
             var jsonData = {
                 "account" : Auth.keypair().accountId(),
                 "amount" : amount,
-                "asset" : asset
+                "asset" : asset,
+                "t" : 1
             }
 
             var qr = Qr.qrcode(8, 'Q');

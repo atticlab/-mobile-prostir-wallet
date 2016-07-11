@@ -1602,7 +1602,7 @@
 			},
 
 			view: function view(ctrl) {
-				return { tag: "header", attrs: { id: "topnav" }, children: [{ tag: "div", attrs: { class: "topbar-main" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "logo" }, children: [{ tag: "a", attrs: { href: "/", config: m.route, class: "logo" }, children: [{ tag: "i", attrs: { class: "md md-equalizer" } }, " ", { tag: "span", attrs: {}, children: ["Web Wallet"] }, " "] }] }, { tag: "div", attrs: { class: "menu-extras" }, children: [{ tag: "ul", attrs: { class: "nav navbar-nav navbar-right pull-right" }, children: [{ tag: "li", attrs: { class: "dropdown" }, children: [{ tag: "a", attrs: { href: "", class: "dropdown-toggle waves-effect waves-light profile", "data-toggle": "dropdown", "aria-expanded": "true" }, children: [{ tag: "img", attrs: { src: "./assets/img/avatar-1.jpg", alt: "user-img", class: "img-circle" } }] }, { tag: "ul", attrs: { class: "dropdown-menu" }, children: [{ tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "#", onclick: Auth.logout }, children: [{ tag: "i", attrs: { class: "ti-power-off m-r-5" } }, " Logout"] }] }] }] }] }, { tag: "div", attrs: { class: "menu-item" }, children: [{ tag: "a", attrs: { onclick: ctrl.toggleVisible.bind(ctrl), class: ctrl.visible() ? 'open navbar-toggle' : 'navbar-toggle' }, children: [{ tag: "div", attrs: { class: "lines" }, children: [{ tag: "span", attrs: {} }, { tag: "span", attrs: {} }, { tag: "span", attrs: {} }] }] }] }] }] }] }, { tag: "div", attrs: { class: "navbar-custom" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { id: "navigation", style: ctrl.visible() ? 'display:block;' : '' }, children: [{ tag: "ul", attrs: { class: "navigation-menu" }, children: [{ tag: "li", attrs: { class: "has-submenu active" }, children: [{ tag: "a", attrs: { href: "/", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-dashboard" } }, "Dashboard"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/transfer", config: m.route }, children: [{ tag: "i", attrs: { class: "fa fa-money" } }, "Transfer Money"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/invoice", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-payment" } }, "Create invoice"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/settings", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-settings" } }, "Settings"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/scanner", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-settings" } }, "Scan code"] }] }] }] }] }] }] };
+				return { tag: "header", attrs: { id: "topnav" }, children: [{ tag: "div", attrs: { class: "topbar-main" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "logo" }, children: [{ tag: "a", attrs: { href: "/", config: m.route, class: "logo" }, children: [{ tag: "i", attrs: { class: "md md-equalizer" } }, " ", { tag: "span", attrs: {}, children: ["Web Wallet"] }, " "] }] }, { tag: "div", attrs: { class: "menu-extras" }, children: [{ tag: "ul", attrs: { class: "nav navbar-nav navbar-right pull-right" }, children: [{ tag: "li", attrs: { class: "dropdown" }, children: [{ tag: "a", attrs: { href: "", class: "dropdown-toggle waves-effect waves-light profile", "data-toggle": "dropdown", "aria-expanded": "true" }, children: [{ tag: "img", attrs: { src: "./assets/img/avatar-1.jpg", alt: "user-img", class: "img-circle" } }] }, { tag: "ul", attrs: { class: "dropdown-menu" }, children: [{ tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "#", onclick: Auth.logout }, children: [{ tag: "i", attrs: { class: "ti-power-off m-r-5" } }, " Logout"] }] }] }] }] }, { tag: "div", attrs: { class: "menu-item" }, children: [{ tag: "a", attrs: { onclick: ctrl.toggleVisible.bind(ctrl), class: ctrl.visible() ? 'open navbar-toggle' : 'navbar-toggle' }, children: [{ tag: "div", attrs: { class: "lines" }, children: [{ tag: "span", attrs: {} }, { tag: "span", attrs: {} }, { tag: "span", attrs: {} }] }] }] }] }] }] }, { tag: "div", attrs: { class: "navbar-custom" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { id: "navigation", style: ctrl.visible() ? 'display:block;' : '' }, children: [{ tag: "ul", attrs: { class: "navigation-menu" }, children: [{ tag: "li", attrs: { class: "has-submenu active" }, children: [{ tag: "a", attrs: { href: "/", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-dashboard" } }, "Dashboard"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/transfer", config: m.route }, children: [{ tag: "i", attrs: { class: "fa fa-money" } }, "Transfer Money"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/invoice", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-payment" } }, "Create invoice"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/settings", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-settings" } }, "Settings"] }] }, { tag: "li", attrs: { class: "has-submenu" }, children: [{ tag: "a", attrs: { href: "/scanner", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-border-outer" } }, "Scan code"] }] }] }] }] }] }] };
 			}
 		};
 
@@ -2077,7 +2077,8 @@
 					var jsonData = {
 						"account": Auth.keypair().accountId(),
 						"amount": amount,
-						"asset": asset
+						"asset": asset,
+						"t": 1
 					};
 
 					var qr = Qr.qrcode(8, 'Q');
@@ -2195,12 +2196,11 @@
 					cordova.plugins.barcodeScanner.scan(function (result) {
 						var params = JSON.parse(result.text);
 
-						switch (params.number.toString()) {
-							case '1':
+						switch (parseInt(params.t)) {
+							case 1:
 								{
-									var getString = '?address=' + params.address;
+									var getString = '?account=' + params.account;
 									getString += '&amount=' + params.amount;
-									getString += '&number=' + params.number;
 									getString += '&asset=' + params.asset;
 									return m.route('/transfer' + getString);
 								}break;
@@ -2377,8 +2377,8 @@
 				var ctrl = this;
 
 				this.infoAsset = m.route.param("asset") ? m.prop(m.route.param("asset")) : m.prop('');
-				this.infoAmount = m.route.param("amount") ? m.prop(m.route.param("amount")) : m.prop('');
-				this.infoAccount = m.route.param("address") ? m.prop(m.route.param("address")) : m.prop('');
+				this.infoAmount = m.route.param("amount") ? m.prop(m.route.param("amount") / 100) : m.prop('');
+				this.infoAccount = m.route.param("account") ? m.prop(m.route.param("account")) : m.prop('');
 
 				if (!Auth.exists()) {
 					return m.route('/');
@@ -2485,8 +2485,6 @@
 
 							m.onLoadingEnd();
 							m.endComputation();
-
-							return Auth.loadAccount();
 						}).catch(function (err) {
 							$.Notification.notify('error', 'top center', 'Error', 'Cannot make transfer');
 							console.log(err);

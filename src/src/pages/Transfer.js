@@ -8,8 +8,8 @@ var Invoice = module.exports = {
     var ctrl = this;
 
     this.infoAsset    = m.route.param("asset") ? m.prop(m.route.param("asset")) : m.prop('');
-    this.infoAmount   = m.route.param("amount") ? m.prop(m.route.param("amount")) : m.prop('');
-    this.infoAccount  = m.route.param("address") ? m.prop(m.route.param("address")) : m.prop('');
+    this.infoAmount   = m.route.param("amount") ? (m.prop(m.route.param("amount")/100)) : m.prop('');
+    this.infoAccount  = m.route.param("account") ? m.prop(m.route.param("account")) : m.prop('');
 
     if (!Auth.exists()) {
       return m.route('/');
@@ -124,7 +124,6 @@ var Invoice = module.exports = {
               m.onLoadingEnd();
               m.endComputation();
 
-              return Auth.loadAccount();
             })
             .catch(function (err) {
               $.Notification.notify('error', 'top center', 'Error', 'Cannot make transfer');
