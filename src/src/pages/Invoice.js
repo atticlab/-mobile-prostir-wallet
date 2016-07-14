@@ -113,7 +113,7 @@ var Invoice = module.exports = {
                                                     <div class="form-group">
                                                         <div class="col-xs-4">
                                                             <label for="">Amount:</label>
-                                                            <input class="form-control" type="text" required="" id="amount"
+                                                            <input class="form-control" type="text" required="required" id="amount"
                                                                    placeholder="0.00"
                                                                    name="amount"/>
                                                         </div>

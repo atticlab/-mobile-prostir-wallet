@@ -61,7 +61,7 @@ var Settings = module.exports = {
                                         <div class="form-group">
                                             <div class="col-xs-12">
                                                 <label for="">Old password:</label>
-                                                <input class="form-control" type="text" required="" id="oldPassword"
+                                                <input class="form-control" type="text" required="required" id="oldPassword"
                                                        name="oldPassword"/>
                                             </div>
                                         </div>
@@ -69,7 +69,7 @@ var Settings = module.exports = {
                                         <div class="form-group">
                                             <div class="col-xs-12">
                                                 <label for="">New password:</label>
-                                                <input class="form-control" type="text" required="" id="newPassword"
+                                                <input class="form-control" type="text" required="required" id="newPassword"
                                                        name="newPassword"/>
                                             </div>
                                         </div>
@@ -77,7 +77,7 @@ var Settings = module.exports = {
                                         <div class="form-group">
                                             <div class="col-xs-12">
                                                 <label for="">New repassword:</label>
-                                                <input class="form-control" type="text" required="" id="newRePassword"
+                                                <input class="form-control" type="text" required="required" id="newRePassword"
                                                        name="newRePassword"/>
                                             </div>
                                         </div>
@@ -102,7 +102,7 @@ var Settings = module.exports = {
                                         <div class="form-group">
                                             <div class="col-xs-12">
                                                 <label for="">Email:</label>
-                                                <input class="form-control" type="text" required="" id="email"
+                                                <input class="form-control" type="text" required="required" id="email"
                                                        name="email"/>
                                             </div>
                                         </div>
@@ -110,7 +110,7 @@ var Settings = module.exports = {
                                         <div class="form-group">
                                             <div class="col-xs-12">
                                                 <label for="">Phone:</label>
-                                                <input class="form-control" type="text" required="" id="phone"
+                                                <input class="form-control" type="text" required="required" id="phone"
                                                        name="phone"/>
                                             </div>
                                         </div>

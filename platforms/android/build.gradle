@@ -86,7 +86,7 @@ ext {
 }
 
 // PLUGIN GRADLE EXTENSIONS START
-apply from: "phonegap-plugin-barcodescanner/mobile-barcodescanner.gradle"
+apply from: "phonegap-plugin-barcodescanner/wallet-barcodescanner.gradle"
 // PLUGIN GRADLE EXTENSIONS END
 
 def hasBuildExtras = file('build-extras.gradle').exists()
