@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Package IgnorableNamespaces="uap mp" xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10">
+    <Identity Name="com.atticlab.smartmoney.wallet" Publisher="CN=$username$" Version="0.0.1.0" />
+    <mp:PhoneIdentity PhoneProductId="9cf4f2b0-4a70-11e6-a864-e34711222d8c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+    <Properties>
+        <DisplayName>SmartMoney Wallet</DisplayName>
+        <PublisherDisplayName>AtticLab Team</PublisherDisplayName>
+        <Logo>images\StoreLogo.png</Logo>
+    </Properties>
+    <Dependencies>
+        <TargetDeviceFamily MaxVersionTested="10.0.10240.0" MinVersion="10.0.10240.0" Name="Windows.Universal" />
+    </Dependencies>
+    <Resources>
+        <Resource Language="x-generate" />
+    </Resources>
+    <Applications>
+        <Application Id="com.atticlab.smartmoney.wallet" StartPage="ms-appx-web://com.atticlab.smartmoney.wallet/www/index.html">
+            <uap:VisualElements BackgroundColor="#464646" Description="CordovaApp" DisplayName="SmartMoney Wallet" Square150x150Logo="images\Square150x150Logo.png" Square44x44Logo="images\Square44x44Logo.png">
+                <uap:SplashScreen Image="images\splashscreen.png" />
+                <uap:DefaultTile ShortName="SmartMoney Wallet" Square310x310Logo="images\Square310x310Logo.png" Square71x71Logo="images\Square71x71Logo.png" Wide310x150Logo="images\Wide310x150Logo.png" />
+                <uap:InitialRotationPreference>
+                    <uap:Rotation Preference="portrait" />
+                    <uap:Rotation Preference="landscape" />
+                    <uap:Rotation Preference="landscapeFlipped" />
+                </uap:InitialRotationPreference>
+            </uap:VisualElements>
+            <uap:ApplicationContentUriRules>
+                <uap:Rule Match="ms-appx-web:///" Type="include" WindowsRuntimeAccess="all" />
+            </uap:ApplicationContentUriRules>
+        </Application>
+    </Applications>
+    <Capabilities>
+        <Capability Name="internetClient" />
+        <uap:Capability Name="contacts" />
+        <DeviceCapability Name="webcam" />
+        <DeviceCapability Name="location" />
+        <DeviceCapability Name="microphone" />
+    </Capabilities>
+</Package>
