@@ -13,7 +13,7 @@
     "mithril": "^0.2.5",
     "qrcode-npm": "0.0.3",
     "stellar-sdk": "git+https://atticlab:Iy0qoqIbLDYgUop0Pegcxpl0MNQbtxXv@bitbucket.org/atticlab/js-smart-sdk.git#dev",
-    "stellar-wallet-js-sdk": "git+https://atticlab:Iy0qoqIbLDYgUop0Pegcxpl0MNQbtxXv@bitbucket.org/atticlab/stellar-wallet-js-sdk.git",
+    "stellar-wallet-js-sdk": "git+https://atticlab:Iy0qoqIbLDYgUop0Pegcxpl0MNQbtxXv@bitbucket.org/atticlab/stellar-wallet-js-sdk.git"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",

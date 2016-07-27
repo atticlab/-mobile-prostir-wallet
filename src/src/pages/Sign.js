@@ -15,26 +15,22 @@ var Sign = module.exports = {
 
             var ctrl = this;
 
-            m.onLoadingStart();
-
             if (!e.target.login.value || !e.target.password.value || !e.target.repassword.value) {
                 $.Notification.notify('error', 'top center', 'Error', 'Please, fill all required fields');
-                m.onLoadingEnd();
                 return;
             }
 
             if (e.target.password.value.length < 6) {
                 $.Notification.notify('error', 'top center', 'Error', 'Password should have 6 chars min');
-                m.onLoadingEnd();
                 return;
             }
 
             if (e.target.password.value != e.target.repassword.value) {
                 $.Notification.notify('error', 'top center', 'Error', 'Passwords should match');
-                m.onLoadingEnd();
                 return;
             }
 
+            m.onLoadingStart();
             m.startComputation();
             Auth.registration(e.target.login.value, e.target.password.value)
                 .then(function () {

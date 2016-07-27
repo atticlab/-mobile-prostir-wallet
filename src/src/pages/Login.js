@@ -17,7 +17,17 @@ var Login = module.exports = {
                 .then(function() {
                     m.route('/home');
                 }, function(err) {
-                    $.Notification.notify('error', 'top center', 'Error', 'Login/password combination is invalid');
+                    switch (err.name) {
+                        case 'WalletNotFound':
+                            $.Notification.notify('error', 'top center', 'Error', 'Login/password combination is invalid');
+                            break;
+                        case 'ConnectionError':
+                            $.Notification.notify('error', 'top center', 'Error', 'Connection error');
+                            break;
+                        default:
+                            $.Notification.notify('error', 'top center', 'Error', err.name);
+                    }
+
                 })
                 .then(function(){
                     m.onLoadingEnd();
@@ -36,14 +46,14 @@ var Login = module.exports = {
 
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control" type="text" required="required" placeholder="Username" name="login" value="" />
+                        <input class="form-control" type="text" required="required" placeholder="Username" name="login"/>
                         <i class="md md-account-circle form-control-feedback l-h-34"></i>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control" type="password" required="required" placeholder="Password" name="password" value="" />
+                        <input class="form-control" type="password" required="required" placeholder="Password" name="password"/>
                         <i class="md md-vpn-key form-control-feedback l-h-34"></i>
                     </div>
                 </div>

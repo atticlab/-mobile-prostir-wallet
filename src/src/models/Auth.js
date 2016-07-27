@@ -1,19 +1,17 @@
 var Conf = require('../config/Config.js');
 
-var Auth = module.exports = {
-    keypair: m.prop(false),
+var Auth = {
 
-    type: m.prop(false),
-
-    username: m.prop(false),
-
-    exists: m.prop(false),
-
-    balances: m.prop([]),
-
-    payments: m.prop([]),
-
-    invoices: m.prop([]),
+    setDefaults: function() {
+        this.keypair = m.prop(false);
+        this.type = m.prop(false);
+        this.username = m.prop(false);
+        this.exists = m.prop(false);
+        this.balances = m.prop([]);
+        this.payments = m.prop([]);
+        this.invoices = m.prop([]);
+        this.wallet = m.prop(false);
+    },
 
     updateBalances: function(response) {
         var balances = [];
@@ -33,21 +31,22 @@ var Auth = module.exports = {
 
     login: function(login, password) {
         return StellarWallet.getWallet({
-                server: Conf.wallet_host + '/v2',
-                username: login,
-                password: password
-            }).then(function(wallet) {
-                Auth.keypair(StellarSdk.Keypair.fromSeed(wallet.getKeychainData()));
-                Auth.username(wallet.username);
-                return Auth.loadAccount();
-            }).then(function() {
-                // TODO: show older transactions (add pagination)
-                return Conf.horizon.payments()
-                    .forAccount(Auth.keypair().accountId())
-                    .order('desc')
-                    .limit(25)
-                    .call();
-            })
+            server: Conf.keyserver_host + '/v2',
+            username: login,
+            password: password
+        }).then(function(wallet) {
+            Auth.wallet(wallet);
+            Auth.keypair(StellarSdk.Keypair.fromSeed(wallet.getKeychainData()));
+            Auth.username(wallet.username);
+            return Auth.loadAccount();
+        }).then(function() {
+            // TODO: show older transactions (add pagination)
+            return Conf.horizon.payments()
+                .forAccount(Auth.keypair().accountId())
+                .order('desc')
+                .limit(25)
+                .call();
+        })
             .then(function(result) {
                 Conf.horizon.payments()
                     .forAccount(Auth.keypair().accountId())
@@ -76,7 +75,7 @@ var Auth = module.exports = {
         var accountKeypair = StellarSdk.Keypair.random();
         let walletUser = StellarSdk.Keypair.fromSeed(Conf.create_acc_seed);
         return StellarWallet.createWallet({
-            server: Conf.wallet_host + '/v2',
+            server: Conf.keyserver_host + '/v2',
             username: login,
             password: password,
             accountId: accountKeypair.accountId(),
@@ -91,7 +90,7 @@ var Auth = module.exports = {
                 p: 1
             }
         })
-        .then(function() {
+            .then(function() {
                 return Conf.horizon.loadAccount(walletUser.accountId());
             })
             .then(source => {
@@ -127,7 +126,9 @@ var Auth = module.exports = {
             })
 
     },
+
     loadAccount: function() {
+
         var ctrl = this;
 
         if (!Auth.keypair()) {
@@ -158,20 +159,51 @@ var Auth = module.exports = {
 
                 ctrl.updateBalances(source.balances);
             })
-        ;
+            ;
     },
+
     logout: function() {
-        window.location.reload();
+        Auth.setDefaults();
+        return m.route('/');
     },
-    updateAdvData: function(email, phone) {
-        console.log(Auth.username());
-        return StellarWallet.updateAdvParams({
-            server: Conf.wallet_host + '/v2',
-            username: Auth.username(), 
-            email: email,
-            phone: phone,
-            accountId : Auth.keypair().accountId(),
-            secretKey: Auth.keypair().seed()
+
+    updatePassword: function(old_pwd, new_pwd)
+    {
+        return StellarWallet.getWallet({
+            server: Conf.keyserver_host + '/v2',
+            username: Auth.username(),
+            password: old_pwd
+        }).then(function(wallet) {
+            return wallet.changePassword({
+                newPassword: new_pwd,
+                secretKey: Auth.keypair()._secretKey.toString('base64')
+            });
+        }).then(function(wallet) {
+            Auth.wallet(wallet);
+        })
+    },
+
+    update: function(data) {
+        return Auth.wallet().update({
+            update: data,
+            secretKey: Auth.keypair()._secretKey.toString('base64')
         });
+    },
+
+    loadTransactionInfo: function(tid) {
+        return Conf.horizon.transactions()
+            .transaction(tid)
+            .call()
+
+    },
+
+    loadAccountById: function(aid) {
+        return Conf.horizon.accounts()
+            .accountId(aid)
+            .call();
     }
 };
+
+Auth.setDefaults();
+
+module.exports = Auth;

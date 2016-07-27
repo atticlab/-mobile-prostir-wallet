@@ -20,28 +20,28 @@ var Home = module.exports = {
     this.showInvoiceGetForm = m.prop(false);
 
     this.getInvoiceFormFields = m.prop(
-      {
-        asset : {
-          data: '',
-          hname:'Asset:',
-        },
-        amount : {
-          data: '',
-          hname:'Amount:',
-        },
-        code : {
-          data: '',
-          hname:'Code:',
-        },
-        payer : {
-          data: '',
-          hname:'Payer:',
-        },
-        account : {
-          data: '',
-          hname:'To account:',
-        },
-      }
+        {
+          asset : {
+            data: '',
+            hname:'Asset:',
+          },
+          amount : {
+            data: '',
+            hname:'Amount:',
+          },
+          code : {
+            data: '',
+            hname:'Code:',
+          },
+          payer : {
+            data: '',
+            hname:'Payer:',
+          },
+          account : {
+            data: '',
+            hname:'To account:',
+          },
+        }
     );
 
 
@@ -49,7 +49,7 @@ var Home = module.exports = {
       this.showInvoiceGetForm = m.prop(true);
     }
 
-    this.HideGetForm = function(){
+    this.HideGetForm = function (){
       this.showInvoiceGetForm = m.prop(false);
     }.bind(this);
 
@@ -131,7 +131,6 @@ var Home = module.exports = {
       m.endComputation();
 
     }
-    ctrl.getInvoice.bind(ctrl);
   },
 
   view: function (ctrl) {
@@ -151,20 +150,20 @@ var Home = module.exports = {
                 </div>
                 <div class="panel-body">
                   <table class="table m-0">
-                      <tbody>
-                          <tr>
-                              <td>Type</td>
-                              <td>{Auth.type()}</td>
-                          </tr>
-                          <tr>
-                            <td>Balance:</td>
-                            <td>
-                              {Auth.balances().map(b => {
-                                return parseFloat(b.balance).toFixed(2) + " " +b.asset
-                              })}
-                            </td>
-                          </tr>
-                      </tbody>
+                    <tbody>
+                    <tr>
+                      <td>Type</td>
+                      <td>{Auth.type()}</td>
+                    </tr>
+                    <tr>
+                      <td>Balance:</td>
+                      <td>
+                        {Auth.balances().map(b => {
+                          return parseFloat(b.balance).toFixed(2) + " " +b.asset
+                        })}
+                      </td>
+                    </tr>
+                    </tbody>
                   </table>
                 </div>
               </div>
@@ -187,20 +186,28 @@ var Home = module.exports = {
                 </tr>
                 </thead>
                 <tbody>
-                  {Auth.payments().map(function(payment) {
-                    return <tr>
-                      <td>
-                        <span class="hidden-xs">{payment.to == Auth.keypair().accountId()? payment.from : payment.to}</span>
-                        <span class="visible-xs">{payment.to == Auth.keypair().accountId()? payment.from.substr(0, 5) : payment.to.substr(0, 5)}...</span>
-                      </td>
-                      <td>{parseFloat(payment.amount).toFixed(2)}  {payment.asset_code}</td>
-                      <td>
+                {Auth.payments().map(function(payment) {
+                  var trans_link = payment._links.transaction.href;
+                  var trans_id = trans_link.substr(trans_link.lastIndexOf('/') + 1);
+                  var accountId = payment.to == Auth.keypair().accountId()? payment.from : payment.to
+                  var trans_url = '/transaction/'+trans_id+'/'+ accountId;
+                  return <tr>
+                    <td>
+                      <a class="hidden-xs" href={trans_url} config={m.route}>
+                        {accountId}
+                      </a>
+                      <a class="visible-xs" href={trans_url} config={m.route}>
+                        {payment.to == Auth.keypair().accountId()? payment.from.substr(0, 5) : payment.to.substr(0, 5)}...
+                      </a>
+                    </td>
+                    <td>{parseFloat(payment.amount).toFixed(2)}  {payment.asset_code}</td>
+                    <td>
                         <span class={(payment.to == Auth.keypair().accountId())? 'label label-success' : 'label label-danger'}>
                           {(payment.to == Auth.keypair().accountId())? 'Debit' : 'Credit'}
                         </span>
-                      </td>
-                    </tr>
-                  })}
+                    </td>
+                  </tr>
+                })}
                 </tbody>
               </table>
             </div>
