@@ -190,7 +190,9 @@ var Home = module.exports = {
                   var trans_link = payment._links.transaction.href;
                   var trans_id = trans_link.substr(trans_link.lastIndexOf('/') + 1);
                   var accountId = payment.to == Auth.keypair().accountId()? payment.from : payment.to
-                  var trans_url = '/transaction/'+trans_id+'/'+ accountId;
+                  //The reason for send an amount and asset code instead of payment id is that there is
+                  //no method in SDK to get payment by id.
+                  var trans_url = '/transaction/'+trans_id+'/'+ accountId+'/'+payment.amount+'/'+payment.asset_code;
                   return <tr>
                     <td>
                       <a class="hidden-xs" href={trans_url} config={m.route}>

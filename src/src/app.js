@@ -11,7 +11,8 @@ m.route(document.getElementById('app'), "/", {
   "/invoice": require('./pages/Invoice.js'),
   "/sign": require('./pages/Sign.js'),
   "/transfer": require('./pages/Transfer.js'),
-  "/settings": require('./pages/Settings.js')
+  "/settings": require('./pages/Settings.js'),
+  "/transaction/:trans_id/:target_acc/:amount/:asset": require('./pages/Transaction.js')
 });
 
 var app = {
