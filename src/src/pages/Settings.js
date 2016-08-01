@@ -66,10 +66,11 @@ var Settings = module.exports = {
                 m.onLoadingStart();
                 m.startComputation();
 
-                Auth.update({
-                    email: e.target.email.value,
-                    phone: e.target.phone.value
-                })
+                var dataToUpdate = {};
+                if (e.target.email.value) {dataToUpdate.email = e.target.email.value}
+                if (e.target.phone.value) {dataToUpdate.phone = e.target.phone.value}
+
+                Auth.update(dataToUpdate)
                     .then(function () {
                         $.Notification.notify('success', 'top center', 'Success', 'Profile saved');
                     })
@@ -143,14 +144,14 @@ var Settings = module.exports = {
                                         <div class="form-group">
                                             <div class="col-xs-12">
                                                 <label for="">Email:</label>
-                                                <input class="form-control" type="text" required="required" name="email" oninput={m.withAttr("value", ctrl.email)} value={ctrl.email()}/>
+                                                <input class="form-control" type="text" name="email" oninput={m.withAttr("value", ctrl.email)} value={ctrl.email()}/>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <div class="col-xs-12">
                                                 <label for="">Phone:</label>
-                                                <input class="form-control" type="text" required="required" name="phone" oninput={m.withAttr("value", ctrl.phone)} value={ctrl.phone()}/>
+                                                <input class="form-control" type="text" name="phone" oninput={m.withAttr("value", ctrl.phone)} value={ctrl.phone()}/>
                                             </div>
                                         </div>
                                         {
