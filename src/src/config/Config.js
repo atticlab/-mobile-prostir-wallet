@@ -4,9 +4,7 @@ var conf = {
     horizon_host: 'http://stellar.attic.pw:8000',
     keyserver_host: 'http://keys.smartmoney.com.ua',
     keyserver_v_url: '/v2/wallets',
-    invoice_host: 'http://invoice.smartmoney.com.ua',
-    invoice_add_url: '/api/invoice/add',
-    invoice_get_url: '/api/invoice/get',
+    invoice_host: 'http://invoice.smartmoney.com.ua'
 };
 
 conf.horizon = new StellarSdk.Server(conf.horizon_host);

@@ -20,81 +20,52 @@ var Invoice = module.exports = {
         this.createInvoice = function (e) {
             e.preventDefault();
 
-            var amount = parseFloat(e.target.amount.value) * 100;
+            var amount = e.target.amount.value
             var asset = e.target.asset.value;
-
-            if (!amount || amount < 0) {
-                $.Notification.notify('error', 'top center', 'Error', 'Bad amount. Check value!');
-                return;
-            }
-
-            // TODO: check if asset is available in Auth.balances
-
-            if (!asset) {
-                $.Notification.notify('error', 'top center', 'Error', 'Asset is invalid!');
-                return;
-            }
-
-            var formData = new FormData();
-
-            formData.append("amount", amount);
-            formData.append("asset", asset);
-            formData.append("account", Auth.keypair().accountId());
-
-            //QR-CODE
-            var jsonData = {
-                "account": Auth.keypair().accountId(),
-                "amount": amount,
-                "asset": asset,
-                "t": 1
-            }
-
-            var qr = Qr.qrcode(8, 'Q');
-            qr.addData(JSON.stringify(jsonData));
-
-            qr.make();
-            var imgTag = qr.createImgTag(4);
-            ctrl.qr(m.trust(imgTag));
+            // // TODO: check if asset is available in Auth.balances
 
             m.onLoadingStart();
 
-            try {
+            Conf.invoiceServer.createInvoice({
+                amount: amount,
+                asset: asset,
+                accountId: Auth.keypair().accountId()
+            })
+                .then(id => {
+                    $.Notification.notify('success', 'top center', 'Success', 'Invoice Created');
+                    ctrl.invoiceCode(id);
 
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", Conf.invoice_host + Conf.invoice_add_url, false); // false for synchronous request
-                xhr.send(formData);
-
-                var response = JSON.parse(xhr.responseText);
-                if (response.error) {
-                    switch (response.error) {
-                        case 'bad amount':
-                            $.Notification.notify('error', 'top center', 'Error', 'Bad amount. Check value!');
-                            break;
-                        default:
-                            $.Notification.notify('error', 'top center', 'Error', 'Network error');
-                            break;
+                    // QR-CODE
+                    var jsonData = {
+                        "account": Auth.keypair().accountId(),
+                        "amount": amount,
+                        "asset": asset,
+                        "t": 1
                     }
+                    var jsonDataStr = JSON.stringify(jsonData);
+                    var qrSize = 8;
+                    if (qr.stringToBytes(jsonDataStr).length > 880) {
+                        qrSize = 9;
+                    }
+                    var qr = Qr.qrcode(qrSize, 'Q');
+                    qr.addData();
+                    qr.make(jsonDataStr);
 
-                    m.onLoadingEnd();
-                    return;
-                } else {
+                    var imgTag = qr.createImgTag(4);
+
                     m.startComputation();
-                    this.invoiceCode(response);
+                    ctrl.qr(m.trust(imgTag));
                     ctrl.barcode(m.trust('<img width="230" height="118"' +
                         'src="http://www.barcode-generator.org/zint/api.php?bc_number=13&bc_data=482000' +
-                        response + '">'));
+                        id + '">'));
                     m.endComputation();
-
-                    $.Notification.notify('success', 'top center', 'Success', 'Invoice Created');
-                }
-
-            } catch (e) {
-                $.Notification.notify('error', 'top center', 'Error', 'Network error');
-            }
-
-            m.onLoadingEnd();
-
-
+                })
+                .catch(err => {
+                    $.Notification.notify('error', 'top center', 'Error', err.name + ((err.message) ? ': ' + err.message : ''));
+                })
+                .then(() => {
+                    m.onLoadingEnd();
+                })
         }
 
         this.newForm = function (e) {

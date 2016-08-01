@@ -40,69 +40,44 @@ var Invoice = module.exports = {
     this.getInvoice = function (e) {
       e.preventDefault();
 
-      var code = e.target.code.value ? e.target.code.value.toString() : null;
-      if (!code || code.length != 6) {
-        $.Notification.notify('error', 'top center', 'Error', 'Invalid invoice code');
-        return;
-      }
-
-      var formData = new FormData();
-      formData.append("id", code);
-      formData.append("account", Auth.keypair().accountId());
-
       m.onLoadingStart();
 
-      try {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", Conf.invoice_host + Conf.invoice_get_url, false); // false for synchronous request
-        xhr.send(formData);
-        var response = JSON.parse(xhr.responseText);
-        if (response.error) {
-          switch (response.error) {
-            case 'Invalid invoice id':
-            case 'no invoice':
-              $.Notification.notify('error', 'top center', 'Error', 'Invalid invoice code');
-              break;
-            case 'invoice already requested':
-              $.Notification.notify('error', 'top center', 'Error', 'Invalid already requested');
-              break;
-            default:
-              $.Notification.notify('error', 'top center', 'Error', 'Network error');
-              break;
-          }
-
-          m.onLoadingEnd();
-          return;
-        }
-
-      } catch (e) {
-        $.Notification.notify('error', 'top center', 'Error', 'Network error');
-      }
-
-      m.onLoadingEnd();
-
-      var allow_inv = false;
-      Auth.balances().map(function (b) {
-        if (b.asset == response.asset) {
-          allow_inv = true;
-        }
+      Conf.invoiceServer.getInvoice({
+        id: e.target.code.value,
+        accountId: Auth.keypair().accountId()
       })
+          .then(response => {
+            var allow_inv = false;
+            Auth.balances().map(function (b) {
+              if (b.asset == response.asset) {
+                allow_inv = true;
+              }
+            })
 
-      if (!allow_inv) {
-        $.Notification.notify('error', 'top center', 'Error', 'Invalid invoice currency');
-        return;
-      }
+            if (!allow_inv) {
+              $.Notification.notify('error', 'top center', 'Error', 'Invalid invoice currency');
+              return;
+            }
 
-      m.startComputation();
-      this.infoAsset(response.asset); // TODO: add this to form
-      this.infoAmount(response.amount / 100);
-      this.infoAccount(response.account);
-      m.endComputation();
+            m.startComputation();
+            this.infoAsset(response.asset); // TODO: add this to form
+            this.infoAmount(response.amount);
+            this.infoAccount(response.account);
+            this.transferType('byAccount');
+            this.infoMemo('by_invoice');
+            m.endComputation();
 
-      // Clear input data
-      e.target.code.value = '';
+            // Clear input data
+            e.target.code.value = '';
 
-      $.Notification.notify('success', 'top center', 'Success', 'Invoice requested');
+            $.Notification.notify('success', 'top center', 'Success', 'Invoice requested');
+          })
+          .catch(err => {
+            $.Notification.notify('error', 'top center', 'Error', err.name + ((err.message) ? ': ' + err.message : ''));
+          })
+          .then(() => {
+            m.onLoadingEnd();
+          })
     }
 
     this.processPayment = function (e) {
