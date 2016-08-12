@@ -7,7 +7,7 @@ var Transaction = module.exports = {
     controller: function () {
         var ctrl = this;
 
-        if (!Auth.exists()) {
+        if (!Auth.keypair()) {
             return m.route('/');
         }
 
@@ -28,7 +28,7 @@ var Transaction = module.exports = {
                 .catch(function (err) {
                     console.error(err);
                     m.onLoadingEnd();
-                    $.Notification.notify('error', 'top center', 'Error', "Can't load account by transaction");
+                    $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Can't load account by transaction"));
                 })
         }
 
@@ -39,10 +39,10 @@ var Transaction = module.exports = {
                     ctrl.transaction(transactionResult);
                     m.endComputation();
                 }).catch(function (err) {
-                    console.log(err);
-                    m.onLoadingEnd();
-                    $.Notification.notify('error', 'top center', 'Error', 'Transaction loading error');
-                })
+                console.log(err);
+                m.onLoadingEnd();
+                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Transaction loading error"));
+            })
         }
 
         this.getTransaction(m.route.param("trans_id"));
@@ -59,24 +59,24 @@ var Transaction = module.exports = {
                                type="button"
                                class="btn btn-primary">
                             <span class="fa fa-arrow-left" aria-hidden="true"></span>
-                            &nbsp;Back
-                        </a>&nbsp;Transaction</h2>
+                            &nbsp;{Conf.tr("Back")}
+                        </a>&nbsp;{Conf.tr("Transaction")}</h2>
                         <div class="panel panel-primary">
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label>Created at:&nbsp;</label>
+                                    <label>{Conf.tr("Created at")}:&nbsp;</label>
                                     <span>{new Date(ctrl.transaction().created_at).toLocaleString()}</span>
                                 </div>
                                 <div class="form-group">
-                                    <label>Transaction Memo:&nbsp;</label>
+                                    <label>{Conf.tr("Transaction memo")}:&nbsp;</label>
                                     <span>{ctrl.transaction().memo}</span>
                                 </div>
                                 <div class="form-group">
-                                    <label>Target Account ID:&nbsp;</label>
+                                    <label>{Conf.tr("Target account ID")}:&nbsp;</label>
                                     <span>{ctrl.account().id}</span>
                                 </div>
                                 <div class="form-group">
-                                    <label>Target Account Balances:&nbsp;</label>
+                                    <label>{Conf.tr("Target account balances")}:&nbsp;</label>
                                     <span>{ctrl.account().balances ? ctrl.account().balances.map(b => {
                                         if (b.asset_type!='native') {
                                             return parseFloat(b.balance).toFixed(2) + " " + b.asset_code + " "
@@ -84,33 +84,33 @@ var Transaction = module.exports = {
                                     }): ''}</span>
                                 </div>
                                 <div class="form-group">
-                                    <label>Target Account Type:&nbsp;</label>
+                                    <label>{Conf.tr("Target account type")}:&nbsp;</label>
                                     <span>{ctrl.account().type}</span>
                                 </div>
                                 <div class="hidden-xs">
-                                    <label>Target Account In Info:&nbsp;</label>
+                                    <label>{Conf.tr("Target account on infohost")}:&nbsp;</label>
                                     <a href={'http://info.smartmoney.com.ua/account/info/'+ctrl.account().id}
                                        class="btn btn-secondary"
                                        target="_blank"
                                     >
                                         <span class="fa fa-external-link"></span>
-                                        &nbsp;Info
+                                        &nbsp;{Conf.tr("Infohost")}
                                     </a>
                                 </div>
                                 <div class="hidden-xs">
-                                    <label>Repeat this payment:&nbsp;</label>
+                                    <label>{Conf.tr("Repeat this payment")}:&nbsp;</label>
                                     <a href={'/transfer' + '?account='+ctrl.account().id +
-                                                            '&amount='+m.route.param("amount")*100 +
+                                                            '&amount='+m.route.param("amount") +
                                                             '&asset='+m.route.param("asset")}
                                        config={m.route}
                                        class="btn btn-primary"
                                     >
                                         <span class="fa fa-repeat"></span>
-                                        &nbsp;Repeat
+                                        &nbsp;{Conf.tr("Repeat")}
                                     </a>
                                 </div>
                             </div>
-                            <div class="panel-footer"><small>Transaction ID: {ctrl.transaction().id}</small></div>
+                            <div class="panel-footer"><small>{Conf.tr("Transaction ID")}: {ctrl.transaction().id}</small></div>
                         </div>
                     </div>
                 </div>

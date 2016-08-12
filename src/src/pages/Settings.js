@@ -7,33 +7,45 @@ var Settings = module.exports = {
     controller: function () {
         var ctrl = this;
 
-        if (!Auth.exists()) {
+        if (!Auth.keypair()) {
             return m.route('/');
         }
 
-        this.phone = m.prop(Auth.wallet().phone || '');
+        //return phone in pattern or prefix
+        this.getPhoneWithViewPattern = function(number){
+            if(number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix){
+                number = Conf.phone.prefix;
+            }
+            return m.prop(VMasker.toPattern(number, {pattern: Conf.phone.view_mask, placeholder: "x"}));
+        }
+
+        this.addPhoneViewPattern = function(e) {
+            ctrl.phone = ctrl.getPhoneWithViewPattern(e.target.value);
+        };
+
+        this.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + Auth.wallet().phone);
         this.email = m.prop(Auth.wallet().email || '');
 
         this.changePassword = function (e) {
             e.preventDefault();
 
             if (!e.target.oldpassword.value || !e.target.password.value || !e.target.repassword.value) {
-                $.Notification.notify('error', 'top center', 'Error', 'Please, fill all required fields');
+                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Please, fill all required fields"));
                 return;
             }
 
             if (e.target.password.value.length < 6) {
-                $.Notification.notify('error', 'top center', 'Error', 'Password should have 6 chars min');
+                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Password should have 6 chars min"));
                 return;
             }
 
             if (e.target.password.value != e.target.repassword.value) {
-                $.Notification.notify('error', 'top center', 'Error', 'Passwords should match');
+                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Passwords should match"));
                 return;
             }
 
             if (e.target.oldpassword.value == e.target.password.value) {
-                $.Notification.notify('error', 'top center', 'Error', 'New password cannot be same as old');
+                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("New password cannot be same as old"));
                 return;
             }
 
@@ -42,11 +54,11 @@ var Settings = module.exports = {
 
             Auth.updatePassword(e.target.oldpassword.value, e.target.password.value)
                 .then(function() {
-                    $.Notification.notify('success', 'top center', 'Success', 'Password changed');
+                    $.Notification.notify('success', 'top center', Conf.tr("Success"), Conf.tr("Password changed"));
                     e.target.reset();
                 })
                 .catch(function(err) {
-                    $.Notification.notify('error', 'top center', 'Error', 'Cannot change password');
+                    $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Cannot change password"));
                 })
                 .then(function() {
                     m.onLoadingEnd();
@@ -57,11 +69,22 @@ var Settings = module.exports = {
         this.bindData = function (e) {
             e.preventDefault();
 
+            //reformat phone to database format
+            e.target.phone.value = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask)
+            e.target.phone.value = e.target.phone.value.substr(2);
+
             if (e.target.email.value != Auth.wallet().email || e.target.phone.value != Auth.wallet().phone) {
 
-                // TODO: add telephone validator
-                // TODO: add email validator
-                // TODO: add input mask for telephone number input field
+                //validate email
+                var email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                if (!email_re.test(e.target.email.value)) {
+                    return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Invalid email"));
+                }
+
+                //validate phone
+                if (e.target.phone.value.length > 0 && e.target.phone.value.match(/\d/g).length != Conf.phone.length) {
+                    return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Invalid phone"));
+                }
 
                 m.onLoadingStart();
                 m.startComputation();
@@ -72,17 +95,17 @@ var Settings = module.exports = {
 
                 Auth.update(dataToUpdate)
                     .then(function () {
-                        $.Notification.notify('success', 'top center', 'Success', 'Profile saved');
+                        $.Notification.notify('success', 'top center', Conf.tr("Success"), Conf.tr("Profile saved"));
                     })
                     .catch(function (err) {
                         if (err.message) {
-                            $.Notification.notify('error', 'top center', 'Error', err.message);
+                            $.Notification.notify('error', 'top center', Conf.tr("Error"), err.message);
                         } else {
-                            $.Notification.notify('error', 'top center', 'Error', 'Cannot update profile details');
+                            $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Cannot update profile details"));
                         }
                     })
                     .then(function() {
-                        ctrl.phone = m.prop(Auth.wallet().phone || '');
+                        ctrl.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + Auth.wallet().phone)
                         ctrl.email = m.prop(Auth.wallet().email || '');
 
                         m.onLoadingEnd();
@@ -96,30 +119,30 @@ var Settings = module.exports = {
         return [m.component(Navbar),
             <div class="wrapper">
                 <div class="container">
-                    <h2>Settings</h2>
+                    <h2>{Conf.tr("Settings")}</h2>
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="panel panel-primary">
-                                <div class="panel-heading">Change password</div>
+                                <div class="panel-heading">{Conf.tr("Change password")}</div>
                                 <div class="panel-body">
                                     <form class="form-horizontal" onsubmit={ctrl.changePassword.bind(ctrl)}>
                                         <div class="form-group">
                                             <div class="col-xs-12">
-                                                <label for="">Old password:</label>
+                                                <label for="">{Conf.tr("Old password")}:</label>
                                                 <input class="form-control" type="password" required="required" name="oldpassword"/>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <div class="col-xs-12">
-                                                <label for="">New password:</label>
+                                                <label for="">{Conf.tr("New password")}:</label>
                                                 <input class="form-control" type="password" required="required" name="password"/>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <div class="col-xs-12">
-                                                <label for="">Repeat new password:</label>
+                                                <label for="">{Conf.tr("Repeat new password")}:</label>
                                                 <input class="form-control" type="password" required="required" name="repassword"/>
                                             </div>
                                         </div>
@@ -128,7 +151,7 @@ var Settings = module.exports = {
                                             <div class="col-sm-7">
                                                 <button class="btn btn-primary btn-custom w-md waves-effect waves-light"
                                                         type="submit">
-                                                    Change
+                                                    {Conf.tr("Change")}
                                                 </button>
                                             </div>
                                         </div>
@@ -138,20 +161,20 @@ var Settings = module.exports = {
                         </div>
                         <div class="col-lg-6">
                             <div class="panel panel-primary">
-                                <div class="panel-heading">Change additional data</div>
+                                <div class="panel-heading">{Conf.tr("Change additional data")}</div>
                                 <div class="panel-body">
                                     <form class="form-horizontal" onsubmit={ctrl.bindData.bind(ctrl)}>
                                         <div class="form-group">
                                             <div class="col-xs-12">
-                                                <label for="">Email:</label>
+                                                <label for="">{Conf.tr("Email")}:</label>
                                                 <input class="form-control" type="text" name="email" oninput={m.withAttr("value", ctrl.email)} value={ctrl.email()}/>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <div class="col-xs-12">
-                                                <label for="">Phone:</label>
-                                                <input class="form-control" type="text" name="phone" oninput={m.withAttr("value", ctrl.phone)} value={ctrl.phone()}/>
+                                                <label for="">{Conf.tr("Phone")}:</label>
+                                                <input class="form-control" type="text" name="phone" placeholder={Conf.phone.view_mask} oninput={ctrl.addPhoneViewPattern.bind(ctrl)} value={ctrl.phone()}/>
                                             </div>
                                         </div>
                                         {
@@ -159,7 +182,7 @@ var Settings = module.exports = {
                                             ctrl.phone() != Auth.wallet().phone || ctrl.email() != Auth.wallet().email ?
                                                 <div class="form-group m-t-20">
                                                     <div class="col-sm-7">
-                                                        <button class="btn btn-primary btn-custom w-md waves-effect waves-light" type="submit">Save</button>
+                                                        <button class="btn btn-primary btn-custom w-md waves-effect waves-light" type="submit">{Conf.tr("Save")}</button>
                                                     </div>
                                                 </div>
                                                 :

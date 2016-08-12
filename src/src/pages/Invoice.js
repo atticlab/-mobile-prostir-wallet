@@ -12,7 +12,7 @@ var Invoice = module.exports = {
         this.qr = m.prop(false);
         this.barcode = m.prop(false);
 
-        if (!Auth.exists()) {
+        if (!Auth.keypair()) {
             return m.route('/');
         }
 
@@ -22,7 +22,7 @@ var Invoice = module.exports = {
 
             var amount = e.target.amount.value
             var asset = e.target.asset.value;
-            // // TODO: check if asset is available in Auth.balances
+            // TODO: check if asset is available in Auth.balances
 
             m.onLoadingStart();
 
@@ -32,7 +32,7 @@ var Invoice = module.exports = {
                 accountId: Auth.keypair().accountId()
             })
                 .then(id => {
-                    $.Notification.notify('success', 'top center', 'Success', 'Invoice Created');
+                    $.Notification.notify('success', 'top center', Conf.tr("Success"), Conf.tr("Invoice created"));
                     ctrl.invoiceCode(id);
 
                     // QR-CODE
@@ -43,13 +43,16 @@ var Invoice = module.exports = {
                         "t": 1
                     }
                     var jsonDataStr = JSON.stringify(jsonData);
+
+                    //calculate the qrCode size
                     var qrSize = 8;
-                    if (qr.stringToBytes(jsonDataStr).length > 880) {
-                        qrSize = 9;
-                    }
+                    // 5 = (496b), 6 = (608b), 7 = (704b), 8 = 108 (880b), 9 = 130 (1056b)
+                    var lenInBytes = Qr.qrcode.stringToBytes(jsonDataStr).length * 8 + 16;
+                    if (lenInBytes > 880) qrSize++;
+                    if (lenInBytes > 1056) qrSize++;
                     var qr = Qr.qrcode(qrSize, 'Q');
-                    qr.addData();
-                    qr.make(jsonDataStr);
+                    qr.addData(jsonDataStr);
+                    qr.make();
 
                     var imgTag = qr.createImgTag(4);
 
@@ -61,7 +64,7 @@ var Invoice = module.exports = {
                     m.endComputation();
                 })
                 .catch(err => {
-                    $.Notification.notify('error', 'top center', 'Error', err.name + ((err.message) ? ': ' + err.message : ''));
+                    $.Notification.notify('error', 'top center', Conf.tr("Error"), err.name + ((err.message) ? ': ' + err.message : ''));
                 })
                 .then(() => {
                     m.onLoadingEnd();
@@ -76,24 +79,26 @@ var Invoice = module.exports = {
     view: function (ctrl) {
         var code = ctrl.qr();
         var barCode = ctrl.barcode();
+
         return [m.component(Navbar),
             <div class="wrapper">
                 <div class="container">
-                    <h2>Transfer</h2>
+                    <h2>{Conf.tr("Invoice")}</h2>
                     <div class="row">
                         <div class="col-lg-4">
                             {
                                 (!ctrl.invoiceCode()) ?
                                     <div class="panel panel-primary">
-                                        <div class="panel-heading">Create a new invoice</div>
+                                        <div class="panel-heading">{Conf.tr("Create a new invoice")}</div>
                                         <div class="panel-body">
                                             <form class="form-horizontal" onsubmit={ctrl.createInvoice.bind(ctrl)}>
 
                                                 <div class="form-group">
                                                     <div class="col-xs-4">
-                                                        <label for="">Amount:</label>
-                                                        <input class="form-control" type="text" required="required"
+                                                        <label for="">{Conf.tr("Amount")}:</label>
+                                                        <input class="form-control" type="number" required="required"
                                                                id="amount"
+                                                               min="t"
                                                                placeholder="0.00"
                                                                name="amount"/>
                                                     </div>
@@ -114,7 +119,7 @@ var Invoice = module.exports = {
                                                         <button
                                                             class="btn btn-primary btn-custom w-md waves-effect waves-light"
                                                             type="submit">
-                                                            Create
+                                                            {Conf.tr("Create")}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -124,12 +129,11 @@ var Invoice = module.exports = {
                                     :
                                     <div class="panel panel-border panel-inverse">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title">Invoice code</h3>
+                                            <h3 class="panel-title">{Conf.tr("Invoice code")}</h3>
                                         </div>
                                         <div class="panel-body text-center">
                                             <h2>{ctrl.invoiceCode()}</h2>
-                                            <i>Copy this invoice code and share it with someone you need to get money
-                                                from</i>
+                                            <i>{Conf.tr("Copy this invoice code and share it with someone you need to get money from")}</i>
                                             <br/>
                                             <br/>
                                             {code}
@@ -139,7 +143,7 @@ var Invoice = module.exports = {
                                             <br/>
                                             <br/>
                                             <button class="btn btn-purple waves-effect w-md waves-light m-b-5"
-                                                    onclick={ctrl.newForm.bind(ctrl)}>Create new
+                                                    onclick={ctrl.newForm.bind(ctrl)}>{Conf.tr("Create new")}
                                             </button>
                                         </div>
                                     </div>
