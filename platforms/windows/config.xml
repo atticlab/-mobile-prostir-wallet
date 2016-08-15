@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.atticlab.smartmoney.wallet" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="com.atticlab.smartmoney.wallet" version="0.0.75" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <icon height="150" platform="windows" src="www/res/icon/windows/logo.png" width="150" />
     <icon height="30" platform="windows" src="www/res/icon/windows/smalllogo.png" width="30" />
     <icon height="50" platform="windows" src="www/res/icon/windows/storelogo.png" width="50" />

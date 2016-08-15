@@ -13,16 +13,16 @@ conf.phone = {
     length:     10,
     prefix:     "+38"
 }
-
 conf.horizon = new StellarSdk.Server(conf.horizon_host);
 conf.invoiceServer = new StellarWallet.InvoiceServer(conf.invoice_host);
 
 //localization
 var Localize = require('localize');
 conf.locales = require('../locales/translations.js');
-
+var locale = (typeof navigator.language != 'undefined') ? navigator.language.substring(0,2) : "uk";
 conf.loc = new Localize(conf.locales);
-conf.loc.setLocale("ua");
+conf.loc.throwOnMissingTranslation(false);
+conf.loc.setLocale(locale);
 conf.tr = conf.loc.translate; //short alias for translation
 
 var Config = module.exports = conf;

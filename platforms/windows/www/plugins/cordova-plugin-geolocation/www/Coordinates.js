@@ -1,4 +1,4 @@
-﻿cordova.define("cordova-plugin-geolocation.Coordinates", function(require, exports, module) {
+cordova.define("cordova-plugin-geolocation.Coordinates", function(require, exports, module) {
 /*
  *
  * Licensed to the Apache Software Foundation (ASF) under one

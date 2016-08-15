@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Theme: Minton Admin Template
 * Author: Coderthemes
 * Module/App: Core js

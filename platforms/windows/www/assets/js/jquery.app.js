@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Theme: Ubold Admin Template
 * Author: Coderthemes
 * Module/App: Main Js

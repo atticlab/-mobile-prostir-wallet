@@ -1,4 +1,4 @@
-﻿cordova.define("phonegap-plugin-barcodescanner.BarcodeScannerProxy", function(require, exports, module) {
+cordova.define("phonegap-plugin-barcodescanner.BarcodeScannerProxy", function(require, exports, module) {
 /*
  * Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.
  *
