@@ -1,5 +1,6 @@
 var Auth = require('../models/Auth.js');
 var Conf = require('../config/Config.js');
+var Scanner = require('../components/Scanner.js');
 
 var Navbar = module.exports = {
 

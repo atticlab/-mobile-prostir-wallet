@@ -7,6 +7,7 @@ var Auth = {
         this.username = m.prop(false);
         this.balances = m.prop([]);
         this.payments = m.prop([]);
+        this.exists = m.prop(false);
         this.wallet = m.prop(false);
     },
 
@@ -48,6 +49,7 @@ var Auth = {
             })
             .then(function (source) {
                 Auth.type(source.type);
+                Auth.exists(true);
 
                 return Conf.horizon.payments()
                     .forAccount(Auth.keypair().accountId())

@@ -4,7 +4,7 @@ var Conf = require('../config/Config.js');
 
 var Login = module.exports = {
     controller: function () {
-        if (Auth.keypair()) {
+        if (Auth.exists()) {
             return m.route('/home');
         }
 

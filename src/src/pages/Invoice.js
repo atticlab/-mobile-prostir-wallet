@@ -12,7 +12,7 @@ var Invoice = module.exports = {
         this.qr = m.prop(false);
         this.barcode = m.prop(false);
 
-        if (!Auth.keypair()) {
+        if (!Auth.exists()) {
             return m.route('/');
         }
 

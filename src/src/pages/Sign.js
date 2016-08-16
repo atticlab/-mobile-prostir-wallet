@@ -5,7 +5,7 @@ var Conf = require('../config/Config.js');
 
 var Sign = module.exports = {
     controller: function () {
-        if (Auth.keypair()) {
+        if (Auth.exists()) {
             return m.route('/home');
         }
 

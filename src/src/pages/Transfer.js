@@ -26,7 +26,7 @@ var Invoice = module.exports = {
     this.transferType = m.prop('byAccount');
     this.infoMemo = m.prop('by_account');
 
-    if (!Auth.keypair()) {
+    if (!Auth.exists()) {
       return m.route('/');
     }
 
