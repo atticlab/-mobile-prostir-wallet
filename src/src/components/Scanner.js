@@ -20,6 +20,8 @@ var Scanner = module.exports = {
                             var getString = '?account=' + params.account;
                             getString += '&amount=' + params.amount;
                             getString += '&asset=' + params.asset;
+                            getString += '&type=' + params.t;
+                            getString += '&memo=' + params.m;
                             return m.route('/transfer' + getString);
                         }
                             break;

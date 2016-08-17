@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-    <Identity Name="com.atticlab.smartmoney.wallet" Publisher="CN=$username$" Version="0.0.75.0" />
+    <Identity Name="com.atticlab.smartmoney.wallet" Publisher="CN=$username$" Version="0.1.0.0" />
     <mp:PhoneIdentity PhoneProductId="9cf4f2b0-4a70-11e6-a864-e34711222d8c" PhonePublisherId="db093ed5-53b1-45f7-af72-751e8f36ab80" />
     <Properties>
         <DisplayName>SmartMoney Wallet</DisplayName>

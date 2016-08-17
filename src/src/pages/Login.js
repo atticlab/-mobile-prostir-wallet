@@ -4,10 +4,17 @@ var Conf = require('../config/Config.js');
 
 var Login = module.exports = {
     controller: function () {
+        var ctrl = this;
+        
+        this.appVersion = m.prop('');
         if (Auth.exists()) {
             return m.route('/home');
         }
-
+        cordova.getAppVersion.getVersionNumber(function (version) {
+            m.startComputation();
+            ctrl.appVersion('v'+version);
+            m.endComputation();
+        });
         this.login = function (e) {
             var ctrl = this;
 
@@ -44,6 +51,7 @@ var Login = module.exports = {
 
             <div class="text-center">
                 <a href="index.html" class="logo logo-lg"><i class="md md-equalizer"></i> <span>SmartMoney</span> </a>
+                <small>{ctrl.appVersion()}</small>
             </div>
 
             <form class="form-horizontal m-t-20" onsubmit={ctrl.login.bind(ctrl)}>

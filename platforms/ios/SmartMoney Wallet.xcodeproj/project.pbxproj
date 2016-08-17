@@ -60,6 +60,7 @@
 		360F221217654D7282622FCF /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAD3405D193F4E2DB6728519 /* CoreVideo.framework */; };
 		81B54C326BDD4B4A8914BC79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82495A037DE843809E11A278 /* QuartzCore.framework */; };
 		3BEFD7EDC1534E85883E81AD /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC41942505F74CDB8B927C1F /* CoreImage.framework */; };
+		1DD05E1D3A8F4064B638F618 /* AppVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A907BA00334FE99F59D011 /* AppVersion.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -172,6 +173,8 @@
 		BAD3405D193F4E2DB6728519 /* CoreVideo.framework */ = {isa = PBXFileReference; name = "CoreVideo.framework"; path = "System/Library/Frameworks/CoreVideo.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		82495A037DE843809E11A278 /* QuartzCore.framework */ = {isa = PBXFileReference; name = "QuartzCore.framework"; path = "System/Library/Frameworks/QuartzCore.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		CC41942505F74CDB8B927C1F /* CoreImage.framework */ = {isa = PBXFileReference; name = "CoreImage.framework"; path = "System/Library/Frameworks/CoreImage.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		34A907BA00334FE99F59D011 /* AppVersion.m */ = {isa = PBXFileReference; name = "AppVersion.m"; path = "cordova-plugin-app-version/AppVersion.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		5D9EEB79634B4BCFBBEAE103 /* AppVersion.h */ = {isa = PBXFileReference; name = "AppVersion.h"; path = "cordova-plugin-app-version/AppVersion.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -360,6 +363,8 @@
 				0162D70FDE96497DB7854385 /* CDVBarcodeScanner.mm */,
 				85447BC7C0A8424F87FA7FA8 /* zxing-all-in-one.cpp */,
 				59C9F63000C24513AE1CE400 /* zxing-all-in-one.h */,
+				34A907BA00334FE99F59D011 /* AppVersion.m */,
+				5D9EEB79634B4BCFBBEAE103 /* AppVersion.h */,
 			);
 			name = Plugins;
 			path = "SmartMoney Wallet/Plugins";
@@ -506,6 +511,7 @@
 				A5EE7E7213664CAD996DF615 /* CDVVibration.m in Sources */,
 				292A9615C71D4AA497D6CF95 /* CDVBarcodeScanner.mm in Resources */,
 				0045C391E6DA4009BF5F141D /* zxing-all-in-one.cpp in Resources */,
+				1DD05E1D3A8F4064B638F618 /* AppVersion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

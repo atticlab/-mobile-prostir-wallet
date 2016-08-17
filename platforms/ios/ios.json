@@ -99,6 +99,10 @@
                         {
                             "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -180,6 +184,9 @@
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         },
         "phonegap-plugin-barcodescanner": {
+            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+        },
+        "cordova-plugin-app-version": {
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         }
     },
@@ -752,6 +759,14 @@
             "clobbers": [
                 "cordova.plugins.barcodeScanner"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
+            "id": "cordova-plugin-app-version.AppVersionPlugin",
+            "pluginId": "cordova-plugin-app-version",
+            "clobbers": [
+                "cordova.getAppVersion"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -776,6 +791,7 @@
         "cordova-plugin-statusbar": "2.1.3",
         "cordova-plugin-vibration": "2.1.1",
         "cordova-plugin-whitelist": "1.2.2",
-        "phonegap-plugin-barcodescanner": "5.0.1"
+        "phonegap-plugin-barcodescanner": "5.0.1",
+        "cordova-plugin-app-version": "0.1.8"
     }
 }

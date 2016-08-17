@@ -23,8 +23,8 @@ var Invoice = module.exports = {
     this.infoAmount = m.prop(m.route.param("amount") ? m.route.param("amount") : '');
     this.infoAccount = m.prop(m.route.param("account") ? m.route.param("account") : '');
     this.infoPhone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix);
-    this.transferType = m.prop('byAccount');
-    this.infoMemo = m.prop('by_account');
+    this.transferType = m.prop((m.route.param("type") == 1) ? 'byAccount' : 'byAccount'); //TODO change when types stay > 1
+    this.infoMemo = m.prop(m.route.param("memo") ? m.route.param("memo") : 'by_account');
 
     if (!Auth.exists()) {
       return m.route('/');

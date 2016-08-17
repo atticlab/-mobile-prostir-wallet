@@ -66,6 +66,9 @@
         },
         "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "SmartMoney Wallet"
+        },
+        "cordova-plugin-app-version": {
+            "PACKAGE_NAME": "SmartMoney Wallet"
         }
     },
     "dependent_plugins": {
