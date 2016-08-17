@@ -7,6 +7,8 @@ var Login = module.exports = {
         var ctrl = this;
         
         this.appVersion = m.prop('');
+        this.backTimeOut = m.prop(false);
+
         if (Auth.exists()) {
             return m.route('/home');
         }
@@ -39,7 +41,14 @@ var Login = module.exports = {
                     }
                 })
                 .then(function () {
-                    document.addEventListener("pause", Auth.logout, false);
+                    document.addEventListener("pause", () => {
+                        // timeout for 1 minute for QR-code reading
+                        ctrl.backTimeOut(setTimeout(Auth.logout, 60*1000));
+                    }, false);
+                    document.addEventListener("resume", () => {
+                        //stop counting when app resumed
+                        clearTimeout(ctrl.backTimeOut());
+                    }, false);
                     m.onLoadingEnd();
                     m.endComputation();
                 })
