@@ -39,6 +39,7 @@ var Login = module.exports = {
                     }
                 })
                 .then(function () {
+                    document.addEventListener("pause", Auth.logout, false);
                     m.onLoadingEnd();
                     m.endComputation();
                 })

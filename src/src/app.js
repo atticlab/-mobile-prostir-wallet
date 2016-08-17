@@ -20,7 +20,6 @@ var app = {
   // The scope of `this` is the event. In order to call the `receivedEvent`
   // function, we must explicity call `app.receivedEvent(...);`
   onDeviceReady: function() {
-    console.log("onDeviceReady");
     // Routing
     m.route.mode = 'hash';
     m.route(document.getElementById('app'), "/", {
@@ -33,7 +32,7 @@ var app = {
       "/settings": require('./pages/Settings.js'),
       "/transaction/:trans_id/:target_acc/:amount/:asset": require('./pages/Transaction.js')
     });
-    
+
     app.receivedEvent('spinner');
   },
 
