@@ -1,3 +1,4 @@
+/*****/
 var Auth = require('../models/Auth.js');
 var Conf = require('../config/Config.js');
 
@@ -6,7 +7,7 @@ var Scanner = module.exports = {
     controller: function () {
         var ctrl = this;
 
-        if (!Auth.exists()) {
+        if (!Auth.keypair()) {
             return m.route('/');
         }
 

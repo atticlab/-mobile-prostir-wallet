@@ -5,7 +5,7 @@ var Conf = require('../config/Config.js');
 
 var Sign = module.exports = {
     controller: function () {
-        if (Auth.exists()) {
+        if (Auth.keypair()) {
             return m.route('/home');
         }
 
@@ -34,40 +34,28 @@ var Sign = module.exports = {
             m.onLoadingStart();
             m.startComputation();
             Auth.registration(e.target.login.value, e.target.password.value)
-                .then(function () {
-                    var qr = Qr.qrcode(4, 'M');
-                    qr.addData(e.target.password.value);
-                    qr.make();
-                    var imgTag = qr.createImgTag(4);
-                    ctrl.qr(m.trust(imgTag));
-                }, function (err) {
-                    console.log(err);
-                    if (err.name) {
-                        switch (err.name) {
-                            case 'UsernameAlreadyTaken':
-                                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Login already used"));
-                                break;
-                            default:
-                                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Service error. Please contact support"));
-                                break;
-                        }
-                    } else {
-                        $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Service error. Please contact support"));
-                    }
-
-                })
-                .then(function () {
+                .then(() => {
+                        var qr = Qr.qrcode(4, 'M');
+                        qr.addData(e.target.password.value);
+                        qr.make();
+                        var imgTag = qr.createImgTag(4);
+                        ctrl.qr(m.trust(imgTag));
+                    },
+                    err => {
+                        $.Notification.notify('error', 'top center', 'Error', err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
+                    })
+                .then(() => {
                     m.onLoadingEnd();
                     m.endComputation();
                 })
         };
     },
 
-    view: function(ctrl) {
+    view: function (ctrl) {
         if (ctrl.qr()) {
             var code = ctrl.qr();
             ctrl.qr(false);
-            var img = code.substring((code.indexOf('="')+2), (code.lastIndexOf('=="')+2));
+            var img = code.substring((code.indexOf('="') + 2), (code.lastIndexOf('=="') + 2));
             return <div class="wrapper-page">
                 <div>
                     <div class="panel panel-color panel-success">

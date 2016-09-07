@@ -488,7 +488,27 @@ module.exports = {
         'ru': "ID транзакции",
         'uk': "ID транзакції"
     },
-
+    "Date": {
+        'en': "Date",
+        'ru': "Дата",
+        'uk': "Дата"
+    },
+    "Overview of transactions history": {
+        'en': "Overview of transactions history",
+        'ru': "Обзор истории операций",
+        'uk': "Огляд історії операцій"
+    },
+    "Payments": {
+        'en': "Payments",
+        'ru': "Операции",
+        'uk': "Операції"
+    },
+    "All transactions": {
+        'en': "All transactions",
+        'ru': "Все операции",
+        'uk': "Всі операції"
+    },
+    /*****/
     //MOBILE-translations
     "Scan": {
         'en': "Scan",

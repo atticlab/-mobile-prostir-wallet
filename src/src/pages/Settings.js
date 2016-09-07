@@ -7,7 +7,7 @@ var Settings = module.exports = {
     controller: function () {
         var ctrl = this;
 
-        if (!Auth.exists()) {
+        if (!Auth.keypair()) {
             return m.route('/');
         }
 

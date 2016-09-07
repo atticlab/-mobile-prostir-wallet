@@ -30,7 +30,8 @@ var app = {
       "/sign": require('./pages/Sign.js'),
       "/transfer": require('./pages/Transfer.js'),
       "/settings": require('./pages/Settings.js'),
-      "/transaction/:trans_id/:target_acc/:amount/:asset": require('./pages/Transaction.js')
+      "/transaction/:trans_id/:target_acc/:amount/:asset": require('./pages/Transaction.js'),
+      "/payments": require('./pages/Payments.js')
     });
 
     app.receivedEvent('spinner');

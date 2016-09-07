@@ -4,12 +4,8 @@ var Conf = require('../config/Config.js');
 
 var Login = module.exports = {
     controller: function () {
-        var ctrl = this;
-        
         this.appVersion = m.prop('');
-        this.backTimeOut = m.prop(false);
-
-        if (Auth.exists()) {
+        if (Auth.keypair()) {
             return m.route('/home');
         }
         cordova.getAppVersion.getVersionNumber(function (version) {
@@ -21,6 +17,7 @@ var Login = module.exports = {
             var ctrl = this;
 
             e.preventDefault();
+
             m.onLoadingStart();
             m.startComputation();
 
@@ -29,26 +26,9 @@ var Login = module.exports = {
                     m.route('/home');
                 })
                 .catch(err => {
-                    switch (err.name) {
-                        case 'WalletNotFound':
-                            $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Login/password combination is invalid"));
-                            break;
-                        case 'ConnectionError':
-                            $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Connection error"));
-                            break;
-                        default:
-                            $.Notification.notify('error', 'top center', Conf.tr("Error"), err.name);
-                    }
+                    $.Notification.notify('error', 'top center', 'Error', err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
                 })
                 .then(function () {
-                    document.addEventListener("pause", () => {
-                        // timeout for 1 minute for QR-code reading
-                        ctrl.backTimeOut(setTimeout(Auth.logout, 60*1000));
-                    }, false);
-                    document.addEventListener("resume", () => {
-                        //stop counting when app resumed
-                        clearTimeout(ctrl.backTimeOut());
-                    }, false);
                     m.onLoadingEnd();
                     m.endComputation();
                 })
@@ -60,8 +40,11 @@ var Login = module.exports = {
         return <div class="wrapper-page">
 
             <div class="text-center">
-                <a href="index.html" class="logo logo-lg"><i class="md md-equalizer"></i> <span>SmartMoney</span> </a>
-                <small>{ctrl.appVersion()}</small>
+                <a href="index.html" class="logo logo-lg">
+                    <i class="md md-equalizer"></i>
+                    <span>SmartMoney</span>
+                    <small>{ctrl.appVersion()}</small>
+                </a>
             </div>
 
             <form class="form-horizontal m-t-20" onsubmit={ctrl.login.bind(ctrl)}>

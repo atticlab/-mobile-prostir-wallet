@@ -23,10 +23,10 @@ var Invoice = module.exports = {
     this.infoAmount = m.prop(m.route.param("amount") ? m.route.param("amount") : '');
     this.infoAccount = m.prop(m.route.param("account") ? m.route.param("account") : '');
     this.infoPhone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix);
-    this.transferType = m.prop((m.route.param("type") == 1) ? 'byAccount' : 'byAccount'); //TODO change when types stay > 1
-    this.infoMemo = m.prop(m.route.param("memo") ? m.route.param("memo") : 'by_account');
+    this.transferType = m.prop('byAccount');
+    this.infoMemo = m.prop('by_account');
 
-    if (!Auth.exists()) {
+    if (!Auth.keypair()) {
       return m.route('/');
     }
 
@@ -60,14 +60,14 @@ var Invoice = module.exports = {
       })
           .then(response => {
             var allow_inv = false;
-            Auth.balances().map(function (b) {
+            Auth.assets().map(function (b) {
               if (b.asset == response.asset) {
                 allow_inv = true;
               }
             })
 
             if (!allow_inv) {
-              $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Invalid invoice currency"));
+              m.flashError(Conf.tr("Invalid invoice currency"));
               return;
             }
 
@@ -77,10 +77,10 @@ var Invoice = module.exports = {
             this.infoAccount(response.account);
             this.transferType('byAccount');
 
-            if (typeof response.memo != 'undefined' && response.memo.toString().length > 0
-                && response.memo.toString().length <= 14
+            if (typeof response.memo == 'string' && response.memo.length > 0
+                && response.memo.length <= 14
             ) {
-              this.infoMemo(response.memo.toString());
+              this.infoMemo(response.memo);
             } else {
               this.infoMemo('by_invoice');
             }
@@ -89,10 +89,10 @@ var Invoice = module.exports = {
             // Clear input data
             e.target.code.value = '';
 
-            $.Notification.notify('success', 'top center', Conf.tr("Success"), Conf.tr("Invoice requested"));
+            m.flashSuccess(Conf.tr("Invoice requested"));
           })
           .catch(err => {
-            $.Notification.notify('error', 'top center', Conf.tr("Error"), err.name + ((err.message) ? ': ' + err.message : ''));
+            m.flashError(err.name + ((err.message) ? ': ' + err.message : ''));
           })
           .then(() => {
             m.onLoadingEnd();
@@ -102,25 +102,31 @@ var Invoice = module.exports = {
     this.processPayment = function (e) {
       e.preventDefault();
 
-      e.target.phone.value = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask)
-      e.target.phone.value = e.target.phone.value.substr(2);
-      //validate phone
-      if (e.target.phone.value.length > 0 && e.target.phone.value.match(/\d/g).length != Conf.phone.length) {
-        return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Invalid phone"));
-      }
-
-      var phoneNum = e.target.phone.value;
+      var phoneNum = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask).substr(2);
       var accountId = e.target.account.value;
       var memoText = e.target.memo.value.replace(/<\/?[^>]+(>|$)/g, ""); //delete html tags from memo
-      var error = false;
+      var amount = parseFloat(e.target.amount.value);
+
+      // validate phone
+      if (phoneNum.length > 0 && phoneNum.match(/\d/g).length != Conf.phone.length) {
+        return m.flashError(Conf.tr("Invalid phone"));
+      }
+
+      if (!amount || amount < 0) {
+        return m.flashError(Conf.tr("Amount is invalid"));
+      }
+
+      if (memoText.length > 14) {
+        return m.flashError(Conf.tr("Memo text is too long"));
+      }
 
       if (this.transferType() == 'byPhone') {
-
         var formData = new FormData();
         formData.append("phone", phoneNum);
         memoText = 'by_phone';
 
         try {
+          // TODO: move to wallet-sdk
           var xhr = new XMLHttpRequest();
           xhr.open("POST", Conf.keyserver_host + Conf.keyserver_v_url + '/get_wallet_data', false); // false for synchronous request
           xhr.send(formData);
@@ -130,48 +136,33 @@ var Invoice = module.exports = {
           if (response.status == 'fail') {
             switch (response.code) {
               case 'not_found':
-                return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("User not found! Check phone number"));
+                return m.flashError(Conf.tr("User not found! Check phone number"));
               default:
-                return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Connection error"));
+                return m.flashError(Conf.tr("Connection error"));
             }
           }
 
           accountId = response.accountId;
 
         } catch (e) {
-          return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Connection error"));
+          return m.flashError(Conf.tr("Connection error"));
         }
       }
 
       if (!StellarSdk.Keypair.isValidPublicKey(accountId)) {
-        return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Account is invalid"));
+        return m.flashError(Conf.tr("Account is invalid"));
       }
 
       if (accountId == Auth.keypair().accountId()) {
-        return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("You cannot send money to yourself"));
-      }
-
-      var amount = parseFloat(e.target.amount.value);
-      if (!amount) {
-        return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Amount is invalid"));
-      }
-
-      if (memoText.length > 14) {
-        return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Memo text is too long"));
+        return m.flashError(Conf.tr("You cannot send money to yourself"));
       }
 
       m.startComputation();
       m.onLoadingStart();
 
-      return Auth.loadAccountById(accountId)
-          .then(source => {
-            if (source.type == 'distribution_agent') {
-              return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Can't send money to distribution agent!"));
-            }
-
-            return Conf.horizon.loadAccount(Auth.keypair().accountId())
-          })
+      return Conf.horizon.loadAccount(Auth.keypair().accountId())
           .then(function (source) {
+            // TODO: Do not add memo to tx if it's empty
             var memo = StellarSdk.Memo.text(memoText);
             var tx = new StellarSdk.TransactionBuilder(source, {memo: memo})
                 .addOperation(StellarSdk.Operation.payment({
@@ -186,32 +177,28 @@ var Invoice = module.exports = {
             return Conf.horizon.submitTransaction(tx);
           })
           .then(function () {
-            $.Notification.notify('success', 'top center', Conf.tr("Success"), Conf.tr("Transfer successful"));
+            m.flashSuccess(Conf.tr("Transfer successful"));
           })
           .catch(function (err) {
-            $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Cannot make transfer"));
             console.log(err);
+            m.flashError(Conf.tr("Cannot make transfer"));
           })
           .then(function () {
             ctrl.infoAsset('');
             ctrl.infoAmount('');
             ctrl.infoAccount('');
             ctrl.infoPhone('');
-
-            m.onLoadingEnd();
             m.endComputation();
           });
-
     }
-
   },
 
   view: function (ctrl) {
     return [m.component(Navbar),
       <div class="wrapper">
         <div class="container">
+          <h2>{Conf.tr("Transfer")}</h2>
           <div class="row">
-            <h2>{Conf.tr("Transfer")}</h2>
             <form class="col-sm-4" onsubmit={ctrl.processPayment.bind(ctrl)}>
               <div class="panel panel-primary">
                 <div class="panel-heading">{Conf.tr("Transfer money")}</div>
@@ -254,7 +241,7 @@ var Invoice = module.exports = {
                   <div class="form-group">
                     <label>{Conf.tr("Asset")}</label>
                     <select name="asset" required="required" class="form-control">
-                      {Auth.balances().map(function (b) {
+                      {Auth.assets().map(function (b) {
                         return <option value={b.asset}>{b.asset}</option>
                       })}
                     </select>

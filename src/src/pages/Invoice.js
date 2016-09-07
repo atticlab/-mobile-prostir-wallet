@@ -12,7 +12,7 @@ var Invoice = module.exports = {
         this.qr = m.prop(false);
         this.barcode = m.prop(false);
 
-        if (!Auth.exists()) {
+        if (!Auth.keypair()) {
             return m.route('/');
         }
 
@@ -107,7 +107,7 @@ var Invoice = module.exports = {
                                                 <div class="form-group">
                                                     <div class="col-xs-4">
                                                         <select name="asset" class="form-control">
-                                                            {Auth.balances().map(function (b) {
+                                                            {Auth.assets().map(function (b) {
                                                                 return <option>{b.asset}</option>
                                                             })}
                                                         </select>

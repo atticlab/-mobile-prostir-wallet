@@ -1463,10 +1463,15 @@ pre {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.1);
-    background-image: url('../img/animation.gif');
-    background-repeat: no-repeat;
-    background-position: center;
     z-index: 10;
+}
+
+#spinner i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -30px;
+  margin-top: -30px;
 }
 
 .account_overflow{
