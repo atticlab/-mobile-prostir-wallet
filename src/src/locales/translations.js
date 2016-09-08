@@ -540,4 +540,54 @@ module.exports = {
         'ru': "Сканировать код",
         'uk': "Сканувати код"
     },
+    "Card has no enough money in this asset!": {
+        'en': "Card has no enough money!",
+        'ru': "На карте недостаточно денег!",
+        'uk': "На карті недостатньо коштів!"
+    },
+    "Funding successful": {
+        'en': "Funding successful",
+        'ru': "Зачисление успешно",
+        'uk': "Зарахування успішне"
+    },
+    "Can't make funding": {
+        'en': "Can't make funding",
+        'ru': "Невозможно провести зачисление",
+        'uk': "Неможливо провести зарахування"
+    },
+    "Card": {
+        'en': "Card",
+        'ru': "Карта",
+        'uk': "Карта"
+    },
+    "Scratch card": {
+        'en': "Scratch card",
+        'ru': "Карта пополнения",
+        'uk': "Карта поповнення"
+    },
+    "Your balance": {
+        'en': "Your balance",
+        'ru': "Ваш счет",
+        'uk': "Ваші кошти"
+    },
+    "Card balance": {
+        'en': "Card balance",
+        'ru': "Счет карты",
+        'uk': "Кошти на карті"
+    },
+    "How much do you want to redeem?": {
+        'en': "How much do you want to redeem?",
+        'ru': "Сколько Вы хотите перевести?",
+        'uk': "Скільки Ви хочете перевести?"
+    },
+    "Get money": {
+        'en': "Get money",
+        'ru': "Получить средства",
+        'uk': "Отримати кошти"
+    },
+    "This card is already used": {
+        'en': "This card is already used.",
+        'ru': "Эта карточка уже использована.",
+        'uk': "Ця карта вже використана."
+    }
 }

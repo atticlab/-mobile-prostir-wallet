@@ -2,6 +2,16 @@
 m.onLoadingStart = function () { document.getElementById('spinner').style.display = 'block'; }
 m.onLoadingEnd =   function () { document.getElementById('spinner').style.display = 'none'; }
 
+// Wrapper for notification which stops animation
+m.flashError = function (msg) {
+  m.onLoadingEnd();
+  $.Notification.notify('error', 'top left', 'Error', msg);
+}
+m.flashSuccess = function (msg) {
+  m.onLoadingEnd();
+  $.Notification.notify('success', 'top left', 'Success', msg);
+}
+
 var app = {
   // Application Constructor
   initialize: function() {
@@ -31,6 +41,7 @@ var app = {
       "/transfer": require('./pages/Transfer.js'),
       "/settings": require('./pages/Settings.js'),
       "/transaction/:trans_id/:target_acc/:amount/:asset": require('./pages/Transaction.js'),
+      "/cards": require('./pages/Cards.js'),
       "/payments": require('./pages/Payments.js')
     });
 

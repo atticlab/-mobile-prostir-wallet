@@ -7,9 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-app-version": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
-        },
         "cordova-plugin-camera": {
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         },
@@ -17,9 +14,6 @@
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         },
         "cordova-plugin-contacts": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
-        },
-        "cordova-plugin-device": {
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         },
         "cordova-plugin-globalization": {
@@ -35,6 +29,9 @@
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         },
         "phonegap-plugin-barcodescanner": {
+            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+        },
+        "cordova-plugin-app-version": {
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         }
     },

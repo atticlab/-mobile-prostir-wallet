@@ -19,7 +19,7 @@ var Invoice = module.exports = {
       ctrl.infoPhone = ctrl.getPhoneWithViewPattern(e.target.value);
     };
 
-    this.infoAsset = m.prop(m.prop(m.route.param('asset') ? m.route.param('asset') : ''));
+    this.infoAsset = m.prop(m.route.param('asset') ? m.route.param('asset') : '');
     this.infoAmount = m.prop(m.route.param("amount") ? m.route.param("amount") : '');
     this.infoAccount = m.prop(m.route.param("account") ? m.route.param("account") : '');
     this.infoPhone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix);
@@ -173,7 +173,6 @@ var Invoice = module.exports = {
                 .build();
 
             tx.sign(Auth.keypair());
-
             return Conf.horizon.submitTransaction(tx);
           })
           .then(function () {
@@ -246,7 +245,7 @@ var Invoice = module.exports = {
                       })}
                     </select>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" style="display:none;">
                     <label>{Conf.tr("Memo message")}</label>
                     <input name="memo"
                            size="14" maxlength="14"

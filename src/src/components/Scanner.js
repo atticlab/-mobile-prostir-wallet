@@ -2,6 +2,9 @@
 var Auth = require('../models/Auth.js');
 var Conf = require('../config/Config.js');
 
+const QR_TYPE_SEND_MONEY = 1;
+const QR_TYPE_DEBIT_CARD = 2;
+
 var Scanner = module.exports = {
 
     controller: function () {
@@ -12,12 +15,12 @@ var Scanner = module.exports = {
         }
 
         this.scanCode = function () {
-            cordova.plugins.barcodeScanner.scan(
+            return cordova.plugins.barcodeScanner.scan(
                 function (result) {
                     var params = JSON.parse(result.text);
 
                     switch (parseInt(params.t)) {
-                        case 1 :
+                        case QR_TYPE_SEND_MONEY :
                         {
                             var getString = '?account=' + params.account;
                             getString += '&amount=' + params.amount;
@@ -25,6 +28,12 @@ var Scanner = module.exports = {
                             getString += '&type=' + params.t;
                             getString += '&memo=' + params.m;
                             return m.route('/transfer' + getString);
+                        }
+                            break;
+                        case QR_TYPE_DEBIT_CARD :
+                        {
+                            var getString = '?seed=' + params.seed;
+                            return m.route('/cards' + getString);
                         }
                             break;
                         default:

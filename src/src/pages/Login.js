@@ -4,7 +4,9 @@ var Conf = require('../config/Config.js');
 
 var Login = module.exports = {
     controller: function () {
+        var ctrl = this;
         this.appVersion = m.prop('');
+
         if (Auth.keypair()) {
             return m.route('/home');
         }
@@ -14,8 +16,6 @@ var Login = module.exports = {
             m.endComputation();
         });
         this.login = function (e) {
-            var ctrl = this;
-
             e.preventDefault();
 
             m.onLoadingStart();
@@ -26,7 +26,7 @@ var Login = module.exports = {
                     m.route('/home');
                 })
                 .catch(err => {
-                    $.Notification.notify('error', 'top center', 'Error', err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
+                    m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
                 })
                 .then(function () {
                     m.onLoadingEnd();
@@ -43,8 +43,8 @@ var Login = module.exports = {
                 <a href="index.html" class="logo logo-lg">
                     <i class="md md-equalizer"></i>
                     <span>SmartMoney</span>
-                    <small>{ctrl.appVersion()}</small>
                 </a>
+                <small>{ctrl.appVersion()}</small>
             </div>
 
             <form class="form-horizontal m-t-20" onsubmit={ctrl.login.bind(ctrl)}>

@@ -32,7 +32,7 @@ var Invoice = module.exports = {
                 accountId: Auth.keypair().accountId()
             })
                 .then(id => {
-                    $.Notification.notify('success', 'top center', Conf.tr("Success"), Conf.tr("Invoice created"));
+                    m.flashSuccess(Conf.tr("Invoice created"));
                     ctrl.invoiceCode(id);
 
                     // QR-CODE
@@ -64,7 +64,7 @@ var Invoice = module.exports = {
                     m.endComputation();
                 })
                 .catch(err => {
-                    $.Notification.notify('error', 'top center', Conf.tr("Error"), err.name + ((err.message) ? ': ' + err.message : ''));
+                    m.flashError(err.name + ((err.message) ? ': ' + err.message : ''));
                 })
                 .then(() => {
                     m.onLoadingEnd();
