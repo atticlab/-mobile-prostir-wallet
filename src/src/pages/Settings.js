@@ -61,7 +61,6 @@ var Settings = module.exports = {
                     m.flashError(Conf.tr("Cannot change password"));
                 })
                 .then(function() {
-                    m.onLoadingEnd();
                     m.endComputation();
                 })
         }
@@ -108,7 +107,6 @@ var Settings = module.exports = {
                         ctrl.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + Auth.wallet().phone)
                         ctrl.email = m.prop(Auth.wallet().email || '');
 
-                        m.onLoadingEnd();
                         m.endComputation();
                     })
             }

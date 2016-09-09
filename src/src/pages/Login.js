@@ -29,7 +29,6 @@ var Login = module.exports = {
                     m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
                 })
                 .then(function () {
-                    m.onLoadingEnd();
                     m.endComputation();
                 })
 

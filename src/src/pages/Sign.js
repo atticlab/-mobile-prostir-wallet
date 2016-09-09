@@ -45,7 +45,6 @@ var Sign = module.exports = {
                         m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
                     })
                 .then(() => {
-                    m.onLoadingEnd();
                     m.endComputation();
                 })
         };
