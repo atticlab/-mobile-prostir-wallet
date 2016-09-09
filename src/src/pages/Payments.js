@@ -55,9 +55,6 @@ var Payments = module.exports = {
                 })
                 .catch(err => {
                     m.flashError(err.name + ((err.message) ? ': ' + err.message : ''));
-                })
-                .then(() => {
-                    m.onLoadingEnd();
                 });
         };
 
