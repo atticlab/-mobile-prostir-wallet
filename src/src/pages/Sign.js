@@ -17,17 +17,17 @@ var Sign = module.exports = {
             var ctrl = this;
 
             if (!e.target.login.value || !e.target.password.value || !e.target.repassword.value) {
-                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Please, fill all required fields"));
+                m.flashError(Conf.tr("Please, fill all required fields"));
                 return;
             }
 
             if (e.target.password.value.length < 6) {
-                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Password should have 6 chars min"));
+                m.flashError(Conf.tr("Error"), Conf.tr("Password should have 6 chars min"));
                 return;
             }
 
             if (e.target.password.value != e.target.repassword.value) {
-                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Passwords should match"));
+                m.flashError(Conf.tr("Passwords should match"));
                 return;
             }
 
@@ -42,7 +42,7 @@ var Sign = module.exports = {
                         ctrl.qr(m.trust(imgTag));
                     },
                     err => {
-                        $.Notification.notify('error', 'top center', 'Error', err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
+                        m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
                     })
                 .then(() => {
                     m.onLoadingEnd();

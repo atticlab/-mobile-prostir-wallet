@@ -12,7 +12,11 @@ var Navbar = module.exports = {
 
         this.toggleVisible = function () {
             this.visible(!this.visible());
+            if(this.visible()){
+                $('#mobile-spec-menu').css('max-height', $(window).height() - $('.topbar-main').height());
+            }
         }
+
     },
 
     view: function (ctrl) {
@@ -58,7 +62,7 @@ var Navbar = module.exports = {
             <div class="navbar-custom">
                 <div class="container">
                     <div id="navigation" style={ctrl.visible()? 'display:block;' : ''}>
-                        <ul class="navigation-menu">
+                        <ul class="navigation-menu" id="mobile-spec-menu">
                             <li class="has-submenu active">
                                 <a href="/" config={m.route}>
                                     <i class="md md-dashboard"></i>
