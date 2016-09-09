@@ -508,6 +508,11 @@ module.exports = {
         'ru': "Все операции",
         'uk': "Всі операції"
     },
+    "No payments yet": {
+        'en': "No payments yet",
+        'ru': "Платежей пока нет",
+        'ua': "Лпатежів поки немає"
+    },
     /*****/
     //MOBILE-translations
     "Scan": {

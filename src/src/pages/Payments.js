@@ -33,7 +33,7 @@ var Payments = module.exports = {
 
                 })
                 .catch(err => {
-                    $.Notification.notify('error', 'top center', Conf.tr("Error"), err.name + ((err.message) ? ': ' + err.message : ''));
+                    m.flashError(err.name + ((err.message) ? ': ' + err.message : ''));
                 })
 
         };
@@ -54,7 +54,7 @@ var Payments = module.exports = {
                     return ctrl.checkNextPaymentsExist();
                 })
                 .catch(err => {
-                    $.Notification.notify('error', 'top center', Conf.tr("Error"), err.name + ((err.message) ? ': ' + err.message : ''));
+                    m.flashError(err.name + ((err.message) ? ': ' + err.message : ''));
                 })
                 .then(() => {
                     m.onLoadingEnd();

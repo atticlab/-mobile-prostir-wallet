@@ -5,9 +5,9 @@ var conf = {
     master_key: 'GAWIB7ETYGSWULO4VB7D6S42YLPGIC7TY7Y2SSJKVOTMQXV5TILYWBUA',
     horizon_host: 'http://dev.stellar.attic.pw:8010/',
     assets_url: 'assets',
-    keyserver_host: 'http://keys.korzun.tk',
+    keyserver_host: 'http://keys.smartmoney.com.ua',
     keyserver_v_url: '/v2/wallets',
-    invoice_host: 'http://invoice.korzun.tk'
+    invoice_host: 'http://invoice.smartmoney.com.ua'
 };
 
 conf.phone = {

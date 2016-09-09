@@ -38,7 +38,7 @@ var Scanner = module.exports = {
                             break;
                         default:
                         {
-                            $.Notification.notify('error', 'top center', 'Error', Conf.tr('Unknown function number'));
+                            m.flashError(Conf.tr('Unknown function number'));
                             return;
                         }
                             break;
@@ -47,7 +47,7 @@ var Scanner = module.exports = {
 
                 },
                 function (error) {
-                    $.Notification.notify('error', 'top center', 'Error', Conf.tr('Scanning failed: ' + error));
+                    m.flashError(Conf.tr('Scanning failed: ' + error));
                     return;
                 },
                 {

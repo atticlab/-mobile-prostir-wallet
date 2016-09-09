@@ -29,7 +29,7 @@ var Transaction = module.exports = {
                 .catch(function (err) {
                     console.error(err);
                     m.onLoadingEnd();
-                    $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Can't load account by transaction"));
+                    m.flashError(Conf.tr("Can't load account by transaction"));
                 })
         }
 
@@ -42,7 +42,7 @@ var Transaction = module.exports = {
                 }).catch(function (err) {
                 console.log(err);
                 m.onLoadingEnd();
-                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Transaction loading error"));
+                m.flashError(Conf.tr("Transaction loading error"));
             })
         }
 

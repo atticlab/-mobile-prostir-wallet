@@ -30,22 +30,22 @@ var Settings = module.exports = {
             e.preventDefault();
 
             if (!e.target.oldpassword.value || !e.target.password.value || !e.target.repassword.value) {
-                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Please, fill all required fields"));
+                m.flashError(Conf.tr("Please, fill all required fields"));
                 return;
             }
 
             if (e.target.password.value.length < 6) {
-                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Password should have 6 chars min"));
+                m.flashError(Conf.tr("Password should have 6 chars min"));
                 return;
             }
 
             if (e.target.password.value != e.target.repassword.value) {
-                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Passwords should match"));
+                m.flashError(Conf.tr("Passwords should match"));
                 return;
             }
 
             if (e.target.oldpassword.value == e.target.password.value) {
-                $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("New password cannot be same as old"));
+                m.flashError(Conf.tr("New password cannot be same as old"));
                 return;
             }
 
@@ -54,11 +54,11 @@ var Settings = module.exports = {
 
             Auth.updatePassword(e.target.oldpassword.value, e.target.password.value)
                 .then(function() {
-                    $.Notification.notify('success', 'top center', Conf.tr("Success"), Conf.tr("Password changed"));
+                    m.flashSuccess(Conf.tr("Password changed"));
                     e.target.reset();
                 })
                 .catch(function(err) {
-                    $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Cannot change password"));
+                    m.flashError(Conf.tr("Cannot change password"));
                 })
                 .then(function() {
                     m.onLoadingEnd();
@@ -70,7 +70,7 @@ var Settings = module.exports = {
             e.preventDefault();
 
             //reformat phone to database format
-            e.target.phone.value = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask)
+            e.target.phone.value = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask);
             e.target.phone.value = e.target.phone.value.substr(2);
 
             if (e.target.email.value != Auth.wallet().email || e.target.phone.value != Auth.wallet().phone) {
@@ -78,12 +78,12 @@ var Settings = module.exports = {
                 //validate email
                 var email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 if (!email_re.test(e.target.email.value)) {
-                    return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Invalid email"));
+                    return m.flashError(Conf.tr("Invalid email"));
                 }
 
                 //validate phone
                 if (e.target.phone.value.length > 0 && e.target.phone.value.match(/\d/g).length != Conf.phone.length) {
-                    return $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Invalid phone"));
+                    return m.flashError(Conf.tr("Invalid phone"));
                 }
 
                 m.onLoadingStart();
@@ -95,13 +95,13 @@ var Settings = module.exports = {
 
                 Auth.update(dataToUpdate)
                     .then(function () {
-                        $.Notification.notify('success', 'top center', Conf.tr("Success"), Conf.tr("Profile saved"));
+                        m.flashSuccess(Conf.tr("Profile saved"));
                     })
                     .catch(function (err) {
                         if (err.message) {
-                            $.Notification.notify('error', 'top center', Conf.tr("Error"), err.message);
+                            m.flashError(err.message);
                         } else {
-                            $.Notification.notify('error', 'top center', Conf.tr("Error"), Conf.tr("Cannot update profile details"));
+                            m.flashError(Conf.tr("Cannot update profile details"));
                         }
                     })
                     .then(function() {

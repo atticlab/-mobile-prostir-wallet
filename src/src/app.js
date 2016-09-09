@@ -1,3 +1,5 @@
+var Conf = require('./config/Config.js');
+
 // Loading spinner
 m.onLoadingStart = function () { document.getElementById('spinner').style.display = 'block'; }
 m.onLoadingEnd =   function () { document.getElementById('spinner').style.display = 'none'; }
