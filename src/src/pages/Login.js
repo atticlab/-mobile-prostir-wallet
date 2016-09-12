@@ -23,6 +23,7 @@ var Login = module.exports = {
 
             Auth.login(e.target.login.value, e.target.password.value)
                 .then(function () {
+                    m.onLoadingEnd();
                     m.route('/home');
                 })
                 .catch(err => {

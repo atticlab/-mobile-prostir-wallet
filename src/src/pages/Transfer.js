@@ -24,7 +24,7 @@ var Invoice = module.exports = {
     this.infoAccount = m.prop(m.route.param("account") ? m.route.param("account") : '');
     this.infoPhone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix);
     this.transferType = m.prop('byAccount');
-    this.infoMemo = m.prop('by_account');
+    this.infoMemo = m.prop(m.route.param("memo") ? m.route.param("memo") : 'by_account');
 
     if (!Auth.keypair()) {
       return m.route('/');
