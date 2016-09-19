@@ -1,8 +1,8 @@
 /**
-* Theme: Ubold Admin Template
-* Author: Coderthemes
-* Module/App: Main Js
-*/
+ * Theme: Ubold Admin Template
+ * Author: Coderthemes
+ * Module/App: Main Js
+ */
 
 
 (function($){
@@ -24,11 +24,25 @@
         $(this).parent('li').toggleClass('open').find('.submenu:first').toggleClass('open');
       }
     });
+
+
+  }
+
+  function setMobileMenuSize(){
+
+    $(window).resize(function () {
+      if ($('#navigation').css('display') == 'block') {
+        $('#mobile-spec-menu').css('max-height', $(window).height() - $('.topbar-main').height());
+      }
+    });
+
   }
 
   function init () {
     initNavbar();
+    setMobileMenuSize();
   }
+
 
   init();
 

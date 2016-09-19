@@ -14,13 +14,12 @@ var Auth = {
 
     updateBalances: function (account_id) {
 
-        var assets          = [];
-        var balances        = [];
-        var account   = null;
+        var assets = [];
+        var balances = [];
+        var account = null;
 
         return getAnonymousAssets()
             .then(assets_list => {
-
                 Object.keys(assets_list).map(function (index) {
                     if (assets_list[index].asset_type != 'native') {
                         assets.push({
@@ -35,7 +34,6 @@ var Auth = {
             .then(source => {
 
                 var response = source.balances;
-
                 Object.keys(response).map(function (index) {
                     if (response[index].asset_type != 'native') {
                         balances.push({
@@ -52,13 +50,14 @@ var Auth = {
 
             })
             .catch(err => {
+                console.log(err);
                 //step this err, because user can be not created yet (before first payment)
             })
-            .then(function() {
+            .then(function () {
 
                 //only unique values
                 var flags = {};
-                assets = assets.filter(function(item) {
+                assets = assets.filter(function (item) {
                     if (flags[item.asset]) {
                         return false;
                     }
@@ -97,10 +96,9 @@ var Auth = {
 
                 if (typeof master.signers != 'undefined') {
 
-                    master.signers.forEach(function(signer) {
-                        if (signer.weight     == StellarSdk.xdr.SignerType.signerAdmin().value &&
-                            signer.public_key == StellarSdk.Keypair.fromSeed(wallet.getKeychainData()).accountId())
-                        {
+                    master.signers.forEach(function (signer) {
+                        if (signer.weight == StellarSdk.xdr.SignerType.signerAdmin().value &&
+                            signer.public_key == StellarSdk.Keypair.fromSeed(wallet.getKeychainData()).accountId()) {
                             is_admin = true;
                         }
                     });
@@ -114,9 +112,11 @@ var Auth = {
                 return wallet;
             })
             .then(function (wallet) {
+                m.startComputation();
                 Auth.wallet(wallet);
                 Auth.keypair(StellarSdk.Keypair.fromSeed(wallet.getKeychainData()));
                 Auth.username(wallet.username);
+                m.endComputation();
             });
     },
 
@@ -133,7 +133,7 @@ var Auth = {
             kdfParams: {
                 algorithm: 'scrypt',
                 bits: 256,
-                n: Math.pow(2, 11),
+                n: Math.pow(2, 3),
                 r: 8,
                 p: 1
             }
@@ -181,26 +181,15 @@ var Auth = {
 
 function getAnonymousAssets() {
 
-    return new Promise((resolve, reject) => {
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = false
-        xhr.timeout = 10000; // time in milliseconds
-        xhr.open("GET", Conf.horizon_host + Conf.assets_url, true); // false for synchronous request
-
-        xhr.onload = function() {
-            let response = JSON.parse(this.responseText);
-
-            if(!response){
-                reject(new Error(Conf.tr(Errors.assets_get_fail)));
-            }
-
+    return m.request({method: "GET", url: Conf.horizon_host + Conf.assets_url})
+        .then(response => {
             if (typeof response._embedded == 'undefined' || typeof response._embedded.records == 'undefined') {
-                reject(new Error(Conf.tr(Errors.assets_empty)));
+                throw new Error(Conf.tr(Errors.assets_empty));
             }
 
             let assets_list = response._embedded.records;
 
-            Object.keys(assets_list).forEach(function(key) {
+            Object.keys(assets_list).forEach(function (key) {
                 if (typeof assets_list[key].is_anonymous == 'undefined') {
                     delete assets_list[key];
                 }
@@ -209,23 +198,8 @@ function getAnonymousAssets() {
                 }
             });
 
-            resolve(assets_list);
-        }
-
-        xhr.onerror = function() {
-            reject(new Error(Conf.tr(Errors.assets_get_fail)));
-        }
-
-        xhr.ontimeout = function (e) {
-            reject(new Error(Conf.tr(Errors.assets_get_timeout)));
-        };
-
-        xhr.send();
-
-    });
-
-
-
+            return assets_list;
+        });
 }
 
 Auth.setDefaults();

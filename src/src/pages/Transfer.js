@@ -19,12 +19,12 @@ var Invoice = module.exports = {
       ctrl.infoPhone = ctrl.getPhoneWithViewPattern(e.target.value);
     };
 
-    this.infoAsset = m.prop(m.route.param('asset') ? m.route.param('asset') : '');
+    this.infoAsset = m.prop(m.prop(m.route.param('asset') ? m.route.param('asset') : ''));
     this.infoAmount = m.prop(m.route.param("amount") ? m.route.param("amount") : '');
     this.infoAccount = m.prop(m.route.param("account") ? m.route.param("account") : '');
     this.infoPhone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix);
     this.transferType = m.prop('byAccount');
-    this.infoMemo = m.prop(m.route.param("memo") ? m.route.param("memo") : 'by_account');
+    this.infoMemo = m.prop('by_account');
 
     if (!Auth.keypair()) {
       return m.route('/');
@@ -173,6 +173,7 @@ var Invoice = module.exports = {
                 .build();
 
             tx.sign(Auth.keypair());
+
             return Conf.horizon.submitTransaction(tx);
           })
           .then(function () {
@@ -196,11 +197,12 @@ var Invoice = module.exports = {
     return [m.component(Navbar),
       <div class="wrapper">
         <div class="container">
-          <h2>{Conf.tr("Transfer")}</h2>
           <div class="row">
-            <form class="col-sm-4" onsubmit={ctrl.processPayment.bind(ctrl)}>
-              <div class="panel panel-primary">
-                <div class="panel-heading">{Conf.tr("Transfer money")}</div>
+            <form class="col-lg-6" onsubmit={ctrl.processPayment.bind(ctrl)}>
+              <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">{Conf.tr("Transfer money")}</h3>
+                </div>
                 <div class="panel-body">
                   <div class="form-group">
                     <label>{Conf.tr("Transfer type")}</label>
@@ -255,21 +257,23 @@ var Invoice = module.exports = {
                            value={ctrl.infoMemo()}/>
                   </div>
                   <div class="form-group">
-                    <button class="btn btn-primary">{Conf.tr("Transfer")}</button>
+                    <button class="btn btn-primary btn-custom">{Conf.tr("Transfer")}</button>
                   </div>
                 </div>
               </div>
             </form>
-            <form class="col-sm-4" onsubmit={ctrl.getInvoice.bind(ctrl)}>
-              <div class="panel panel-primary">
-                <div class="panel-heading">{Conf.tr("Request invoice")}</div>
+            <form class="col-lg-6" onsubmit={ctrl.getInvoice.bind(ctrl)}>
+              <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">{Conf.tr("Request invoice")}</h3>
+                </div>
                 <div class="panel-body">
                   <div class="form-group">
                     <label>{Conf.tr("Invoice code")}</label>
                     <input type="number" name="code" required="required" class="form-control"/>
                   </div>
                   <div class="form-group">
-                    <button class="btn btn-primary">{Conf.tr("Request")}</button>
+                    <button class="btn btn-primary btn-custom">{Conf.tr("Request")}</button>
                   </div>
                 </div>
               </div>

@@ -2,6 +2,10 @@
   "name": "mobile-wallet",
   "version": "0.0.2",
   "description": "> wallet-mobile attic lab progect",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "eval `ssh-agent` && chmod 600 npm_key_rsa && ssh-add npm_key_rsa && npm install"
+  },
   "repository": {
     "type": "git",
     "url": "http://bitbucket.attic.pw/scm/smar/mobile-wallet.git"

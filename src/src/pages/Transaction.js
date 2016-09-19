@@ -28,7 +28,6 @@ var Transaction = module.exports = {
                 })
                 .catch(function (err) {
                     console.error(err);
-                    m.onLoadingEnd();
                     m.flashError(Conf.tr("Can't load account by transaction"));
                 })
         }
@@ -39,11 +38,11 @@ var Transaction = module.exports = {
                     m.startComputation();
                     ctrl.transaction(transactionResult);
                     m.endComputation();
-                }).catch(function (err) {
-                console.log(err);
-                m.onLoadingEnd();
-                m.flashError(Conf.tr("Transaction loading error"));
-            })
+                })
+                .catch(function (err) {
+                    console.log(err);
+                    m.flashError(Conf.tr("Transaction loading error"));
+                })
         }
 
         this.getTransaction(m.route.param("trans_id"));
@@ -55,67 +54,70 @@ var Transaction = module.exports = {
             m.component(Navbar),
             <div class="wrapper">
                 <div class="container">
-                    <h2><a href="/" config={m.route}
-                           type="button"
-                           class="btn btn-primary">
-                        <span class="fa fa-arrow-left" aria-hidden="true"></span>
-                        &nbsp;{Conf.tr("Back")}
-                    </a>&nbsp;{Conf.tr("Transaction")}</h2>
-                    <div class="panel panel-primary">
+                    <div class="panel panel-border panel-inverse">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{Conf.tr("Transaction")}</h3>
+                        </div>
+
                         <div class="panel-body">
-                            <div class="form-group">
-                                <label>{Conf.tr("Created at")}:&nbsp;</label>
-                                <span>{DateFormat(ctrl.transaction().created_at, 'dd.mm.yyyy HH:MM:ss')}</span>
-                            </div>
-                            {
-                                (ctrl.transaction().memo) ?
-                                    <div class="form-group">
-                                        <label>{Conf.tr("Transaction memo")}:&nbsp;</label>
-                                        <span>{ctrl.transaction().memo}</span>
-                                    </div>
+                            <table class="table table-bordered m-0 small-table">
+                                <tbody>
+                                <tr>
+                                    <th>{Conf.tr("Created at")}:</th>
+                                    <td>{DateFormat(ctrl.transaction().created_at, 'dd.mm.yyyy HH:MM:ss')}</td>
+                                </tr>
+                                <tr>
+                                    <th>{Conf.tr("Transaction ID")}:</th>
+                                    <td><span class="account_overflow">{ctrl.transaction().id}</span></td>
+                                </tr>
+                                <tr>
+                                    <th>{Conf.tr("Transaction amount")}:</th>
+                                    <td>{m.route.param("amount")}</td>
+                                </tr>
+                                {(ctrl.transaction().memo) ?
+                                    <tr>
+                                        <th>{Conf.tr("Transaction memo")}:</th>
+                                        <td>{ctrl.transaction().memo}</td>
+                                    </tr>
                                     :
                                     ''
-                            }
-                            <div class="form-group">
-                                <label>{Conf.tr("Target account ID")}:&nbsp;</label>
-                                <span class="account_overflow">{ctrl.account().id}</span>
-                            </div>
-                            <div class="form-group">
-                                <label>{Conf.tr("Target account balances")}:&nbsp;</label>
-                                <span>{ctrl.account().balances ? ctrl.account().balances.map(b => {
-                                    if (b.asset_type!='native') {
-                                        return parseFloat(b.balance).toFixed(2) + " " + b.asset_code + " "
-                                    } else {return '';}
-                                }): ''}</span>
-                            </div>
-                            <div class="form-group">
-                                <label>{Conf.tr("Target account type")}:&nbsp;</label>
-                                <span>{ctrl.account().type}</span>
-                            </div>
-                            <div class="hidden-xs">
-                                <label>{Conf.tr("Target account on infohost")}:&nbsp;</label>
-                                <a href={'http://info.smartmoney.com.ua/account/info/'+ctrl.account().id}
-                                   class="btn btn-secondary"
-                                   target="_blank"
-                                >
-                                    <span class="fa fa-external-link"></span>
-                                    &nbsp;{Conf.tr("Infohost")}
-                                </a>
-                            </div>
-                            <div class="hidden-xs">
-                                <label>{Conf.tr("Repeat this payment")}:&nbsp;</label>
-                                <a href={'/transfer' + '?account='+ctrl.account().id +
+                                }
+                                <tr>
+                                    <th>{Conf.tr("Target account ID")}:</th>
+                                    <td><a href={'http://info.smartmoney.com.ua/account/info/'+ctrl.account().id}
+                                           target="_blank"
+                                    ><span class="account_overflow">{ctrl.account().id}</span>
+                                    </a></td>
+                                </tr>
+                                <tr>
+                                    <th>{Conf.tr("Target account balances")}:</th>
+                                    <td>{ctrl.account().balances ? ctrl.account().balances.map(b => {
+                                        if (b.asset_type != 'native') {
+                                            return parseFloat(b.balance).toFixed(2) + " " + b.asset_code + " "
+                                        } else {
+                                            return '';
+                                        }
+                                    }) : ''}</td>
+                                </tr>
+
+                                <tr>
+                                    <th>{Conf.tr("Target account type")}:</th>
+                                    <td>{ctrl.account().type}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer text-center">
+                            <a href={'/transfer' + '?account='+ctrl.account().id +
                                                         '&amount='+m.route.param("amount") +
                                                         '&asset='+m.route.param("asset")}
-                                   config={m.route}
-                                   class="btn btn-primary"
-                                >
-                                    <span class="fa fa-repeat"></span>
-                                    &nbsp;{Conf.tr("Repeat")}
-                                </a>
-                            </div>
+                               config={m.route}
+                               class="btn btn-inverse btn-custom waves-effect w-md waves-light"
+                            >
+                                <span class="fa fa-repeat"></span>
+                                &nbsp;{Conf.tr("Repeat")}
+                            </a>
                         </div>
-                        <div class="panel-footer"><small class="account_overflow">{Conf.tr("Transaction ID")}: {ctrl.transaction().id}</small></div>
                     </div>
                 </div>
             </div>

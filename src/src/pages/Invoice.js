@@ -58,9 +58,9 @@ var Invoice = module.exports = {
 
                     m.startComputation();
                     ctrl.qr(m.trust(imgTag));
-                    ctrl.barcode(m.trust('<img width="230" height="118"' +
-                        'src="http://www.barcode-generator.org/zint/api.php?bc_number=13&bc_data=482000' +
-                        id + '">'));
+                    // ctrl.barcode(m.trust('<img width="230" height="118"' +
+                    //     'src="http://www.barcode-generator.org/zint/api.php?bc_number=13&bc_data=482000' +
+                    //     id + '">'));
                     m.endComputation();
                 })
                 .catch(err => {
@@ -78,18 +78,18 @@ var Invoice = module.exports = {
 
     view: function (ctrl) {
         var code = ctrl.qr();
-        var barCode = ctrl.barcode();
 
         return [m.component(Navbar),
             <div class="wrapper">
                 <div class="container">
-                    <h2>{Conf.tr("Invoice")}</h2>
                     <div class="row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             {
                                 (!ctrl.invoiceCode()) ?
-                                    <div class="panel panel-primary">
-                                        <div class="panel-heading">{Conf.tr("Create a new invoice")}</div>
+                                    <div class="panel panel-color panel-purple">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">{Conf.tr("Create a new invoice")}</h3>
+                                        </div>
                                         <div class="panel-body">
                                             <form class="form-horizontal" onsubmit={ctrl.createInvoice.bind(ctrl)}>
 
@@ -117,7 +117,7 @@ var Invoice = module.exports = {
                                                 <div class="form-group m-t-20">
                                                     <div class="col-sm-7">
                                                         <button
-                                                            class="btn btn-primary btn-custom w-md waves-effect waves-light"
+                                                            class="btn btn-purple btn-custom w-md waves-effect waves-light"
                                                             type="submit">
                                                             {Conf.tr("Create")}
                                                         </button>
@@ -139,7 +139,7 @@ var Invoice = module.exports = {
                                             {code}
                                             <br/>
                                             <br/>
-                                            {barCode}
+                                            {ctrl.barcode() ? ctrl.barcode() : ''}
                                             <br/>
                                             <br/>
                                             <button class="btn btn-purple waves-effect w-md waves-light m-b-5"

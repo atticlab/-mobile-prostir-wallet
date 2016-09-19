@@ -1,4 +1,4 @@
-var Footer = module.exports = {
+module.exports = {
     controller: function() {
         var ctrl = this;
     },

@@ -1,4 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700);
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,500,700);
 /*
 Template Name: Minton Dashboard
@@ -50,29 +49,11 @@ File: Responsive
     padding-left: 15px;
     padding-right: 15px;
   }
-  .wizard > .steps > ul > li {
-    width: 100%;
+  .fixedHeader-floating {
+    top: 60px !important;
   }
-  .wizard > .content {
-    padding: 0px !important;
-  }
-  .wizard > .content > .body {
+  div#datatable-buttons_info {
     float: none;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 0%;
-  }
-  .wizard.vertical > .steps {
-    display: inline;
-    float: none;
-    width: 100%;
-  }
-  .wizard.vertical > .content {
-    display: inline;
-    float: none;
-    margin: 0%;
-    width: 100%;
   }
 }
 @media (max-width: 480px) {

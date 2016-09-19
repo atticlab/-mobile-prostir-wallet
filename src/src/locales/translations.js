@@ -11,13 +11,18 @@ module.exports = {
     },
     "Create invoice": {
         'en': "Create invoice",
-        'ru': "Создать счет",
-        'uk': "Створити рахунок"
+        'ru': "Создать инвойс",
+        'uk': "Створити інвойс"
     },
     "Settings": {
         'en': "Settings",
         'ru': "Настройки",
         'uk': "Налаштування"
+    },
+    "Login": {
+        'en': "Login",
+        'ru': "Войти",
+        'uk': "Увійти"
     },
     "Logout": {
         'en': "Logout",
@@ -170,8 +175,8 @@ module.exports = {
     },
     "Sign up new account": {
         'en': "Sign up new account",
-        'ru': "Зарегистрировать новый аккаунт",
-        'uk': "Зареєструвати новий аккаунт"
+        'ru': "Создать новый аккаунт",
+        'uk': "Створити новий аккаунт"
     },
     "Characters and numbers allowed": {
         'en': "Characters and numbers allowed",
@@ -183,10 +188,10 @@ module.exports = {
         'ru': "Минимум 6 символов",
         'uk': "Мінімум 6 символів"
     },
-    "Already registered": {
-        'en': "Already registered",
-        'ru': "Уже зарегистрированы",
-        'uk': "Вже зареєстровані"
+    "Log in": {
+        'en': "Log in",
+        'ru': "Войти",
+        'uk': "Увійти"
     },
     "Sign up": {
         'en': "Sign up",
@@ -353,6 +358,11 @@ module.exports = {
         'ru': "Счет получателя",
         'uk': "Рахунок отримувача"
     },
+    "Transaction amount": {
+        'en': "Transaction amount",
+        'ru': "Сумма транзакции",
+        'uk': "Сума транзакції"
+    },
     "Target account balances": {
         'en': "Target account balances",
         'ru': "Балансы получателя",
@@ -511,7 +521,38 @@ module.exports = {
     "No payments yet": {
         'en': "No payments yet",
         'ru': "Платежей пока нет",
-        'ua': "Лпатежів поки немає"
+        'uk': "Платежів поки немає"
+    },
+    "anonymous_user" : {
+        'en': "Anonymous user",
+        'ru': "Анонимный пользователь",
+        'uk': "Анонімний користувач"
+    },
+
+    "registered_user" : {
+        'en': "Registered user",
+        'ru': "Зарегестрированный пользователь",
+        'uk': "Зареєстрований користувач"
+    },
+    "merchant" : {
+        'en': "Merchant",
+        'ru': "Мерчант",
+        'uk': "Мерчант"
+    },
+    "distribution_agent" : {
+        'en': "Distribution agent",
+        'ru': "Агент по распостранению",
+        'uk': "Агент з розповсюдження"
+    },
+    "settlement_agent" : {
+        'en': "settlement_agent",
+        'ru': "settlement_agent",
+        'uk': "settlement_agent"
+    },
+    "exchange_agent" : {
+        'en': "exchange_agent",
+        'ru': "exchange_agent",
+        'uk': "exchange_agent"
     },
     /*****/
     //MOBILE-translations
