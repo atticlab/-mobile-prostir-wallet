@@ -94,7 +94,7 @@ module.exports = {
                         </div>
 
                         <div class="panel-body">
-                            {m.component(Payments)}
+                            {m.component(Payments, {payments: ctrl.payments()})}
                         </div>
 
                         {(ctrl.next()) ?

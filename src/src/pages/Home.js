@@ -116,7 +116,7 @@ module.exports = {
                         </div>
 
                         <div class="panel-body">
-                            {m.component(Payments)}
+                            {m.component(Payments, {payments: Auth.payments()})}
                         </div>
 
                         <div class="panel-footer text-center">

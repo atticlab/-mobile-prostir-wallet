@@ -81,7 +81,7 @@ var Sign = module.exports = {
 
         return <div class="wrapper-page">
             <div class="text-center logo">
-                <img src="/assets/img/logo.svg" alt="Smartmoney logo"/>
+                <a href="/" config={m.route}><img src="assets/img/logo.svg" alt="Smartmoney logo"/></a>
                 <h4>{Conf.tr('Sign up new account')}</h4>
             </div>
 

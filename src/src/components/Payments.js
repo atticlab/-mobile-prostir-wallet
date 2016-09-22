@@ -6,13 +6,13 @@ module.exports = {
     controller: function () {
     },
 
-    view: function (ctrl) {
-        return !Auth.payments().length ?
+    view: function (ctrl, data) {
+        return !data || !data.payments.length ?
                 <p class="text-primary">{Conf.tr("No payments yet")}</p>
             :
             <div>
                 <div class="visible-xs">
-                    {Auth.payments().map(function (payment, index) {
+                    {data.payments.map(function (payment, index) {
                         var trans_link = payment._links.transaction.href;
                         var trans_id = trans_link.substr(trans_link.lastIndexOf('/') + 1);
                         var accountId = payment.to == Auth.keypair().accountId() ? payment.from : payment.to
@@ -61,7 +61,7 @@ module.exports = {
                         </tr>
                         </thead>
                         <tbody>
-                        {Auth.payments().map(function (payment) {
+                        {data.payments.map(function (payment) {
                             var trans_link = payment._links.transaction.href;
                             var trans_id = trans_link.substr(trans_link.lastIndexOf('/') + 1);
                             var accountId = payment.to == Auth.keypair().accountId() ? payment.from : payment.to

@@ -68,8 +68,12 @@ var Settings = module.exports = {
 
         this.bindData = function (e) {
             e.preventDefault();
+            //reformat phone to database format
+            e.target.phone.value = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask);
+            var phone_number = e.target.phone.value.substr(2) ? e.target.phone.value.substr(2) : null;
 
-            if (e.target.email.value != Auth.wallet().email || e.target.phone.value != Auth.wallet().phone) {
+
+            if (e.target.email.value != Auth.wallet().email || phone_number != Auth.wallet().phone) {
 
                 m.onLoadingStart();
                 m.startComputation();
@@ -83,15 +87,12 @@ var Settings = module.exports = {
                     }
                     dataToUpdate.email = e.target.email.value
                 }
-                if (e.target.phone.value) {
+                if (phone_number) {
                     //validate phone
-                    if (e.target.phone.value.length > 0 && e.target.phone.value.match(/\d/g).length != Conf.phone.length) {
+                    if (phone_number.length > 0 && phone_number.match(/\d/g).length != Conf.phone.length) {
                         return m.flashError(Conf.tr("Invalid phone"));
                     }
-                    //reformat phone to database format
-                    e.target.phone.value = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask);
-                    e.target.phone.value = e.target.phone.value.substr(2);
-                    dataToUpdate.phone = e.target.phone.value
+                    dataToUpdate.phone = phone_number
                 }
 
                 Auth.update(dataToUpdate)

@@ -98,7 +98,8 @@ var Invoice = module.exports = {
                                                         <label for="">{Conf.tr("Amount")}:</label>
                                                         <input class="form-control" type="number" required="required"
                                                                id="amount"
-                                                               min="t"
+                                                               min="0.01"
+                                                               step="0.01"
                                                                placeholder="0.00"
                                                                name="amount"/>
                                                     </div>

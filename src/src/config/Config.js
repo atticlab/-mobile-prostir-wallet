@@ -3,7 +3,7 @@ var Locales = require('../locales/translations.js');
 
 var conf = {
     master_key: 'GAWIB7ETYGSWULO4VB7D6S42YLPGIC7TY7Y2SSJKVOTMQXV5TILYWBUA',
-    horizon_host: 'http://dev.stellar.attic.pw:8010/',
+    horizon_host: 'http://blockchain.smartmoney.com.ua/',
     assets_url: 'assets',
     keyserver_host: 'http://keys.smartmoney.com.ua',
     keyserver_v_url: '/v2/wallets',

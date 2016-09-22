@@ -316,7 +316,7 @@ module.exports = {
     "Email": {
         'en': "Email",
         'ru': "Электронная почта",
-        'uk': "Електронна пошти"
+        'uk': "Електронна пошта"
     },
     "Save": {
         'en': "Save",
@@ -462,6 +462,11 @@ module.exports = {
         'en': "By phone",
         'ru': "По номеру телефона",
         'uk': "За номером телефону"
+    },
+    "by email": {
+        'en': "By email",
+        'ru': "По адресу эл. почты",
+        'uk': "За адресою ел. пошти"
     },
     "Account ID should have 56 symbols": {
         'en': "Account ID should have 56 symbols",
