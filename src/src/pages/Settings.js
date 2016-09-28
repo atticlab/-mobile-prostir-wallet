@@ -90,6 +90,8 @@ var Settings = module.exports = {
                 if (phone_number) {
                     //validate phone
                     if (phone_number.length > 0 && phone_number.match(/\d/g).length != Conf.phone.length) {
+                        ctrl.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + phone_number);
+                        m.endComputation();
                         return m.flashError(Conf.tr("Invalid phone"));
                     }
                     dataToUpdate.phone = phone_number
@@ -101,7 +103,11 @@ var Settings = module.exports = {
                     })
                     .catch(function (err) {
                         if (err.message) {
-                            m.flashError(err.message);
+                            if (err.message == 'Nothing to update') {
+                                m.flashSuccess(Conf.tr(err.message));
+                            } else {
+                                m.flashError(err.message);
+                            }
                         } else {
                             m.flashError(Conf.tr("Cannot update profile details"));
                         }

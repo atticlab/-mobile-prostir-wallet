@@ -195,8 +195,8 @@ module.exports = {
     },
     "Sign up": {
         'en': "Sign up",
-        'ru': "Зарегистрироваться",
-        'uk': "Зареєструватися"
+        'ru': "Регистрация",
+        'uk': "Реєстрація"
     },
     "Error": {
         'en': "Error",
@@ -559,6 +559,177 @@ module.exports = {
         'ru': "exchange_agent",
         'uk': "exchange_agent"
     },
+    "Username already exists" : {
+        'en': "Username already exists",
+        'ru': "Логин уже занят",
+        'uk': "Логін вже зайнятий"
+    },
+    "Invalid username" : {
+        'en': "Invalid username",
+        'ru': "Неверный логин",
+        'uk': "Невірний логін"
+    },
+    "Invalid TOTP code" : {
+        'en': "Invalid TOTP code",
+        'ru': "Неверный код TOTP",
+        'uk': "Невірний код TOTP"
+    },
+    "Invalid signature" : {
+        'en': "Invalid signature",
+        'ru': "Неверная подпись",
+        'uk': "Невірний підпис"
+    },
+    "Forbidden" : {
+        'en': "Forbidden",
+        'ru': "Запрещено",
+        'uk': "Заборонено"
+    },
+    "Invalid parameter: phone" : {
+        'en': "Invalid parameter: phone",
+        'ru': "Неверный параметр: телефон",
+        'uk': "Неверній параметр: телефон"
+    },
+    "Invalid parameter: email" : {
+        'en': "Invalid parameter: email",
+        'ru': "Неверный параметр: эл. почта",
+        'uk': "Неверній параметр: ел. пошта"
+    },
+    "User with this phone exists" : {
+        'en': "User with this phone exists",
+        'ru': "Пользователь с таким телефоном уже существует",
+        'uk': "Користувач з таким телефоном вже існує"
+    },
+    "User with this email exists" : {
+        'en': "User with this email exists",
+        'ru': "Пользователь с такой эл. почтой уже существует",
+        'uk': "Користувач з такою ел. поштою вже існує"
+    },
+    "Nothing to update" : {
+        'en': "Nothing to update",
+        'ru': "Данные не претерпели изменений",
+        'uk': "Дані не зазнали змін"
+    },
+    "Empty required parameter" : {
+        'en': "Empty required parameter",
+        'ru': "Некоторые обязательные параметры отсутствуют",
+        'uk': "Деякі обов'язкові параметри відсутні"
+    },
+    "Empty parameter: account id" : {
+        'en': "Empty parameter: account id",
+        'ru': "Пустой параметр: счет",
+        'uk': "Порожній параметр: рахунок"
+    },
+    "Empty parameter: asset" : {
+        'en': "Empty parameter: asset",
+        'ru': "Пустой параметр: валюта",
+        'uk': "Порожній параметр: валюта"
+    },
+    "Empty parameter: invoice id" : {
+        'en': "Empty parameter: invoice id",
+        'ru': "Пустой параметр: номер инфойса",
+        'uk': "Порожній параметр: номер інвойсу"
+    },
+    "Invalid parameter: amount" : {
+        'en': "Invalid parameter: amount",
+        'ru': "Неверный параметр: сумма",
+        'uk': "Неверній параметр: сума"
+    },
+    "Invalid parameter: asset" : {
+        'en': "Invalid parameter: asset",
+        'ru': "Неверный параметр: валюта",
+        'uk': "Неверній параметр: валюта"
+    },
+    "Invalid parameter: account id" : {
+        'en': "Invalid parameter: account id",
+        'ru': "Неверный параметр: счет",
+        'uk': "Неверній параметр: рахунок"
+    },
+    "Invalid parameter: invoice id" : {
+        'en': "Invalid parameter: invoice id",
+        'ru': "Неверный параметр: номер инфойса",
+        'uk': "Неверній параметр: номер інвойсу"
+    },
+    "Database error" : {
+        'en': "Database error",
+        'ru': "Ошибка базы данных",
+        'uk': "Помилка бази даних"
+    },
+    "Can not create invoice id" : {
+        'en': "Can not create invoice id",
+        'ru': "Не удалось создать инвойс",
+        'uk': "Не вдалося створити інвойс"
+    },
+    "Invoice not found" : {
+        'en': "Invoice not found",
+        'ru': "Инвойс не найден",
+        'uk': "Інвойс не знайдено"
+    },
+    "Invoice has expired" : {
+        'en': "Invoice has expired",
+        'ru': "Инвойс просрочен",
+        'uk': "Інвойс прострочений"
+    },
+    "Invoice was already requested" : {
+        'en': "Invoice was already requested",
+        'ru': "Инвойс уже использован",
+        'uk': "Інвойс вже використаний"
+    },
+    "IP-address is blocked" : {
+        'en': "IP-address is blocked",
+        'ru': "IP-адрес заблокирован",
+        'uk': "IP-адреса заблокована"
+    },
+    "IP-address exceeded the minute limit of missed requests" : {
+        'en': "IP-address exceeded the minute limit of missed requests",
+        'ru': "Минутный лимит неверных запросов для ip-адреса превышен",
+        'uk': "Хвилинний ліміт невірних запитів для ip-адреси перевищено"
+    },
+    "IP-address exceeded the daily limit of missed requests" : {
+        'en': "IP-address exceeded the daily limit of missed requests",
+        'ru': "Дневной лимит неверных запросов для ip-адреса превышен",
+        'uk': "Денний ліміт невірних запитів для ip-адреси перевищено"
+    },
+    "IP-address exceeded the daily limit of requests" : {
+        'en': "IP-address exceeded the daily limit of requests",
+        'ru': "Дневной лимит запросов для ip-адреса превышен",
+        'uk': "Денний ліміт запитів для ip-адреси перевищено"
+    },
+    "Account is blocked" : {
+        'en': "Account is blocked",
+        'ru': "Счет заблокирован",
+        'uk': "Рахунок заблоковано"
+    },
+    "Account exceeded the minute limit of missed requests" : {
+        'en': "Account exceeded the minute limit of missed requests",
+        'ru': "Минутный лимит неверных запросов для счета превышен",
+        'uk': "Хвилинний ліміт невірних запитів для рахунку перевищено"
+    },
+    "Account exceeded the daily limit of missed requests" : {
+        'en': "Account exceeded the daily limit of missed requests",
+        'ru': "Дневной лимит неверных запросов для счета превышен",
+        'uk': "Денний ліміт невірних запитів для рахунку перевищено"
+    },
+    "Account exceeded the daily limit of requests" : {
+        'en': "Account exceeded the daily limit of requests",
+        'ru': "Дневной лимит запросов для счета превышен",
+        'uk': "Денний ліміт запитів для рахунку перевищено"
+    },
+    "Account does not exist" : {
+        'en': "Account does not exist",
+        'ru': "Счет не существует",
+        'uk': "Рахунок не існує"
+    },
+    "Unknown error" : {
+        'en': "Unknown error",
+        'ru': "Неизвестная ошибка, обратитесь к администратору",
+        'uk': "Невідома помилка, зверніться до адміністратора"
+    },
+    "UpdateError" : {
+        'en': "UpdateError",
+        'ru': "Ошибка",
+        'uk': "Помилка"
+    },
+    
     /*****/
     //MOBILE-translations
     "Scan": {

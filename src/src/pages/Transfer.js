@@ -97,7 +97,7 @@ var Invoice = module.exports = {
                     m.flashSuccess(Conf.tr("Invoice requested"));
                 })
                 .catch(err => {
-                    m.flashError(err.name + ((err.message) ? ': ' + err.message : ''));
+                    m.flashError(Conf.tr(err.name) + ((err.message) ? ': ' + Conf.tr(err.message) : ''));
                 })
                 .then(() => {
                     m.onLoadingEnd();
@@ -280,9 +280,12 @@ var Invoice = module.exports = {
                                     </div>
                                     <div class="form-group">
                                         <label>{Conf.tr("Amount")}</label>
-                                        <input name="amount" required="required"
-                                               oninput={m.withAttr("value", ctrl.infoAmount)}
+                                        <input type="number" required="required" name="amount"
+                                               min="0.01"
+                                               step="0.01"
+                                               placeholder="0.00"
                                                class="form-control"
+                                               oninput={m.withAttr("value", ctrl.infoAmount)}
                                                value={ctrl.infoAmount()}/>
                                     </div>
                                     <div class="form-group">

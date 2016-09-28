@@ -34,13 +34,21 @@ var Sign = module.exports = {
             m.onLoadingStart();
             Auth.registration(e.target.login.value, e.target.password.value)
                 .then(() => {
-                        var qr = Qr.qrcode(4, 'M');
+                        /*var qr = Qr.qrcode(4, 'M');
                         qr.addData(e.target.password.value);
                         qr.make();
                         var imgTag = qr.createImgTag(4);
                         m.startComputation();
                         ctrl.qr(m.trust(imgTag));
-                        m.endComputation();
+                        m.endComputation();*/
+                        Auth.login(e.target.login.value, e.target.password.value)
+                            .then(function () {
+                                m.onLoadingEnd();
+                                m.route('/home');
+                            })
+                            .catch(err => {
+                                m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
+                            })
                     },
                     err => {
                         m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
@@ -61,7 +69,7 @@ var Sign = module.exports = {
                     <div class="panel panel-color panel-success">
                         <div class="panel-heading">
                             <h3 class="panel-title">{Conf.tr("Registration successful")}</h3>
-                            <p class="panel-sub-title font-13 text-muted">{Conf.tr("Print this QR-code and keep it in secure place. This is the only possible way to recover your password")}!</p>
+                            <p class="panel-sub-title font-13">{Conf.tr("Print this QR-code and keep it in secure place. This is the only possible way to recover your password")}!</p>
                         </div>
                         <div class="panel-body">
                             <div class="text-center">
@@ -117,15 +125,9 @@ var Sign = module.exports = {
                     </div>
                 </div>
 
-                <div class="form-group m-t-20">
-                    <div class="col-xs-6">
-                        <a href="/login" config={m.route}
-                           class="btn btn-default btn-custom waves-effect w-md waves-light m-b-5">{Conf.tr("Log in")}</a>
-                    </div>
-                    <div class="col-xs-6 text-right">
-                        <button
-                            class="btn btn-inverse btn-custom waves-effect w-md waves-light m-b-5">{Conf.tr("Sign up")}</button>
-                    </div>
+                <div class="form-group m-t-20 text-center">
+                    <button
+                        class="btn btn-inverse btn-lg btn-custom waves-effect w-md waves-light m-b-5">{Conf.tr("Sign up")}</button>
                 </div>
             </form>
         </div>

@@ -72,7 +72,7 @@ var Transaction = module.exports = {
                                 </tr>
                                 <tr>
                                     <th>{Conf.tr("Transaction amount")}:</th>
-                                    <td>{m.route.param("amount")}</td>
+                                    <td>{parseFloat(m.route.param("amount")).toFixed(2)}</td>
                                 </tr>
                                 {(ctrl.transaction().memo) ?
                                     <tr>
@@ -84,22 +84,11 @@ var Transaction = module.exports = {
                                 }
                                 <tr>
                                     <th>{Conf.tr("Target account ID")}:</th>
-                                    <td><a href={'http://info.smartmoney.com.ua/account/info/'+ctrl.account().id}
+                                    <td><a href={'http://info.smartmoney.com.ua/account?acc='+ctrl.account().id}
                                            target="_blank"
                                     ><span class="account_overflow">{ctrl.account().id}</span>
                                     </a></td>
                                 </tr>
-                                <tr>
-                                    <th>{Conf.tr("Target account balances")}:</th>
-                                    <td>{ctrl.account().balances ? ctrl.account().balances.map(b => {
-                                        if (b.asset_type != 'native') {
-                                            return parseFloat(b.balance).toFixed(2) + " " + b.asset_code + " "
-                                        } else {
-                                            return '';
-                                        }
-                                    }) : ''}</td>
-                                </tr>
-
                                 <tr>
                                     <th>{Conf.tr("Target account type")}:</th>
                                     <td>{ctrl.account().type}</td>
@@ -109,7 +98,7 @@ var Transaction = module.exports = {
                         </div>
                         <div class="panel-footer text-center">
                             <a href={'/transfer' + '?account='+ctrl.account().id +
-                                                        '&amount='+m.route.param("amount") +
+                                                        '&amount='+parseFloat(m.route.param("amount")).toFixed(2) +
                                                         '&asset='+m.route.param("asset")}
                                config={m.route}
                                class="btn btn-inverse btn-custom waves-effect w-md waves-light"
