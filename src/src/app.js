@@ -8,11 +8,16 @@ m.onLoadingEnd =   function () { document.getElementById('spinner').style.displa
 m.flashError = function (msg) {
   m.onLoadingEnd();
   $.Notification.notify('error', 'top center', Conf.tr("Error"), msg);
-}
+};
+m.flashApiError = function (err) {
+  m.onLoadingEnd();
+  var msg = err.message ? Conf.tr(err.message) + (err.description ? ': ' + Conf.tr(err.description) : '') : Conf.tr('Unknown error. Contact support');
+  $.Notification.notify('error', 'top center', Conf.tr("Error"), msg);
+};
 m.flashSuccess = function (msg) {
   m.onLoadingEnd();
   $.Notification.notify('success', 'top center', Conf.tr("Success"), msg);
-}
+};
 
 var app = {
   // Application Constructor

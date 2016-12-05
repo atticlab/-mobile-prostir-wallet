@@ -133,6 +133,27 @@ module.exports = [
         "clobbers": [
             "cordova.getAppVersion"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-device/www/device.js",
+        "id": "cordova-plugin-device.device",
+        "clobbers": [
+            "device"
+        ]
+    },
+    {
+        "file": "plugins/cordova-universal-links-plugin/www/universal_links.js",
+        "id": "cordova-universal-links-plugin.universalLinks",
+        "clobbers": [
+            "universalLinks"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-customurlscheme/www/android/LaunchMyApp.js",
+        "id": "cordova-plugin-customurlscheme.LaunchMyApp",
+        "clobbers": [
+            "window.plugins.launchmyapp"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -147,7 +168,10 @@ module.exports.metadata =
     "cordova-plugin-splashscreen": "3.2.2",
     "cordova-plugin-whitelist": "1.2.2",
     "phonegap-plugin-barcodescanner": "5.0.1",
-    "cordova-plugin-app-version": "0.1.9"
+    "cordova-plugin-app-version": "0.1.9",
+    "cordova-plugin-device": "1.1.3",
+    "cordova-universal-links-plugin": "1.2.1",
+    "cordova-plugin-customurlscheme": "4.2.0"
 };
 // BOTTOM OF METADATA
 });

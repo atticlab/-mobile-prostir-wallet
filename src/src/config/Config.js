@@ -7,7 +7,7 @@ var conf = {
     assets_url: 'assets',
     keyserver_host: 'http://keys.smartmoney.com.ua',
     keyserver_v_url: '/v2/wallets',
-    invoice_host: 'http://invoice.smartmoney.com.ua'
+    api_host: 'http://api.smartmoney.com.ua'
 };
 
 conf.phone = {
@@ -18,7 +18,6 @@ conf.phone = {
 }
 
 conf.horizon = new StellarSdk.Server(conf.horizon_host);
-conf.invoiceServer = new StellarWallet.InvoiceServer(conf.invoice_host);
 conf.locales = Locales;
 
 conf.payments = {

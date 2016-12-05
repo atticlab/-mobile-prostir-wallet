@@ -59,9 +59,8 @@ var Invoice = module.exports = {
 
             m.onLoadingStart();
 
-            Conf.invoiceServer.getInvoice({
+            Auth.api().getInvoice({
                 id: e.target.code.value,
-                accountId: Auth.keypair().accountId()
             })
                 .then(response => {
                     var allow_inv = false;
@@ -97,7 +96,7 @@ var Invoice = module.exports = {
                     m.flashSuccess(Conf.tr("Invoice requested"));
                 })
                 .catch(err => {
-                    m.flashError(Conf.tr(err.name) + ((err.message) ? ': ' + Conf.tr(err.message) : ''));
+                    m.flashApiError(err);
                 })
                 .then(() => {
                     m.onLoadingEnd();

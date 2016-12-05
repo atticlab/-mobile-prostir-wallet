@@ -17,33 +17,52 @@ var Scanner = module.exports = {
         this.scanCode = function () {
             return cordova.plugins.barcodeScanner.scan(
                 function (result) {
-                    var params = JSON.parse(result.text);
-
-                    switch (parseInt(params.t)) {
-                        case QR_TYPE_SEND_MONEY :
-                        {
-                            var getString = '?account=' + params.account;
-                            getString += '&amount=' + params.amount;
-                            getString += '&asset=' + params.asset;
-                            getString += '&type=' + params.t;
-                            getString += '&memo=' + params.m;
-                            return m.route('/transfer' + getString);
-                        }
-                            break;
-                        case QR_TYPE_DEBIT_CARD :
-                        {
-                            var getString = '?seed=' + params.seed;
+                    console.log(result.text);
+                    if (result.text.substr(0, 4) == 'http') {
+                        console.log(result.text.substr(0, 4));
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('GET',
+                            'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyDqY4a5m2DS-pV9LwENP_kofNb0FaXORrg&shortUrl=' + result.text);
+                        xhr.onload = function () {
+                            var params = JSON.parse(xhr.responseText);
+                            var p = params['longUrl'].split('?')[1].split('&');
+                            var result = {};
+                            p.forEach(function (pair) {
+                                pair = pair.split('=');
+                                result[pair[0]] = pair[1] || '';
+                            });
+                            var getString = '?seed=' + result['seed'];
                             return m.route('/cards' + getString);
-                        }
-                            break;
-                        default:
-                        {
-                            m.flashError(Conf.tr('Unknown function number'));
-                            return;
-                        }
-                            break;
-                    }
+                        };
+                        xhr.send();
+                    } else {
+                        var params = JSON.parse(result.text);
 
+                        switch (parseInt(params.t)) {
+                            case QR_TYPE_SEND_MONEY :
+                            {
+                                var getString = '?account=' + params.account;
+                                getString += '&amount=' + params.amount;
+                                getString += '&asset=' + params.asset;
+                                getString += '&type=' + params.t;
+                                getString += '&memo=' + params.m;
+                                return m.route('/transfer' + getString);
+                            }
+                                break;
+                            case QR_TYPE_DEBIT_CARD :
+                            {
+                                var getString = '?seed=' + params.seed;
+                                return m.route('/cards' + getString);
+                            }
+                                break;
+                            default:
+                            {
+                                m.flashError(Conf.tr('Unknown function number'));
+                                return;
+                            }
+                                break;
+                        }
+                    }
 
                 },
                 function (error) {
@@ -63,6 +82,7 @@ var Scanner = module.exports = {
     },
 
     view: function (ctrl) {
-        return <a href="#" onclick={ctrl.scanCode.bind(ctrl)}><i class="md md-border-outer"></i>{Conf.tr("Scan code")}</a>;
+        return <a href="#" onclick={ctrl.scanCode.bind(ctrl)}><i class="md md-border-outer"></i>{Conf.tr("Scan code")}
+        </a>;
     }
 };

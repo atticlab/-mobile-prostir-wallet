@@ -10,6 +10,7 @@ var Auth = {
         this.assets = m.prop([]);
         this.payments = m.prop([]);
         this.wallet = m.prop(false);
+        this.api = m.prop(false);
     },
 
     updateBalances: function (account_id) {
@@ -116,6 +117,7 @@ var Auth = {
                 Auth.wallet(wallet);
                 Auth.keypair(StellarSdk.Keypair.fromSeed(wallet.getKeychainData()));
                 Auth.username(wallet.username);
+                Auth.api(new StellarWallet.Api(Conf.api_host, Auth.keypair()));
                 m.endComputation();
             });
     },

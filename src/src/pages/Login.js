@@ -1,7 +1,10 @@
 var Navbar = require('../components/Navbar.js');
 var Auth = require('../models/Auth.js');
 var Conf = require('../config/Config.js');
-
+function extract(xhr, xhrOptions) {
+    console.log(xhr);
+    console.log(xhrOptions);
+}
 var Login = module.exports = {
     controller: function () {
         var ctrl = this;
@@ -9,7 +12,7 @@ var Login = module.exports = {
         if (Auth.keypair()) {
             return m.route('/home');
         }
-
+        
         /******/
         this.appVersion = m.prop('');
         cordova.getAppVersion.getVersionNumber(function (version) {

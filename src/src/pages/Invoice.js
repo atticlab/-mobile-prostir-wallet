@@ -20,20 +20,22 @@ var Invoice = module.exports = {
         this.createInvoice = function (e) {
             e.preventDefault();
 
-            var amount = e.target.amount.value
+            var amount = e.target.amount.value;
             var asset = e.target.asset.value;
             // TODO: check if asset is available in Auth.balances
 
             m.onLoadingStart();
 
-            Conf.invoiceServer.createInvoice({
-                amount: amount,
-                asset: asset,
-                accountId: Auth.keypair().accountId()
-            })
-                .then(id => {
+            Auth.api().createInvoice({asset: asset, amount: parseFloat(parseFloat(amount).toFixed(2))})
+                .then(function(response){
                     m.flashSuccess(Conf.tr("Invoice created"));
                     ctrl.invoiceCode(id);
+
+                    if (!response.id) {
+                        m.flashError(Conf.tr("Invalid response. Contact support"));
+                    }
+
+                    ctrl.invoiceCode(response.id);
 
                     // QR-CODE
                     var jsonData = {
@@ -41,7 +43,7 @@ var Invoice = module.exports = {
                         "amount": amount,
                         "asset": asset,
                         "t": 1
-                    }
+                    };
                     var jsonDataStr = JSON.stringify(jsonData);
 
                     //calculate the qrCode size
@@ -64,7 +66,7 @@ var Invoice = module.exports = {
                     m.endComputation();
                 })
                 .catch(err => {
-                    m.flashError(err.name + ((err.message) ? ': ' + err.message : ''));
+                    m.flashApiError(err);
                 })
                 .then(() => {
                     m.onLoadingEnd();
@@ -140,7 +142,7 @@ var Invoice = module.exports = {
                                             {code}
                                             <br/>
                                             <br/>
-                                            {ctrl.barcode() ? ctrl.barcode() : ''}
+                                            {/*{ctrl.barcode() ? ctrl.barcode() : ''}*/}
                                             <br/>
                                             <br/>
                                             <button class="btn btn-purple waves-effect w-md waves-light m-b-5"
