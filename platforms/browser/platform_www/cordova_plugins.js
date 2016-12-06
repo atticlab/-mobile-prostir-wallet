@@ -220,8 +220,7 @@ module.exports.metadata =
     "phonegap-plugin-barcodescanner": "5.0.1",
     "cordova-plugin-app-version": "0.1.9",
     "cordova-plugin-device": "1.1.3",
-    "cordova-universal-links-plugin": "1.2.1",
-    "cordova-plugin-customurlscheme": "4.2.0"
+    "cordova-universal-links-plugin": "1.2.1"
 }
 // BOTTOM OF METADATA
 });

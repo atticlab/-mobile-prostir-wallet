@@ -18,9 +18,6 @@
     <plugin name="phonegap-plugin-barcodescanner" source="npm" spec="~5.0.1" />
     <plugin name="cordova-plugin-app-version" source="npm" spec="~0.1.8" />
     <plugin name="cordova-plugin-device" source="npm" />
-    <plugin name="cordova-plugin-customurlscheme" source="npm">
-        <param name="URL_SCHEME" value="smwallet" />
-    </plugin>
     <icon src="icon.png" width="512" height="512" />
     <platform name="android">
         <icon density="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />

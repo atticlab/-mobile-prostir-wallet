@@ -39,13 +39,6 @@
         },
         "cordova-universal-links-plugin": {
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
-        },
-        "cordova-plugin-customurlscheme": {
-            "URL_SCHEME": "smwallet",
-            "ANDROID_SCHEME": " ",
-            "ANDROID_HOST": " ",
-            "ANDROID_PATHPREFIX": "/",
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         }
     },
     "dependent_plugins": {
