@@ -36,9 +36,6 @@
         },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
-        },
-        "cordova-universal-links-plugin": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         }
     },
     "dependent_plugins": {

@@ -81,9 +81,4 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <engine name="android" spec="~5.1.1" />
-    <universal-links>
-        <host name="router.smartmoney.com.ua/">
-            <path url="/" />
-        </host>
-    </universal-links>
 </widget>

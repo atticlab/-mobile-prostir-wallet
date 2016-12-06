@@ -140,13 +140,6 @@ module.exports = [
         "clobbers": [
             "device"
         ]
-    },
-    {
-        "file": "plugins/cordova-universal-links-plugin/www/universal_links.js",
-        "id": "cordova-universal-links-plugin.universalLinks",
-        "clobbers": [
-            "universalLinks"
-        ]
     }
 ];
 module.exports.metadata = 
@@ -162,8 +155,7 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.2.2",
     "phonegap-plugin-barcodescanner": "5.0.1",
     "cordova-plugin-app-version": "0.1.9",
-    "cordova-plugin-device": "1.1.3",
-    "cordova-universal-links-plugin": "1.2.1"
+    "cordova-plugin-device": "1.1.3"
 };
 // BOTTOM OF METADATA
 });

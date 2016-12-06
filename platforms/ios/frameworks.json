@@ -1,0 +1,12 @@
+{
+    "ImageIO.framework": 1,
+    "CoreLocation.framework": 1,
+    "AVFoundation.framework": 2,
+    "AddressBook.framework": 1,
+    "AddressBookUI.framework": 1,
+    "libiconv.dylib": 1,
+    "CoreVideo.framework": 1,
+    "QuartzCore.framework": 1,
+    "CoreImage.framework": 1,
+    "AudioToolbox.framework": 1
+}
