@@ -29,7 +29,6 @@ var Invoice = module.exports = {
             Auth.api().createInvoice({asset: asset, amount: parseFloat(parseFloat(amount).toFixed(2))})
                 .then(function(response){
                     m.flashSuccess(Conf.tr("Invoice created"));
-                    ctrl.invoiceCode(id);
 
                     if (!response.id) {
                         m.flashError(Conf.tr("Invalid response. Contact support"));
