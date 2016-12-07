@@ -10,6 +10,10 @@ m.flashError = function (msg) {
   $.Notification.notify('error', 'top center', Conf.tr("Error"), msg);
 };
 m.flashApiError = function (err) {
+  if (err && typeof err.message != 'undefined' && err.message == 'Invalid signature') {
+    window.location.href = '/';
+    return;
+  }
   m.onLoadingEnd();
   var msg = err.message ? Conf.tr(err.message) + (err.description ? ': ' + Conf.tr(err.description) : '') : Conf.tr('Unknown error. Contact support');
   $.Notification.notify('error', 'top center', Conf.tr("Error"), msg);

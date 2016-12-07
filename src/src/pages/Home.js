@@ -96,7 +96,11 @@ module.exports = {
                                 <h3 class="text-primary counter">
                                     {Auth.balances().length ?
                                         Auth.balances().map(b => {
-                                            return parseFloat(b.balance).toFixed(2) + " " + b.asset
+                                            return <div class="col-sm-2 p-t-10">
+                                            <span class="label label-primary">
+                                                {parseFloat(b.balance).toFixed(2) + " " + b.asset}
+                                            </span>
+                                            </div>
                                         })
                                         :
                                         '0.00'
