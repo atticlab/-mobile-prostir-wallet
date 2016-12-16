@@ -29,7 +29,10 @@
 <script type="text/javascript" src="cordova.js"></script>
 
 <div id="app"></div>
-<div id="spinner">
+<div id="data-spinner" style="display:none">
+    <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+</div>
+<div id="idle-spinner">
     <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
 </div>
 
@@ -48,6 +51,9 @@
 <script src="./assets/js/jquery.app.js"></script>
 
 <script src="./js/bundle.js"></script>
+
+<script src="./js/sjcl/sjcl.js"></script>
+<script src="./js/sjcl-scrypt.js"></script>
 </body>
 
 </html>

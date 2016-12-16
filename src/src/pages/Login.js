@@ -1,33 +1,40 @@
 var Navbar = require('../components/Navbar.js');
 var Auth = require('../models/Auth.js');
 var Conf = require('../config/Config.js');
-function extract(xhr, xhrOptions) {
-    console.log(xhr);
-    console.log(xhrOptions);
-}
+
 var Login = module.exports = {
     controller: function () {
         var ctrl = this;
-
+        var lastLogin = window.localStorage.getItem('lastLogin');
+        this.lastLogin = m.prop(((typeof lastLogin != 'undefined') || ((lastLogin != null))) ? lastLogin : '');
         if (Auth.keypair()) {
             return m.route('/home');
         }
-        
+
         /******/
         this.appVersion = m.prop('');
         cordova.getAppVersion.getVersionNumber(function (version) {
             m.startComputation();
-            ctrl.appVersion('v'+version);
+            ctrl.appVersion('v' + version);
             m.endComputation();
         });
+        this.makeRequest = function (method, url, done) {
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+            xhr.onload = function () {
+                done(null, xhr.response);
+            };
+            xhr.onerror = function () {
+                done(xhr.response);
+            };
+            xhr.send();
+        };
 
         this.login = function (e) {
             e.preventDefault();
-
-            m.onLoadingStart();
             Auth.login(e.target.login.value, e.target.password.value)
                 .then(function () {
-                    m.onLoadingEnd();
+                    window.localStorage.setItem('lastLogin', Auth.wallet().username);
                     m.route('/home');
                 })
                 .catch(err => {
@@ -52,7 +59,9 @@ var Login = module.exports = {
                     <div class="col-xs-12">
                         <input class="form-control" type="text" required="required" placeholder={Conf.tr("Username")}
                                autocapitalize="none"
-                               name="login"/>
+                               name="login"
+                               onchange={m.withAttr("value", ctrl.lastLogin)}
+                                value={ctrl.lastLogin()}/>
                         <i class="md md-account-circle form-control-feedback l-h-34"></i>
                     </div>
                 </div>

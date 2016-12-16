@@ -9,12 +9,12 @@
     <title>Smartmoney Mobile Wallet</title>
 
     <link href="./css/index.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="./assets/css/components.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="./assets/css/core.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/components.css" rel="stylesheet" type="text/css" />
     <link href="./assets/css/icons.css" rel="stylesheet" type="text/css" />
-    <link href="./assets/css/menu.css" rel="stylesheet" type="text/css" />
     <link href="./assets/css/pages.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/menu.css" rel="stylesheet" type="text/css" />
     <link href="./assets/css/responsive.css" rel="stylesheet" type="text/css" />
 
     <!--[if lt IE 9]>
@@ -26,28 +26,34 @@
 </head>
 
 <body>
-    <script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
 
-	<div id="app"></div>
-    <div id="spinner">
-        <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
-    </div>
+<div id="app"></div>
+<div id="data-spinner">
+    <i class="fa fa-refresh fa-spin fa-3x fa-fw spinner"></i>
+    <!--<p id="data-stage"></p>-->
+</div>
+<div id="idle-spinner">
+    <i class="fa fa-cog fa-spin fa-3x fa-fw spinner"></i>
+    <p id="idle-stage"></p>
+</div>
 
-    <script src="./js/mithril.min.js"></script>
-    <script src="./js/stellar-sdk.min.js"></script>
-    <script src="./js/stellar-wallet.min.js"></script>
-    <script src="./js/vanilla-masker.min.js"></script>
+<script src="./js/mithril.min.js"></script>
+<script src="./js/stellar-sdk.min.js"></script>
+<script src="./js/stellar-wallet.min.js"></script>
+<script src="./js/vanilla-masker.min.js"></script>
 
-    <script src="./assets/js/jquery.min.js"></script>
-    <script src="./assets/js/bootstrap.min.js"></script>
+<script src="./assets/js/jquery.min.js"></script>
+<script src="./assets/js/bootstrap.min.js"></script>
 
-    <!-- Notification js -->
-    <script src="./assets/plugins/notifyjs/dist/notify.min.js"></script>
-    <script src="./assets/plugins/notifications/notify-metro.js"></script>
-    <script src="./assets/js/jquery.core.js"></script>
-    <script src="./assets/js/jquery.app.js"></script>
+<!-- Notification js -->
+<script src="./assets/plugins/notifyjs/dist/notify.min.js"></script>
+<script src="./assets/plugins/notifications/notify-metro.js"></script>
+<script src="./assets/js/jquery.core.js"></script>
+<script src="./assets/js/jquery.app.js"></script>
 
-    <script src="./js/bundle.js"></script>
+<script src="./js/bundle.js"></script>
+
 </body>
 
 </html>
