@@ -84,6 +84,26 @@ var app = {
     receivedEvent: function (id) {
         var parentElement = document.getElementById(id);
         parentElement.setAttribute('style', 'display:none;');
+
+        document.addEventListener("offline", function() {
+            if (Conf.networkStatus !== false) {
+                m.flashError(Conf.tr('No internet connection'));
+                Conf.networkStatus = false;
+            }
+        }, false);
+
+        document.addEventListener("online", function() {
+            if (Conf.networkStatus === false) {
+                m.flashSuccess(Conf.tr("Internet connection established"));
+                Conf.networkStatus = true;
+            }
+        }, false);
+
+        if ((device != 'undefined') //it is if network plugin can't work
+            && (device.platform != 'undefined')
+            && (device.platform != 'browser')) {
+            Conf.networkStatus = true;
+        }
     }
 };
 

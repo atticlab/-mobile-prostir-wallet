@@ -74,21 +74,21 @@ var Auth = {
                 return account;
             })
     },
-    loadingCB: function(params, stage) {
+    loadingCB: function (params, stage) {
         m.startComputation();
         if (stage.type == 'request') {
-            m.onLoadingStart(stage.prevTime+' '+stage.func);
+            m.onLoadingStart(stage.prevTime + ' ' + stage.func);
         } else {
-            m.onIdleStart(stage.prevTime+' '+stage.func);
+            m.onIdleStart(stage.prevTime + ' ' + stage.func);
         }
         m.endComputation();
     },
     login: function (login, password) {
         var master = null;
         m.onIdleStart();
-        return this.loadAccountById(Conf.master_key)
+        return this.checkConnection()
+            .then(this.loadAccountById(Conf.master_key))
             .then(function (master_info) {
-
                 master = master_info;
                 return StellarWallet.getWallet({
                     server: Conf.keyserver_host + '/v2',
@@ -103,7 +103,7 @@ var Auth = {
                 m.onLoadingEnd();
                 var is_admin = false;
                 m.onIdleStart();
-                if (typeof master.signers != 'undefined') {
+                if ((typeof master != 'undefined') && (typeof master.signers != 'undefined')) {
                     master.signers.forEach(function (signer) {
                         if (signer.weight == StellarSdk.xdr.SignerType.signerAdmin().value &&
                             signer.public_key == StellarSdk.Keypair.fromSeed(wallet.getKeychainData()).accountId()) {
@@ -135,23 +135,24 @@ var Auth = {
         m.onIdleStart();
         var accountKeypair = StellarSdk.Keypair.random();
         m.onLoadingStart();
-        return StellarWallet.createWallet({
-            server: Conf.keyserver_host + '/v2',
-            username: login,
-            password: password,
-            accountId: accountKeypair.accountId(),
-            publicKey: accountKeypair.rawPublicKey().toString('base64'),
-            keychainData: accountKeypair.seed(),
-            mainData: 'mainData',
-            kdfParams: {
-                algorithm: 'scrypt',
-                bits: 256,
-                n: Math.pow(2, 11),
-                r: 8,
-                p: 1
-            },
-            cb: Auth.loadingCB
-        });
+        return this.checkConnection()
+            .then(StellarWallet.createWallet({
+                server: Conf.keyserver_host + '/v2',
+                username: login,
+                password: password,
+                accountId: accountKeypair.accountId(),
+                publicKey: accountKeypair.rawPublicKey().toString('base64'),
+                keychainData: accountKeypair.seed(),
+                mainData: 'mainData',
+                kdfParams: {
+                    algorithm: 'scrypt',
+                    bits: 256,
+                    n: Math.pow(2, 11),
+                    r: 8,
+                    p: 1
+                },
+                cb: Auth.loadingCB
+            }));
     },
 
     logout: function () {
@@ -159,38 +160,50 @@ var Auth = {
     },
 
     updatePassword: function (old_pwd, new_pwd) {
-        return StellarWallet.getWallet({
-            server: Conf.keyserver_host + '/v2',
-            username: Auth.username(),
-            password: old_pwd
-        }).then(function (wallet) {
-            return wallet.changePassword({
-                newPassword: new_pwd,
-                secretKey: Auth.keypair()._secretKey.toString('base64'),
-                cb: Auth.loadingCB
+        return this.checkConnection()
+            .then(StellarWallet.getWallet({
+                server: Conf.keyserver_host + '/v2',
+                username: Auth.username(),
+                password: old_pwd
+            }))
+            .then(function (wallet) {
+                return wallet.changePassword({
+                    newPassword: new_pwd,
+                    secretKey: Auth.keypair()._secretKey.toString('base64'),
+                    cb: Auth.loadingCB
+                });
+            }).then(function (wallet) {
+                Auth.wallet(wallet);
             });
-        }).then(function (wallet) {
-            Auth.wallet(wallet);
-        })
     },
 
     update: function (data) {
-        return Auth.wallet().update({
-            update: data,
-            secretKey: Auth.keypair()._secretKey.toString('base64')
-        });
+        return this.checkConnection()
+            .then(Auth.wallet().update({
+                update: data,
+                secretKey: Auth.keypair()._secretKey.toString('base64')
+            }));
     },
 
     loadTransactionInfo: function (tid) {
-        return Conf.horizon.transactions()
-            .transaction(tid)
-            .call()
+        return this.checkConnection()
+            .then(Conf.horizon.transactions()
+                .transaction(tid)
+                .call());
     },
 
     loadAccountById: function (aid) {
-        return Conf.horizon.accounts()
-            .accountId(aid)
-            .call();
+        return this.checkConnection()
+            .then(Conf.horizon.accounts()
+                .accountId(aid)
+                .call());
+    },
+
+    checkConnection: function () {
+        if (Conf.networkStatus === false) {
+            return Promise.reject({message: Conf.tr('No internet connection')});
+        }
+        return Promise.resolve();
     }
 };
 

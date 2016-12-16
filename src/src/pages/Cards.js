@@ -22,8 +22,9 @@ var Cards = module.exports = {
             }
             this.seed = m.prop(m.route.param('seed') ? m.route.param('seed') : '');
 
-            this.updateCardBalances = (accountId) => {
-                return Auth.loadAccountById(accountId)
+            this.updateCardBalances = function (accountId) {
+                return Auth.checkConnection()
+                    .then(Auth.loadAccountById(accountId))
                     .then(source => {
 
                         var response = source.balances;
@@ -71,7 +72,8 @@ var Cards = module.exports = {
                 }
                 //m.startComputation();
                 m.onLoadingStart();
-                Conf.horizon.loadAccount(ctrl.keypair().accountId())
+                Auth.checkConnection()
+                    .then(Conf.horizon.loadAccount(ctrl.keypair().accountId()))
                     .then(source => {
                         var memo = StellarSdk.Memo.text("funding_card");
                         var tx = new StellarSdk.TransactionBuilder(source, {memo: memo})
@@ -90,8 +92,7 @@ var Cards = module.exports = {
                         return ctrl.updateCardBalances(ctrl.keypair().accountId()).bind(ctrl);
                     })
                     .catch(err => {
-                        console.log(err);
-                        m.flashError(Conf.tr("Can't make funding"));
+                        m.flashError(err.message ? Conf.tr(err.message) : Conf.tr("Can't make funding"));
                     })
             }
 
@@ -176,7 +177,7 @@ var Cards = module.exports = {
                         </div>
                     </div> :
                     <div>
-                        
+
                     </div>
                 ,
                 m.component(Footer)

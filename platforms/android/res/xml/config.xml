@@ -33,6 +33,9 @@
     <feature name="BarcodeScanner">
         <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner" />
     </feature>
+    <feature name="NetworkStatus">
+        <param name="android-package" value="org.apache.cordova.networkinformation.NetworkManager" />
+    </feature>
     <icon density="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />
     <icon density="mdpi" src="www/res/icon/android/icon-48-mdpi.png" />
     <icon density="hdpi" src="www/res/icon/android/icon-72-hdpi.png" />

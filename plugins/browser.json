@@ -39,6 +39,9 @@
         },
         "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
         }
     },
     "dependent_plugins": {

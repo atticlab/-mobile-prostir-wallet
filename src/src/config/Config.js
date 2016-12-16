@@ -15,19 +15,21 @@ conf.phone = {
     db_mask:    "999999999999",
     length:     10,
     prefix:     "+38"
-}
+};
 
 conf.horizon = new StellarSdk.Server(conf.horizon_host);
 conf.locales = Locales;
 
 conf.payments = {
     onpage: 10
-}
+};
 
 conf.loc = new Localize(conf.locales);
 conf.loc.throwOnMissingTranslation(false);
 /*****/ var locale = (typeof navigator.language != 'undefined') ? navigator.language.substring(0,2) : "uk";
 /*****/ conf.loc.setLocale(locale);
 conf.tr = conf.loc.translate; //short alias for translation
+
+conf.networkStatus = null;
 
 var Config = module.exports = conf;

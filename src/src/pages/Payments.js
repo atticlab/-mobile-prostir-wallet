@@ -4,6 +4,9 @@ var Footer = require('../components/Footer.js');
 var Auth = require('../models/Auth.js');
 var Payments = require('../components/Payments.js');
 
+//iScroll
+var myScroll;
+
 module.exports = {
     controller: function () {
         var ctrl = this;
@@ -15,6 +18,13 @@ module.exports = {
         if (!Auth.keypair()) {
             return m.route('/');
         }
+        setTimeout(function() {
+            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+            myScroll = new IScroll('#wrapper');
+            console.debug(myScroll);
+        }, 1000);
+
+
 
         this.checkNextPaymentsExist = function () {
 
@@ -85,7 +95,7 @@ module.exports = {
     view: function (ctrl) {
         return [
             m.component(Navbar),
-            <div class="wrapper">
+            <div class="wrapper" id="wrapper">
                 <div class="container">
                     <div class="panel panel-color panel-success">
                         <div class="panel-heading">
