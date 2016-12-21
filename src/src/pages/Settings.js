@@ -17,7 +17,7 @@ var Settings = module.exports = {
                 number = Conf.phone.prefix;
             }
             return m.prop(VMasker.toPattern(number, {pattern: Conf.phone.view_mask, placeholder: "x"}));
-        }
+        };
 
         this.addPhoneViewPattern = function (e) {
             ctrl.phone = ctrl.getPhoneWithViewPattern(e.target.value);
@@ -58,44 +58,43 @@ var Settings = module.exports = {
                     e.target.reset();
                 })
                 .catch(function (err) {
-                    m.flashError(Conf.tr("Cannot change password"));
+                    m.flashError(err.message ? Conf.tr(err.message) : Conf.tr("Cannot change password"));
                 })
                 .then(function () {
                     m.onLoadingEnd();
                     m.endComputation();
                 })
-        }
+        };
 
         this.bindData = function (e) {
             e.preventDefault();
             //reformat phone to database format
             e.target.phone.value = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask);
-            var phone_number = e.target.phone.value.substr(2) ? e.target.phone.value.substr(2) : null;
-
+            var phone_number = e.target.phone.value.substr(2) ? e.target.phone.value.substr(2) : '';
 
             if (e.target.email.value != Auth.wallet().email || phone_number != Auth.wallet().phone) {
 
                 m.onLoadingStart();
-                m.startComputation();
 
                 var dataToUpdate = {};
-                if (e.target.email.value) {
+
                     //validate email
+                if (e.target.email.value.length > 0) {
                     var email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                     if (!email_re.test(e.target.email.value)) {
                         return m.flashError(Conf.tr("Invalid email"));
                     }
-                    dataToUpdate.email = e.target.email.value
                 }
-                if (phone_number) {
-                    //validate phone
-                    if (phone_number.length > 0 && phone_number.match(/\d/g).length != Conf.phone.length) {
+                dataToUpdate.email = e.target.email.value
+
+                //validate phone
+                if (phone_number.length > 0) {
+                    if (phone_number.match(/\d/g).length != Conf.phone.length) {
                         ctrl.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + phone_number);
-                        m.endComputation();
                         return m.flashError(Conf.tr("Invalid phone"));
                     }
-                    dataToUpdate.phone = phone_number
                 }
+                dataToUpdate.phone = phone_number;
 
                 Auth.update(dataToUpdate)
                     .then(function () {
@@ -113,9 +112,11 @@ var Settings = module.exports = {
                         }
                     })
                     .then(function () {
-                        ctrl.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + Auth.wallet().phone)
+                        m.startComputation();
+                        Auth.wallet().phone = dataToUpdate.phone;
+                        Auth.wallet().email = dataToUpdate.email;
+                        ctrl.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + Auth.wallet().phone);
                         ctrl.email = m.prop(Auth.wallet().email || '');
-
                         m.onLoadingEnd();
                         m.endComputation();
                     })

@@ -19,7 +19,7 @@ var Auth = {
         var balances = [];
         var account = null;
 
-        return getAnonymousAssets()
+        return Auth.getAnonymousAssets()
             .then(assets_list => {
                 Object.keys(assets_list).map(function (index) {
                     if (assets_list[index].asset_type != 'native') {
@@ -28,12 +28,10 @@ var Auth = {
                         });
                     }
                 });
-
                 // Use this function instead of load account to gather more data
                 return Auth.loadAccountById(account_id);
             })
             .then(source => {
-
                 var response = source.balances;
                 Object.keys(response).map(function (index) {
                     if (response[index].asset_type != 'native') {
@@ -41,6 +39,7 @@ var Auth = {
                             balance: response[index].balance,
                             asset: response[index].asset_code
                         });
+
                         assets.push({
                             asset: response[index].asset_code
                         });
@@ -86,8 +85,7 @@ var Auth = {
     login: function (login, password) {
         var master = null;
         m.onIdleStart();
-        return this.checkConnection()
-            .then(this.loadAccountById(Conf.master_key))
+        return this.loadAccountById(Conf.master_key)
             .then(function (master_info) {
                 master = master_info;
                 return StellarWallet.getWallet({
@@ -182,53 +180,57 @@ var Auth = {
             .then(Auth.wallet().update({
                 update: data,
                 secretKey: Auth.keypair()._secretKey.toString('base64')
-            }));
+            }))
+            .catch(e => {
+                console.error(e);
+            });
     },
 
     loadTransactionInfo: function (tid) {
-        return this.checkConnection()
-            .then(Conf.horizon.transactions()
+        return Conf.horizon.transactions()
                 .transaction(tid)
-                .call());
+                .call();
     },
 
     loadAccountById: function (aid) {
-        return this.checkConnection()
-            .then(Conf.horizon.accounts()
-                .accountId(aid)
-                .call());
+        return Conf.horizon.accounts()
+            .accountId(aid)
+            .call();
     },
 
     checkConnection: function () {
-        if (Conf.networkStatus === false) {
-            return Promise.reject({message: Conf.tr('No internet connection')});
-        }
-        return Promise.resolve();
+        return new Promise(function (resolve, reject) {
+            if ((Conf.networkStatus != null) && (Conf.networkStatus === false)) {
+                reject({message: Conf.tr('No internet connection')});
+            } else {
+                resolve();
+            }
+        });
+    },
+
+    getAnonymousAssets: function() {
+
+        return m.request({method: "GET", url: Conf.horizon_host + Conf.assets_url})
+            .then(response => {
+                if (typeof response._embedded == 'undefined' || typeof response._embedded.records == 'undefined') {
+                    throw new Error(Conf.tr(Errors.assets_empty));
+                }
+
+                let assets_list = response._embedded.records;
+
+                Object.keys(assets_list).forEach(function (key) {
+                    if (typeof assets_list[key].is_anonymous == 'undefined') {
+                        delete assets_list[key];
+                    }
+                    if (!assets_list[key].is_anonymous) {
+                        delete assets_list[key];
+                    }
+                });
+
+                return assets_list;
+            });
     }
 };
-
-function getAnonymousAssets() {
-
-    return m.request({method: "GET", url: Conf.horizon_host + Conf.assets_url})
-        .then(response => {
-            if (typeof response._embedded == 'undefined' || typeof response._embedded.records == 'undefined') {
-                throw new Error(Conf.tr(Errors.assets_empty));
-            }
-
-            let assets_list = response._embedded.records;
-
-            Object.keys(assets_list).forEach(function (key) {
-                if (typeof assets_list[key].is_anonymous == 'undefined') {
-                    delete assets_list[key];
-                }
-                if (!assets_list[key].is_anonymous) {
-                    delete assets_list[key];
-                }
-            });
-
-            return assets_list;
-        });
-}
 
 Auth.setDefaults();
 

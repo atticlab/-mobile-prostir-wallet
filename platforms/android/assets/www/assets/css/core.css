@@ -20,6 +20,7 @@ body {
   color: #4c5667;
   padding-bottom: 61px;
   overflow-x: hidden !important;
+  overflow: hidden; /* this is important to prevent the whole page to bounce */
 }
 
 html {
@@ -1852,4 +1853,22 @@ table.table td.account-td {
   .notifyjs-metro-base .text {
     width: auto!important;
   }
+}
+
+.puller {
+  position: absolute;
+  top: 72px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+#pull-info {
+  display: block;
+  align-content: center;
+  align: center;
+  text-transform: none !important;
+  width: 100%;
 }

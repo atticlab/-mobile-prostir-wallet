@@ -811,5 +811,20 @@ module.exports = {
         'en': "This card is already used.",
         'ru': "Эта карточка уже использована.",
         'uk': "Ця карта вже використана."
+    },
+    "AccountId copied!": {
+        'en': "AccountId copied!",
+        'ru': "AccountId скопирован!",
+        'uk': "AccountId скопійовано!"
+    },
+    "Release to refresh": {
+        'en': "Release to refresh",
+        'ru': "Отпустите для обновления",
+        'uk': "Відпустіть для оновлення"
+    },
+    "Card": {
+        'en': "Updating...",
+        'ru': "Обновление...",
+        'uk': "Оновлення..."
     }
 }
