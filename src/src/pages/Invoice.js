@@ -20,20 +20,19 @@ var Invoice = module.exports = {
         this.createInvoice = function (e) {
             e.preventDefault();
 
-            var amount = e.target.amount.value
+            var amount = e.target.amount.value;
             var asset = e.target.asset.value;
             // TODO: check if asset is available in Auth.balances
 
             m.onLoadingStart();
 
-            Conf.invoiceServer.createInvoice({
-                amount: amount,
-                asset: asset,
-                accountId: Auth.keypair().accountId()
-            })
-                .then(id => {
+            Auth.api().createInvoice({asset: asset, amount: parseFloat(parseFloat(amount).toFixed(2))})
+                .then(function(response) {
                     m.flashSuccess(Conf.tr("Invoice created"));
-                    ctrl.invoiceCode(id);
+                    if (typeof response.id == 'undefined') {
+                        m.flashError(Conf.tr("Invalid response. Contact support"));
+                    }
+                    ctrl.invoiceCode(response.id);
 
                     // QR-CODE
                     var jsonData = {
@@ -41,7 +40,7 @@ var Invoice = module.exports = {
                         "amount": amount,
                         "asset": asset,
                         "t": 1
-                    }
+                    };
                     var jsonDataStr = JSON.stringify(jsonData);
 
                     //calculate the qrCode size

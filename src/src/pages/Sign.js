@@ -80,7 +80,12 @@ var Sign = module.exports = {
         return <div class="wrapper-page">
 
             <div class="text-center">
-                <a href="index.html" class="logo logo-lg"><i class="md md-equalizer"></i> <span>SmartMoney</span> </a>
+                <a href="index.html" class="logo logo-lg">
+                    {((Conf.localeStr == 'uk') || (Conf.localeStr == 'ru')) ?
+                        <img class="logo-img" src="./img/logo-ua-tagline.svg" />
+                        : <img class="logo-img" src="./img/logo-en-tagline.svg" />
+                    }
+                </a>
             </div>
 
             <h4 class="text-center">{Conf.tr("Sign up new account")}</h4>

@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.atticlab.smartmoney.wallet" version="0.2.6" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>SmartMoney Wallet</name>
+<widget id="com.atticlab.smartmoney.wallet" version="0.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>Prostir Wallet</name>
     <description>
-        SmartMoney Wallet application
+        Prostir Wallet application
     </description>
-    <author email="attic.it.lab@gmail.com" href="http://smartmoney.com.ua">
+    <author email="attic.it.lab@gmail.com" href="http://wallet.euah.cf/">
         AtticLab Team
     </author>
     <content src="index.html" />

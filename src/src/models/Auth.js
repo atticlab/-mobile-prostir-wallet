@@ -10,13 +10,16 @@ var Auth = {
         this.assets = m.prop([]);
         this.payments = m.prop([]);
         this.wallet = m.prop(false);
+        this.api = m.prop(false);
+        this.ttl        = m.prop(0);
+        this.time_live  = m.prop(0);
     },
 
     updateBalances: function (account_id) {
 
-        var assets          = [];
-        var balances        = [];
-        var account   = null;
+        var assets = [];
+        var balances = [];
+        var account = null;
 
         return getAnonymousAssets()
             .then(assets_list => {
@@ -54,11 +57,11 @@ var Auth = {
             .catch(err => {
                 //step this err, because user can be not created yet (before first payment)
             })
-            .then(function() {
+            .then(function () {
 
                 //only unique values
                 var flags = {};
-                assets = assets.filter(function(item) {
+                assets = assets.filter(function (item) {
                     if (flags[item.asset]) {
                         return false;
                     }
@@ -97,10 +100,9 @@ var Auth = {
 
                 if (typeof master.signers != 'undefined') {
 
-                    master.signers.forEach(function(signer) {
-                        if (signer.weight     == StellarSdk.xdr.SignerType.signerAdmin().value &&
-                            signer.public_key == StellarSdk.Keypair.fromSeed(wallet.getKeychainData()).accountId())
-                        {
+                    master.signers.forEach(function (signer) {
+                        if (signer.weight == StellarSdk.xdr.SignerType.signerAdmin().value &&
+                            signer.public_key == StellarSdk.Keypair.fromSeed(wallet.getKeychainData()).accountId()) {
                             is_admin = true;
                         }
                     });
@@ -117,6 +119,18 @@ var Auth = {
                 Auth.wallet(wallet);
                 Auth.keypair(StellarSdk.Keypair.fromSeed(wallet.getKeychainData()));
                 Auth.username(wallet.username);
+                Auth.api(new StellarWallet.Api(Conf.api_host, Auth.keypair()));
+                Auth.api().initNonce()
+                    .then(function(ttl){
+                        Auth.ttl(ttl);
+                        Auth.time_live(Number(ttl));
+                    });
+
+                setInterval(function(){
+                    m.startComputation();
+                    Auth.ttl(Auth.api().getNonceTTL());
+                    m.endComputation();
+                }, 1000);
             });
     },
 
@@ -187,10 +201,10 @@ function getAnonymousAssets() {
         xhr.timeout = 10000; // time in milliseconds
         xhr.open("GET", Conf.horizon_host + Conf.assets_url, true); // false for synchronous request
 
-        xhr.onload = function() {
+        xhr.onload = function () {
             let response = JSON.parse(this.responseText);
 
-            if(!response){
+            if (!response) {
                 reject(new Error(Conf.tr(Errors.assets_get_fail)));
             }
 
@@ -200,7 +214,7 @@ function getAnonymousAssets() {
 
             let assets_list = response._embedded.records;
 
-            Object.keys(assets_list).forEach(function(key) {
+            Object.keys(assets_list).forEach(function (key) {
                 if (typeof assets_list[key].is_anonymous == 'undefined') {
                     delete assets_list[key];
                 }
@@ -212,7 +226,7 @@ function getAnonymousAssets() {
             resolve(assets_list);
         }
 
-        xhr.onerror = function() {
+        xhr.onerror = function () {
             reject(new Error(Conf.tr(Errors.assets_get_fail)));
         }
 
@@ -223,7 +237,6 @@ function getAnonymousAssets() {
         xhr.send();
 
     });
-
 
 
 }

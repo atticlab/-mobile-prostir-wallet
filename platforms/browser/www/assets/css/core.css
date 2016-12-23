@@ -1456,14 +1456,14 @@ pre {
 }
 
 #spinner{
-    display: none;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.1);
-    z-index: 10;
+  display: none;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 #spinner i {
@@ -1480,4 +1480,8 @@ pre {
   white-space: nowrap;
   overflow:hidden !important;
   text-overflow: ellipsis;
+}
+
+.logo-img {
+  height: 100px;
 }

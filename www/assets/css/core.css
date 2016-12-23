@@ -1481,3 +1481,7 @@ pre {
   overflow:hidden !important;
   text-overflow: ellipsis;
 }
+
+.logo-img {
+  height: 100px;
+}

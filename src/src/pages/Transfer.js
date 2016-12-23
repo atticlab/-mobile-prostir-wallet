@@ -13,7 +13,7 @@ var Invoice = module.exports = {
         number = Conf.phone.prefix;
       }
       return m.prop(VMasker.toPattern(number, {pattern: Conf.phone.view_mask, placeholder: "x"}));
-    }
+    };
 
     this.addPhoneViewPattern = function (e) {
       ctrl.infoPhone = ctrl.getPhoneWithViewPattern(e.target.value);
@@ -47,24 +47,23 @@ var Invoice = module.exports = {
           this.infoMemo('');
       }
       m.endComputation();
-    }
+    };
 
     this.getInvoice = function (e) {
       e.preventDefault();
 
       m.onLoadingStart();
 
-      Conf.invoiceServer.getInvoice({
-        id: e.target.code.value,
-        accountId: Auth.keypair().accountId()
+      Auth.api().getInvoice({
+        id: e.target.code.value
       })
-          .then(response => {
+          .then(function(response) {
             var allow_inv = false;
             Auth.assets().map(function (b) {
               if (b.asset == response.asset) {
                 allow_inv = true;
               }
-            })
+            });
 
             if (!allow_inv) {
               m.flashError(Conf.tr("Invalid invoice currency"));

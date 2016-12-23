@@ -26,7 +26,7 @@ var Login = module.exports = {
                     m.onLoadingEnd();
                     m.route('/home');
                 })
-                .catch(err => {
+                .catch(function(err) {
                     m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
                 })
                 .then(function () {
@@ -41,8 +41,10 @@ var Login = module.exports = {
 
             <div class="text-center">
                 <a href="index.html" class="logo logo-lg">
-                    <i class="md md-equalizer"></i>
-                    <span>SmartMoney</span>
+                    {((Conf.localeStr == 'uk') || (Conf.localeStr == 'ru')) ?
+                        <img class="logo-img" src="./img/logo-ua-tagline.svg" />
+                        : <img class="logo-img" src="./img/logo-en-tagline.svg" />
+                    }
                 </a>
                 <small>{ctrl.appVersion()}</small>
             </div>

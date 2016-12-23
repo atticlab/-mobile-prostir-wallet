@@ -7,11 +7,11 @@ m.onLoadingEnd =   function () { document.getElementById('spinner').style.displa
 // Wrapper for notification which stops animation
 m.flashError = function (msg) {
   m.onLoadingEnd();
-  $.Notification.notify('error', 'top center', Conf.tr("Error"), msg);
+  $.Notification.notify('error', 'top left', Conf.tr("Error"), msg);
 }
 m.flashSuccess = function (msg) {
   m.onLoadingEnd();
-  $.Notification.notify('success', 'top center', Conf.tr("Success"), msg);
+  $.Notification.notify('success', 'top left', Conf.tr("Success"), msg);
 }
 
 var app = {
