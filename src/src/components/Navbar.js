@@ -26,7 +26,12 @@ module.exports = {
             <div class="topbar-main">
                 <div class="container">
 
-                    <a href="/" config={m.route} class="logo"><img src="assets/img/logo-white.svg" alt=""/></a>
+                    <a href="/" config={m.route} class="logo">
+                        {((Conf.localeStr == 'uk') || (Conf.localeStr == 'ru')) ?
+                            <img src="./assets/img/white_yellow_ua.svg" alt=""/>
+                            : <img src="./assets/img/white_yellow_en.svg" alt="" style="margin-top: 11px !important"/>
+                        }
+                    </a>
 
                     <div class="menu-extras">
                         <ul class="nav navbar-nav navbar-right pull-right hidden-xs">

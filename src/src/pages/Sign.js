@@ -88,9 +88,14 @@ var Sign = module.exports = {
         }
 
         return <div class="wrapper-page">
-            <div class="text-center logo">
-                <a href="/" config={m.route}><img src="assets/img/logo.svg" alt="Smartmoney logo"/></a>
-                <h4>{Conf.tr('Sign up new account')}</h4>
+
+            <div class="text-center">
+                <a href="index.html" class="logo logo-lg">
+                    {((Conf.localeStr == 'uk') || (Conf.localeStr == 'ru')) ?
+                        <img class="logo-img" src="./img/logo-ua-tagline.svg" />
+                        : <img class="logo-img" src="./img/logo-en-tagline.svg" />
+                    }
+                </a>
             </div>
 
             <form class="form-horizontal m-t-20" onsubmit={ctrl.signup.bind(ctrl)}>

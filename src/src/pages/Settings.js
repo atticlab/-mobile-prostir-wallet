@@ -130,7 +130,7 @@ var Settings = module.exports = {
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="panel panel-color panel-pink">
+                            <div class="panel panel-color panel-inverse">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">{Conf.tr("Change password")}</h3>
                                 </div>
@@ -162,7 +162,7 @@ var Settings = module.exports = {
 
                                         <div class="form-group m-t-20">
                                             <div class="col-sm-7">
-                                                <button class="btn btn-pink btn-custom w-md waves-effect waves-light"
+                                                <button class="btn btn-primary btn-custom w-md waves-effect waves-light"
                                                         type="submit">
                                                     {Conf.tr("Change")}
                                                 </button>
@@ -173,7 +173,7 @@ var Settings = module.exports = {
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="panel panel-color panel-pink">
+                            <div class="panel panel-color panel-inverse">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">{Conf.tr("Change additional data")}</h3>
                                 </div>
@@ -202,7 +202,7 @@ var Settings = module.exports = {
                                                 <div class="form-group m-t-20">
                                                     <div class="col-sm-7">
                                                         <button
-                                                            class="btn btn-pink btn-custom w-md waves-effect waves-light"
+                                                            class="btn btn-primary btn-custom w-md waves-effect waves-light"
                                                             type="submit">{Conf.tr("Save")}</button>
                                                     </div>
                                                 </div>

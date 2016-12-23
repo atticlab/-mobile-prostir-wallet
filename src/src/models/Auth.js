@@ -11,6 +11,8 @@ var Auth = {
         this.payments = m.prop([]);
         this.wallet = m.prop(false);
         this.api = m.prop(false);
+        this.ttl = m.prop(0);
+        this.time_live = m.prop(0);
     },
 
     updateBalances: function (account_id) {
@@ -188,8 +190,8 @@ var Auth = {
 
     loadTransactionInfo: function (tid) {
         return Conf.horizon.transactions()
-                .transaction(tid)
-                .call();
+            .transaction(tid)
+            .call();
     },
 
     loadAccountById: function (aid) {
@@ -208,7 +210,7 @@ var Auth = {
         });
     },
 
-    getAnonymousAssets: function() {
+    getAnonymousAssets: function () {
 
         return m.request({method: "GET", url: Conf.horizon_host + Conf.assets_url})
             .then(response => {

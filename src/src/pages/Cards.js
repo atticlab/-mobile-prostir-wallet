@@ -80,7 +80,7 @@ var Cards = module.exports = {
                             .addOperation(StellarSdk.Operation.payment({
                                 destination: Auth.keypair().accountId(),
                                 amount: amount,
-                                asset: new StellarSdk.Asset(e.target.asset.value, Conf.master_key)
+                                asset: new StellarSdk.Asset(Conf.defaultAsset, Conf.master_key)
                             }))
                             .build();
                         tx.sign(ctrl.keypair());
@@ -106,7 +106,7 @@ var Cards = module.exports = {
                             <h2>{Conf.tr("Card")}</h2>
                             <div class="row">
                                 <form class="col-sm-4" onsubmit={ctrl.processTransfer.bind(ctrl)}>
-                                    <div class="panel panel-primary">
+                                    <div class="panel panel-inverse">
                                         <div class="panel-heading">{Conf.tr("Scratch card")}</div>
                                         <div class="panel-body">
                                             <table class="table m-b-30">
@@ -116,7 +116,7 @@ var Cards = module.exports = {
                                                         <td>
                                                             <b>
                                                                 {Auth.balances().map(b => {
-                                                                    return parseFloat(b.balance).toFixed(2) + " " + b.asset
+                                                                    return parseFloat(b.balance).toFixed(2) + " " + Conf.defaultAsset
                                                                 })}
                                                             </b>
                                                         </td>
@@ -128,7 +128,7 @@ var Cards = module.exports = {
                                                     <td>{Conf.tr("Card balance")}:</td>
                                                     <td>
                                                         {ctrl.balances().map(b => {
-                                                            return parseFloat(b.balance).toFixed(2) + " " + b.asset
+                                                            return parseFloat(b.balance).toFixed(2) + " " + Conf.defaultAsset
                                                         })}
                                                     </td>
                                                 </tr>
@@ -144,14 +144,6 @@ var Cards = module.exports = {
                                                                value={ctrl.needle_balance()}
                                                                oninput={m.withAttr('value', ctrl.needle_balance)}
                                                                required="required" class="form-control"/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>{Conf.tr("Asset")}</label>
-                                                        <select name="asset" required="required" class="form-control">
-                                                            {ctrl.assets().map(b => {
-                                                                return <option value={b.asset}>{b.asset}</option>
-                                                            })}
-                                                        </select>
                                                     </div>
                                                     <div class="form-group">
                                                         <button class="btn btn-primary">{Conf.tr("Get money")}</button>

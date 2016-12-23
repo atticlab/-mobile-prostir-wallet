@@ -34,14 +34,14 @@ module.exports = {
                                                                     <i class="fa fa-sign-in fa-fw"
                                                                        aria-hidden="true"></i>
                                             &nbsp;
-                                            {parseFloat(payment.amount).toFixed(2)} {payment.asset_code}
+                                            {parseFloat(payment.amount).toFixed(2)} {Conf.defaultAsset}
                                                                 </span>
                                         :
                                         <span class="label label-danger">
                                                                     <i class="fa fa-sign-out fa-fw"
                                                                        aria-hidden="true"></i>
                                             &nbsp;
-                                            {parseFloat(payment.amount).toFixed(2)} {payment.asset_code}
+                                            {parseFloat(payment.amount).toFixed(2)} {Conf.defaultAsset}
                                                                 </span>
                                     }
                                 </div>
@@ -75,7 +75,7 @@ module.exports = {
                                     </a>
                                 </td>
                                 <td>{DateFormat(payment.closed_at, 'dd.mm.yyyy HH:MM:ss')}</td>
-                                <td>{parseFloat(payment.amount).toFixed(2)} {payment.asset_code}</td>
+                                <td>{parseFloat(payment.amount).toFixed(2)} {Conf.defaultAsset}</td>
                                 <td>
                                     {payment.to == Auth.keypair().accountId() ?
                                         <span class="label label-success">

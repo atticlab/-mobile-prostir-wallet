@@ -4,16 +4,16 @@ var Auth = require('../models/Auth.js');
 
 var Invoice = module.exports = {
 
-    controller: function () {
-        var ctrl = this;
+  controller: function () {
+    var ctrl = this;
 
-        //return phone in pattern or prefix
-        this.getPhoneWithViewPattern = function (number) {
-            if (number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix) {
-                number = Conf.phone.prefix;
-            }
-            return m.prop(VMasker.toPattern(number, {pattern: Conf.phone.view_mask, placeholder: "x"}));
-        }
+    //return phone in pattern or prefix
+    this.getPhoneWithViewPattern = function (number) {
+      if (number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix) {
+        number = Conf.phone.prefix;
+      }
+      return m.prop(VMasker.toPattern(number, {pattern: Conf.phone.view_mask, placeholder: "x"}));
+    };
 
         this.addPhoneViewPattern = function (e) {
             ctrl.infoPhone = ctrl.getPhoneWithViewPattern(e.target.value);
@@ -105,7 +105,6 @@ var Invoice = module.exports = {
 
         this.processPayment = function (e) {
             e.preventDefault();
-
             var phoneNum = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask).substr(2);
             var email = e.target.email.value.toLowerCase();
             var accountId = e.target.account.value;
@@ -202,7 +201,7 @@ var Invoice = module.exports = {
                         .addOperation(StellarSdk.Operation.payment({
                             destination: accountId,
                             amount: amount.toString(),
-                            asset: new StellarSdk.Asset(e.target.asset.value, Conf.master_key)
+                            asset: new StellarSdk.Asset(Conf.defaultAsset, Conf.master_key)
                         }))
                         .build();
 
@@ -234,7 +233,7 @@ var Invoice = module.exports = {
                 <div class="container">
                     <div class="row">
                         <form class="col-lg-6" onsubmit={ctrl.processPayment.bind(ctrl)}>
-                            <div class="panel panel-color panel-primary">
+                            <div class="panel panel-color panel-inverse">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">{Conf.tr("Transfer money")}</h3>
                                 </div>
@@ -287,14 +286,6 @@ var Invoice = module.exports = {
                                                oninput={m.withAttr("value", ctrl.infoAmount)}
                                                value={ctrl.infoAmount()}/>
                                     </div>
-                                    <div class="form-group">
-                                        <label>{Conf.tr("Asset")}</label>
-                                        <select name="asset" required="required" class="form-control">
-                                            {Auth.assets().map(function (b) {
-                                                return <option value={b.asset}>{b.asset}</option>
-                                            })}
-                                        </select>
-                                    </div>
                                     <div class="form-group" style="display:none;">
                                         <label>{Conf.tr("Memo message")}</label>
                                         <input name="memo"
@@ -311,7 +302,7 @@ var Invoice = module.exports = {
                             </div>
                         </form>
                         <form class="col-lg-6" onsubmit={ctrl.getInvoice.bind(ctrl)}>
-                            <div class="panel panel-color panel-primary">
+                            <div class="panel panel-color panel-inverse">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">{Conf.tr("Request invoice")}</h3>
                                 </div>

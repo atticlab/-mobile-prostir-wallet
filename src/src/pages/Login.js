@@ -37,7 +37,7 @@ var Login = module.exports = {
                     window.localStorage.setItem('lastLogin', Auth.wallet().username);
                     m.route('/home');
                 })
-                .catch(err => {
+                .catch(function(err) {
                     m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
                 })
         };
@@ -46,9 +46,14 @@ var Login = module.exports = {
     view: function (ctrl) {
         return <div class="wrapper-page">
 
-            <div class="text-center logo">
-                <img src="assets/img/logo.svg" alt="Smartmoney logo"/>
-                <br />
+            <div class="text-center">
+                <a href="index.html" class="logo logo-lg">
+                    {((Conf.localeStr == 'uk') || (Conf.localeStr == 'ru')) ?
+                        <img class="logo-img" src="./img/logo-ua-tagline.svg" />
+                        : <img class="logo-img" src="./img/logo-en-tagline.svg" />
+                    }
+                </a>
+
                 <small>{ctrl.appVersion()}</small>
                 <h4>{Conf.tr('Login')}</h4>
             </div>
@@ -70,6 +75,7 @@ var Login = module.exports = {
                     <div class="col-xs-12">
                         <input class="form-control" type="password" required="required" autocapitalize="none"
                                placeholder={Conf.tr("Password")}
+                               value="123123"
                                name="password"/>
                         <i class="md md-vpn-key form-control-feedback l-h-34"></i>
                     </div>
@@ -81,7 +87,7 @@ var Login = module.exports = {
                            class="btn btn-default btn-custom waves-effect w-md waves-light m-b-5">{Conf.tr("Create an account")}</a>
                     </div>
                     <div class="col-xs-6 text-right">
-                        <button class="btn btn-inverse btn-custom waves-effect w-md waves-light m-b-5"
+                        <button class="btn btn-primary btn-custom waves-effect w-md waves-light m-b-5"
                                 type="submit">{Conf.tr("Log in")}
                         </button>
                     </div>

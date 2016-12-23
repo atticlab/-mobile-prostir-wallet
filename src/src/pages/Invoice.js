@@ -21,19 +21,17 @@ var Invoice = module.exports = {
             e.preventDefault();
 
             var amount = e.target.amount.value;
-            var asset = e.target.asset.value;
+            var asset = Conf.defaultAsset;
             // TODO: check if asset is available in Auth.balances
 
             m.onLoadingStart();
 
             Auth.api().createInvoice({asset: asset, amount: parseFloat(parseFloat(amount).toFixed(2))})
-                .then(function(response){
+                .then(function(response) {
                     m.flashSuccess(Conf.tr("Invoice created"));
-
-                    if (!response.id) {
+                    if (typeof response.id == 'undefined') {
                         m.flashError(Conf.tr("Invalid response. Contact support"));
                     }
-
                     ctrl.invoiceCode(response.id);
 
                     // QR-CODE
@@ -87,7 +85,7 @@ var Invoice = module.exports = {
                         <div class="col-lg-6">
                             {
                                 (!ctrl.invoiceCode()) ?
-                                    <div class="panel panel-color panel-purple">
+                                    <div class="panel panel-color panel-inverse">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">{Conf.tr("Create a new invoice")}</h3>
                                         </div>
@@ -106,20 +104,10 @@ var Invoice = module.exports = {
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group">
-                                                    <div class="col-xs-4">
-                                                        <select name="asset" class="form-control">
-                                                            {Auth.assets().map(function (b) {
-                                                                return <option>{b.asset}</option>
-                                                            })}
-                                                        </select>
-                                                    </div>
-                                                </div>
-
                                                 <div class="form-group m-t-20">
                                                     <div class="col-sm-7">
                                                         <button
-                                                            class="btn btn-purple btn-custom w-md waves-effect waves-light"
+                                                            class="btn btn-primary btn-custom w-md waves-effect waves-light"
                                                             type="submit">
                                                             {Conf.tr("Create")}
                                                         </button>

@@ -6,20 +6,20 @@ m.onLoadingStart = function (stage) {
         document.getElementById('data-stage').innerHTML = stage;
     }*/
     m.onIdleEnd();
-    document.getElementById('data-spinner').style.display = 'block';
+    document.getElementById('spinner').style.display = 'block';
 };
 m.onLoadingEnd = function () {
-    document.getElementById('data-spinner').style.display = 'none';
+    document.getElementById('spinner').style.display = 'none';
 };
 m.onIdleStart = function (stage) {
     /*if (typeof stage != 'undefined') {
         document.getElementById('idle-stage').innerHTML = stage;
     }*/
     m.onLoadingEnd();
-    document.getElementById('idle-spinner').style.display = 'block';
+    document.getElementById('spinner').style.display = 'block';
 };
 m.onIdleEnd = function () {
-    document.getElementById('idle-spinner').style.display = 'none';
+    document.getElementById('spinner').style.display = 'none';
 };
 
 // Wrapper for notification which stops animation
@@ -43,6 +43,7 @@ m.flashSuccess = function (msg) {
     m.onIdleEnd();
     $.Notification.notify('success', 'top center', Conf.tr("Success"), msg);
 };
+
 
 var app = {
     // Application Constructor
@@ -77,7 +78,7 @@ var app = {
             "/payments": require('./pages/Payments.js')
         });
 
-        app.receivedEvent('idle-spinner');
+        app.receivedEvent('spinner');
     },
 
     // Update DOM on a Received Event
