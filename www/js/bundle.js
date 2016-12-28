@@ -2571,8 +2571,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                             var trans_url = '/transaction/' + trans_id + '/' + accountId + '/' + payment.amount + '/' + payment.asset_code;
                             return { tag: "div", attrs: { class: "payment" }, children: [{ tag: "a", attrs: { class: "account_overflow", href: trans_url, config: m.route,
                                         title: accountId }, children: [accountId] }, { tag: "div", attrs: { class: "row" }, children: [{ tag: "div", attrs: { class: "col-xs-7" }, children: [{ tag: "p", attrs: { class: "text-muted" }, children: [DateFormat(payment.closed_at, 'dd.mm.yyyy HH:MM:ss')] }] }, { tag: "div", attrs: { class: "col-xs-5 text-right" }, children: [payment.to == Auth.keypair().accountId() ? { tag: "span", attrs: { class: "label label-success" }, children: [{ tag: "i", attrs: { class: "fa fa-sign-in fa-fw",
-                                                    "aria-hidden": "true" } }, " ", parseFloat(payment.amount).toFixed(2), " ", Conf.defaultAsset] } : { tag: "span", attrs: { class: "label label-danger" }, children: [{ tag: "i", attrs: { class: "fa fa-sign-out fa-fw",
-                                                    "aria-hidden": "true" } }, " ", parseFloat(payment.amount).toFixed(2), " ", Conf.defaultAsset] }] }, { tag: "div", attrs: { class: "clearfix" } }] }] };
+                                                    "aria-hidden": "true" } }, " ", parseFloat(payment.amount).toFixed(2), " ", Conf.asset] } : { tag: "span", attrs: { class: "label label-danger" }, children: [{ tag: "i", attrs: { class: "fa fa-sign-out fa-fw",
+                                                    "aria-hidden": "true" } }, " ", parseFloat(payment.amount).toFixed(2), " ", Conf.asset] }] }, { tag: "div", attrs: { class: "clearfix" } }] }] };
                         })] }, { tag: "div", attrs: { class: "hidden-xs" }, children: [{ tag: "table", attrs: { class: "table table-bordered" }, children: [{ tag: "thead", attrs: {}, children: [{ tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Account id")] }, { tag: "th", attrs: {}, children: [Conf.tr("Date")] }, { tag: "th", attrs: {}, children: [Conf.tr("Amount")] }, { tag: "th", attrs: {}, children: [Conf.tr("Type")] }] }] }, { tag: "tbody", attrs: {}, children: [data.payments.map(function (payment) {
                                     var trans_link = payment._links.transaction.href;
                                     var trans_id = trans_link.substr(trans_link.lastIndexOf('/') + 1);
@@ -2580,7 +2580,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                     //The reason for send an amount and asset code instead of payment id is that there is
                                     //no method in SDK to get payment by id.
                                     var trans_url = '/transaction/' + trans_id + '/' + accountId + '/' + payment.amount + '/' + payment.asset_code;
-                                    return { tag: "tr", attrs: {}, children: [{ tag: "td", attrs: { class: "account-td" }, children: [{ tag: "a", attrs: { class: "account_overflow", href: trans_url, config: m.route }, children: [accountId] }] }, { tag: "td", attrs: {}, children: [DateFormat(payment.closed_at, 'dd.mm.yyyy HH:MM:ss')] }, { tag: "td", attrs: {}, children: [parseFloat(payment.amount).toFixed(2), " ", Conf.defaultAsset] }, { tag: "td", attrs: {}, children: [payment.to == Auth.keypair().accountId() ? { tag: "span", attrs: { class: "label label-success" }, children: [{ tag: "i", attrs: { class: "fa fa-sign-in fa-fw", "aria-hidden": "true" } }, " ", Conf.tr("Debit")] } : { tag: "span", attrs: { class: "label label-danger" }, children: [{ tag: "i", attrs: { class: "fa fa-sign-out fa-fw", "aria-hidden": "true" } }, " ", Conf.tr("Credit")] }] }] };
+                                    return { tag: "tr", attrs: {}, children: [{ tag: "td", attrs: { class: "account-td" }, children: [{ tag: "a", attrs: { class: "account_overflow", href: trans_url, config: m.route }, children: [accountId] }] }, { tag: "td", attrs: {}, children: [DateFormat(payment.closed_at, 'dd.mm.yyyy HH:MM:ss')] }, { tag: "td", attrs: {}, children: [parseFloat(payment.amount).toFixed(2), " ", Conf.asset] }, { tag: "td", attrs: {}, children: [payment.to == Auth.keypair().accountId() ? { tag: "span", attrs: { class: "label label-success" }, children: [{ tag: "i", attrs: { class: "fa fa-sign-in fa-fw", "aria-hidden": "true" } }, " ", Conf.tr("Debit")] } : { tag: "span", attrs: { class: "label label-danger" }, children: [{ tag: "i", attrs: { class: "fa fa-sign-out fa-fw", "aria-hidden": "true" } }, " ", Conf.tr("Credit")] }] }] };
                                 })] }] }] }] };
             }
         };
@@ -2654,7 +2654,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         "showFlipCameraButton": true, // iOS and Android
                         "prompt": Conf.tr("Place a barcode inside the scan area"), // supported on Android only
                         "formats": "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-                        "orientation": "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
+                        "orientation": "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
                     })).catch(function (err) {
                         m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
                         return;
@@ -2672,13 +2672,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         var conf = {
             master_key: 'GAWIB7ETYGSWULO4VB7D6S42YLPGIC7TY7Y2SSJKVOTMQXV5TILYWBUA',
-            horizon_host: 'http://blockchain.euah.cf:80/',
+            horizon_host: 'http://blockchain.euah.pw',
             assets_url: 'assets',
-            keyserver_host: 'http://keys.euah.cf',
+            keyserver_host: 'http://keys.euah.pw',
             keyserver_v_url: '/v2/wallets',
-            api_host: 'http://api.euah.cf',
-            exchange_host: 'http://exchange.euah.cf',
-            info_host: 'http://info.euah.cf'
+            api_host: 'http://api.euah.pw',
+            asset: 'EUAH'
         };
 
         conf.phone = {
@@ -2688,7 +2687,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             prefix: "+38"
         };
 
+        StellarSdk.Network.use(new StellarSdk.Network('euah.network'));
         conf.horizon = new StellarSdk.Server(conf.horizon_host);
+
         conf.locales = Locales;
 
         conf.payments = {
@@ -2702,8 +2703,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         conf.tr = conf.loc.translate; //short alias for translation
 
         conf.networkStatus = null;
-
-        conf.defaultAsset = 'EUAH';
 
         var Config = module.exports = conf;
     }, { "../locales/translations.js": 14, "localize": 3 }], 12: [function (require, module, exports) {
@@ -2743,7 +2742,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         m.flashError = function (msg) {
             m.onLoadingEnd();
             m.onIdleEnd();
-            $.Notification.notify('error', 'top center', Conf.tr("Error"), msg);
+            $.Notification.notify('error', 'top left', Conf.tr("Error"), msg);
         };
         m.flashApiError = function (err) {
             if (err && typeof err.message != 'undefined' && err.message == 'Invalid signature') {
@@ -2753,12 +2752,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             m.onLoadingEnd();
             m.onIdleEnd();
             var msg = err.message ? Conf.tr(err.message) + (err.description ? ': ' + Conf.tr(err.description) : '') : Conf.tr('Unknown error. Contact support');
-            $.Notification.notify('error', 'top center', Conf.tr("Error"), msg);
+            $.Notification.notify('error', 'top left', Conf.tr("Error"), msg);
         };
         m.flashSuccess = function (msg) {
             m.onLoadingEnd();
             m.onIdleEnd();
-            $.Notification.notify('success', 'top center', Conf.tr("Success"), msg);
+            $.Notification.notify('success', 'top left', Conf.tr("Success"), msg);
         };
 
         var app = {
@@ -3823,7 +3822,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         var tx = new StellarSdk.TransactionBuilder(source, { memo: memo }).addOperation(StellarSdk.Operation.payment({
                             destination: Auth.keypair().accountId(),
                             amount: amount,
-                            asset: new StellarSdk.Asset(Conf.defaultAsset, Conf.master_key)
+                            asset: new StellarSdk.Asset(Conf.asset, Conf.master_key)
                         })).build();
                         tx.sign(ctrl.keypair());
 
@@ -3839,9 +3838,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             view: function view(ctrl) {
                 return [m.component(Navbar), ctrl.card_balances_sum() !== false ? { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "h2", attrs: {}, children: [Conf.tr("Card")] }, { tag: "div", attrs: { class: "row" }, children: [{ tag: "form", attrs: { class: "col-sm-4", onsubmit: ctrl.processTransfer.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "panel panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [Conf.tr("Scratch card")] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "table", attrs: { class: "table m-b-30" }, children: [Auth.balances().length ? { tag: "tr", attrs: {}, children: [{ tag: "td", attrs: {}, children: [{ tag: "b", attrs: {}, children: [Conf.tr("Your balance"), ":"] }] }, { tag: "td", attrs: {}, children: [{ tag: "b", attrs: {}, children: [Auth.balances().map(function (b) {
-                                                            return parseFloat(b.balance).toFixed(2) + " " + Conf.defaultAsset;
+                                                            return parseFloat(b.balance).toFixed(2) + " " + Conf.asset;
                                                         })] }] }] } : '', { tag: "tr", attrs: {}, children: [{ tag: "td", attrs: {}, children: [Conf.tr("Card balance"), ":"] }, { tag: "td", attrs: {}, children: [ctrl.balances().map(function (b) {
-                                                        return parseFloat(b.balance).toFixed(2) + " " + Conf.defaultAsset;
+                                                        return parseFloat(b.balance).toFixed(2) + " " + Conf.asset;
                                                     })] }] }] }, ctrl.balances().length && ctrl.card_balances_sum() > 0 ? { tag: "div", attrs: {}, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "label", attrs: { for: "money_to_get" }, children: [Conf.tr("How much do you want to redeem?")] }, { tag: "input", attrs: { type: "number", name: "money_to_get", id: "money_to_get",
                                                         min: "0.01", step: "0.01", max: ctrl.card_balance(),
                                                         value: ctrl.needle_balance(),
@@ -3958,7 +3957,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 var type = Auth.type() ? Auth.type() : 'anonymous_user';
                 return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container puller", id: "home-puller" }, children: [{ tag: "div", attrs: {}, children: [ctrl.pullDownPhrase() == 1 ? { tag: "div", attrs: { id: "pull-info", class: "center-block" }, children: [{ tag: "p", attrs: { class: "lead m-t-10" }, children: [{ tag: "span", attrs: { class: "fa fa-arrow-up fa-2x m-r-10" } }, Conf.tr("Release to refresh")] }] } : ctrl.pullDownPhrase() == 2 ? { tag: "div", attrs: {}, children: [{ tag: "p", attrs: { class: "lead m-t-10" }, children: [{ tag: "i", attrs: { class: "fa fa-spinner fa-pulse fa-2x fa-fw" } }, Conf.tr("Updating...")] }] } : '', { tag: "div", attrs: { class: "row" }, children: [{ tag: "div", attrs: { class: "col-sm-6" }, children: [{ tag: "div", attrs: { class: "card-box widget-user" }, children: [{ tag: "div", attrs: {}, children: [{ tag: "img", attrs: { src: "assets/img/no-avatar.png", class: "img-responsive img-circle",
                                                     alt: "user" } }, { tag: "div", attrs: { class: "wid-u-info" }, children: [{ tag: "h4", attrs: { class: "m-t-0 m-b-5" }, children: [Conf.tr("Welcome"), ", ", Auth.username()] }, { tag: "p", attrs: { class: "text-muted m-b-5 font-13 account_overflow" }, children: [{ tag: "a", attrs: { href: "#", onclick: ctrl.copyAccountId.bind(this) }, children: [Auth.keypair().accountId()] }] }, { tag: "small", attrs: {}, children: [{ tag: "b", attrs: {}, children: [Conf.tr(type)] }] }] }] }] }] }, { tag: "div", attrs: { class: "col-sm-6" }, children: [{ tag: "div", attrs: { class: "widget-simple text-center card-box" }, children: [{ tag: "h3", attrs: { class: "text-primary counter" }, children: [Auth.balances().length ? Auth.balances().map(function (b) {
-                                                return { tag: "div", attrs: { class: "col-sm-2 p-t-10" }, children: [{ tag: "span", attrs: { class: "label label-primary" }, children: [parseFloat(b.balance).toFixed(2) + " " + Conf.defaultAsset] }] };
+                                                return { tag: "div", attrs: { class: "col-sm-2 p-t-10" }, children: [{ tag: "span", attrs: { class: "label label-primary" }, children: [parseFloat(b.balance).toFixed(2) + " " + Conf.asset] }] };
                                             }) : '0.00'] }, { tag: "p", attrs: { class: "text-muted", style: "margin: 2px;" }, children: [Conf.tr("Balance")] }] }] }, { tag: "div", attrs: { class: "clearfix" } }] }, { tag: "div", attrs: { class: "panel panel-color panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Account transactions")] }, { tag: "p", attrs: { class: "panel-sub-title font-13" }, children: [Conf.tr("Overview of recent transactions"), "."] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [m.component(Payments, { payments: Auth.payments() })] }, { tag: "div", attrs: { class: "panel-footer text-center" }, children: [{ tag: "a", attrs: { href: "/payments", config: m.route,
                                             class: "btn btn-primary btn-custom waves-effect w-md btn-sm waves-light" }, children: [Conf.tr("All transactions")] }] }] }] }] }] }, m.component(Footer)];
             }
@@ -3982,12 +3981,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     return m.route('/');
                 }
 
+                this.myScroll = null;
+                this.initPullToRefresh = function () {
+                    if (ctrl.myScroll == null) {
+                        var topnavSize = document.getElementById('topnav').offsetHeight;
+                        document.getElementById('container').style.top = topnavSize + 10 + "px";
+                        document.addEventListener('touchmove', function (e) {
+                            e.preventDefault();
+                        }, false);
+                        ctrl.myScroll = new IScroll('#container', {
+                            useTransition: true,
+                            startX: 0,
+                            topOffset: 0
+                        });
+                    }
+                };
+
+                setTimeout(function () {
+                    ctrl.initPullToRefresh();
+                }, 500);
+
                 //create invoice function
                 this.createInvoice = function (e) {
                     e.preventDefault();
 
                     var amount = e.target.amount.value;
-                    var asset = Conf.defaultAsset;
+                    var asset = Conf.asset;
                     // TODO: check if asset is available in Auth.balances
 
                     m.onLoadingStart();
@@ -4041,7 +4060,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             view: function view(ctrl) {
                 var code = ctrl.qr();
 
-                return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "row" }, children: [{ tag: "div", attrs: { class: "col-lg-6" }, children: [!ctrl.invoiceCode() ? { tag: "div", attrs: { class: "panel panel-color panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Create a new invoice")] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "form", attrs: { class: "form-horizontal", onsubmit: ctrl.createInvoice.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-4" }, children: [{ tag: "label", attrs: { for: "" }, children: [Conf.tr("Amount"), ":"] }, { tag: "input", attrs: { class: "form-control", type: "number", required: "required",
+                return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container puller", id: "container" }, children: [{ tag: "div", attrs: { class: "row" }, children: [{ tag: "div", attrs: { class: "col-lg-6" }, children: [!ctrl.invoiceCode() ? { tag: "div", attrs: { class: "panel panel-color panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Create a new invoice")] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "form", attrs: { class: "form-horizontal", onsubmit: ctrl.createInvoice.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-4" }, children: [{ tag: "label", attrs: { for: "" }, children: [Conf.tr("Amount"), ":"] }, { tag: "input", attrs: { class: "form-control", type: "number", required: "required",
                                                             id: "amount",
                                                             min: "0.01",
                                                             step: "0.01",
@@ -4105,7 +4124,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                         onchange: m.withAttr("value", ctrl.lastLogin),
                                         value: ctrl.lastLogin() } }, { tag: "i", attrs: { class: "md md-account-circle form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "required", autocapitalize: "none",
                                         placeholder: Conf.tr("Password"),
-                                        value: "123123",
                                         name: "password" } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-xs-6" }, children: [{ tag: "a", attrs: { href: "/sign", config: m.route,
                                         class: "btn btn-default btn-custom waves-effect w-md waves-light m-b-5" }, children: [Conf.tr("Create an account")] }] }, { tag: "div", attrs: { class: "col-xs-6 text-right" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom waves-effect w-md waves-light m-b-5",
                                         type: "submit" }, children: [Conf.tr("Log in")] }] }] }] }] };
@@ -4246,6 +4264,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     return m.route('/');
                 }
 
+                this.myScroll = null;
+                this.initPullToRefresh = function () {
+                    if (ctrl.myScroll == null) {
+                        var topnavSize = document.getElementById('topnav').offsetHeight;
+                        document.getElementById('container').style.top = topnavSize + 10 + "px";
+                        document.addEventListener('touchmove', function (e) {
+                            e.preventDefault();
+                        }, false);
+                        ctrl.myScroll = new IScroll('#container', {
+                            useTransition: true,
+                            startX: 0,
+                            topOffset: 0
+                        });
+                    }
+                };
+
+                setTimeout(function () {
+                    ctrl.initPullToRefresh();
+                }, 500);
+
                 //return phone in pattern or prefix
                 this.getPhoneWithViewPattern = function (number) {
                     if (number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix) {
@@ -4354,7 +4392,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             },
 
             view: function view(ctrl) {
-                return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "row" }, children: [{ tag: "div", attrs: { class: "col-lg-6" }, children: [{ tag: "div", attrs: { class: "panel panel-color panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Change password")] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "form", attrs: { class: "form-horizontal", onsubmit: ctrl.changePassword.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "label", attrs: { for: "" }, children: [Conf.tr("Old password"), ":"] }, { tag: "input", attrs: { class: "form-control", type: "password", required: "required",
+                return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container puller", id: "container" }, children: [{ tag: "div", attrs: { class: "row" }, children: [{ tag: "div", attrs: { class: "col-lg-6" }, children: [{ tag: "div", attrs: { class: "panel panel-color panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Change password")] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "form", attrs: { class: "form-horizontal", onsubmit: ctrl.changePassword.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "label", attrs: { for: "" }, children: [Conf.tr("Old password"), ":"] }, { tag: "input", attrs: { class: "form-control", type: "password", required: "required",
                                                             name: "oldpassword" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "label", attrs: { for: "" }, children: [Conf.tr("New password"), ":"] }, { tag: "input", attrs: { class: "form-control", type: "password", required: "required",
                                                             name: "password" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "label", attrs: { for: "" }, children: [Conf.tr("Repeat new password"), ":"] }, { tag: "input", attrs: { class: "form-control", type: "password", required: "required",
                                                             name: "repassword" } }] }] }, { tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-sm-7" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom w-md waves-effect waves-light",
@@ -4461,6 +4499,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     return m.route('/');
                 }
 
+                this.myScroll = null;
+                this.initPullToRefresh = function () {
+                    if (ctrl.myScroll == null) {
+                        var topnavSize = document.getElementById('topnav').offsetHeight;
+                        document.getElementById('container').style.top = topnavSize + 10 + "px";
+                        document.addEventListener('touchmove', function (e) {
+                            e.preventDefault();
+                        }, false);
+                        ctrl.myScroll = new IScroll('#container', {
+                            useTransition: true,
+                            startX: 0,
+                            topOffset: 0
+                        });
+                    }
+                };
+
+                setTimeout(function () {
+                    ctrl.initPullToRefresh();
+                }, 500);
+
                 this.navbar = new Navbar.controller();
 
                 this.transaction = m.prop(false);
@@ -4495,7 +4553,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             },
 
             view: function view(ctrl) {
-                return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "panel panel-border panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Transaction")] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "table", attrs: { class: "table table-bordered m-0 small-table" }, children: [{ tag: "tbody", attrs: {}, children: [{ tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Created at"), ":"] }, { tag: "td", attrs: {}, children: [DateFormat(ctrl.transaction().created_at, 'dd.mm.yyyy HH:MM:ss')] }] }, { tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Transaction ID"), ":"] }, { tag: "td", attrs: {}, children: [{ tag: "span", attrs: { class: "account_overflow" }, children: [ctrl.transaction().id] }] }] }, { tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Transaction amount"), ":"] }, { tag: "td", attrs: {}, children: [parseFloat(m.route.param("amount")).toFixed(2)] }] }, ctrl.transaction().memo ? { tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Transaction memo"), ":"] }, { tag: "td", attrs: {}, children: [ctrl.transaction().memo] }] } : '', { tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Target account ID"), ":"] }, { tag: "td", attrs: {}, children: [{ tag: "a", attrs: { href: 'http://info.smartmoney.com.ua/account?acc=' + ctrl.account().id,
+                return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container puller", id: "container" }, children: [{ tag: "div", attrs: { class: "panel panel-border panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Transaction")] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "table", attrs: { class: "table table-bordered m-0 small-table" }, children: [{ tag: "tbody", attrs: {}, children: [{ tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Created at"), ":"] }, { tag: "td", attrs: {}, children: [DateFormat(ctrl.transaction().created_at, 'dd.mm.yyyy HH:MM:ss')] }] }, { tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Transaction ID"), ":"] }, { tag: "td", attrs: {}, children: [{ tag: "span", attrs: { class: "account_overflow" }, children: [ctrl.transaction().id] }] }] }, { tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Transaction amount"), ":"] }, { tag: "td", attrs: {}, children: [parseFloat(m.route.param("amount")).toFixed(2)] }] }, ctrl.transaction().memo ? { tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Transaction memo"), ":"] }, { tag: "td", attrs: {}, children: [ctrl.transaction().memo] }] } : '', { tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Target account ID"), ":"] }, { tag: "td", attrs: {}, children: [{ tag: "a", attrs: { href: 'http://info.smartmoney.com.ua/account?acc=' + ctrl.account().id,
                                                         target: "_blank"
                                                     }, children: [{ tag: "span", attrs: { class: "account_overflow" }, children: [ctrl.account().id] }] }] }] }, { tag: "tr", attrs: {}, children: [{ tag: "th", attrs: {}, children: [Conf.tr("Target account type"), ":"] }, { tag: "td", attrs: {}, children: [ctrl.account().type] }] }] }] }] }, { tag: "div", attrs: { class: "panel-footer text-center" }, children: [{ tag: "a", attrs: { href: '/transfer' + '?account=' + ctrl.account().id + '&amount=' + parseFloat(m.route.param("amount")).toFixed(2) + '&asset=' + m.route.param("asset"),
                                         config: m.route,
@@ -4536,6 +4594,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 if (!Auth.keypair()) {
                     return m.route('/');
                 }
+
+                this.myScroll = null;
+                this.initPullToRefresh = function () {
+                    if (ctrl.myScroll == null) {
+                        var topnavSize = document.getElementById('topnav').offsetHeight;
+                        document.getElementById('container').style.top = topnavSize + 10 + "px";
+                        document.addEventListener('touchmove', function (e) {
+                            e.preventDefault();
+                        }, false);
+                        ctrl.myScroll = new IScroll('#container', {
+                            useTransition: true,
+                            startX: 0,
+                            topOffset: 0
+                        });
+                    }
+                };
+
+                setTimeout(function () {
+                    ctrl.initPullToRefresh();
+                }, 500);
 
                 this.changeTransferType = function (e) {
                     e.preventDefault();
@@ -4700,7 +4778,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         var tx = new StellarSdk.TransactionBuilder(source, { memo: memo }).addOperation(StellarSdk.Operation.payment({
                             destination: accountId,
                             amount: amount.toString(),
-                            asset: new StellarSdk.Asset(Conf.defaultAsset, Conf.master_key)
+                            asset: new StellarSdk.Asset(Conf.asset, Conf.master_key)
                         })).build();
 
                         tx.sign(Auth.keypair());
@@ -4723,7 +4801,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             },
 
             view: function view(ctrl) {
-                return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "row" }, children: [{ tag: "form", attrs: { class: "col-lg-6", onsubmit: ctrl.processPayment.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "panel panel-color panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Transfer money")] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "label", attrs: {}, children: [Conf.tr("Transfer type")] }, { tag: "select", attrs: { name: "transType", required: "required", class: "form-control",
+                return [m.component(Navbar), { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container puller", id: "container" }, children: [{ tag: "div", attrs: { class: "row" }, children: [{ tag: "form", attrs: { class: "col-lg-6", onsubmit: ctrl.processPayment.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "panel panel-color panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Transfer money")] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "label", attrs: {}, children: [Conf.tr("Transfer type")] }, { tag: "select", attrs: { name: "transType", required: "required", class: "form-control",
                                                     onchange: ctrl.changeTransferType.bind(ctrl),
                                                     value: ctrl.transferType()
                                                 }, children: [{ tag: "option", attrs: { value: "byAccount" }, children: [Conf.tr("by account ID")] }, { tag: "option", attrs: { value: "byPhone" }, children: [Conf.tr("by phone")] }, { tag: "option", attrs: { value: "byEmail" }, children: [Conf.tr("by email")] }] }] }, { tag: "div", attrs: _defineProperty({ class: "form-group"

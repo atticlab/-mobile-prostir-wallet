@@ -7,52 +7,49 @@
         "files": {}
     },
     "installed_plugins": {
+        "com.verso.cordova.clipboard": {
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
+        },
         "cordova-plugin-app-version": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         },
         "cordova-plugin-camera": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         },
         "cordova-plugin-console": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         },
         "cordova-plugin-contacts": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         },
         "cordova-plugin-device": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         },
         "cordova-plugin-globalization": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         },
         "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         },
         "cordova-plugin-scrypt": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         },
         "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
-        },
-        "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
-        },
-        "cordova-plugin-network-information": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
-        },
-        "com.verso.cordova.clipboard": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         },
         "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
+        },
+        "phonegap-plugin-barcodescanner": {
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-compat": {
-            "PACKAGE_NAME": "com.atticlab.smartmoney.wallet"
+            "PACKAGE_NAME": "com.atticlab.prostir.wallet"
         }
     }
 }

@@ -80,7 +80,7 @@ var Cards = module.exports = {
                             .addOperation(StellarSdk.Operation.payment({
                                 destination: Auth.keypair().accountId(),
                                 amount: amount,
-                                asset: new StellarSdk.Asset(Conf.defaultAsset, Conf.master_key)
+                                asset: new StellarSdk.Asset(Conf.asset, Conf.master_key)
                             }))
                             .build();
                         tx.sign(ctrl.keypair());
@@ -116,7 +116,7 @@ var Cards = module.exports = {
                                                         <td>
                                                             <b>
                                                                 {Auth.balances().map(b => {
-                                                                    return parseFloat(b.balance).toFixed(2) + " " + Conf.defaultAsset
+                                                                    return parseFloat(b.balance).toFixed(2) + " " + Conf.asset
                                                                 })}
                                                             </b>
                                                         </td>
@@ -128,7 +128,7 @@ var Cards = module.exports = {
                                                     <td>{Conf.tr("Card balance")}:</td>
                                                     <td>
                                                         {ctrl.balances().map(b => {
-                                                            return parseFloat(b.balance).toFixed(2) + " " + Conf.defaultAsset
+                                                            return parseFloat(b.balance).toFixed(2) + " " + Conf.asset
                                                         })}
                                                     </td>
                                                 </tr>

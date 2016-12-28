@@ -16,12 +16,32 @@ var Invoice = module.exports = {
             return m.route('/');
         }
 
+        this.myScroll = null;
+        this.initPullToRefresh = function () {
+            if (ctrl.myScroll == null) {
+                var topnavSize = document.getElementById('topnav').offsetHeight;
+                document.getElementById('container').style.top = topnavSize + 10 + "px";
+                document.addEventListener('touchmove', function (e) {
+                    e.preventDefault();
+                }, false);
+                ctrl.myScroll = new IScroll('#container', {
+                    useTransition: true,
+                    startX: 0,
+                    topOffset: 0
+                });
+            }
+        };
+
+        setTimeout(function () {
+            ctrl.initPullToRefresh();
+        }, 500);
+
         //create invoice function
         this.createInvoice = function (e) {
             e.preventDefault();
 
             var amount = e.target.amount.value;
-            var asset = Conf.defaultAsset;
+            var asset = Conf.asset;
             // TODO: check if asset is available in Auth.balances
 
             m.onLoadingStart();
@@ -80,7 +100,7 @@ var Invoice = module.exports = {
 
         return [m.component(Navbar),
             <div class="wrapper">
-                <div class="container">
+                <div class="container puller" id="container">
                     <div class="row">
                         <div class="col-lg-6">
                             {

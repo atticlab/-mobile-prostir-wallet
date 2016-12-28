@@ -75,7 +75,6 @@ var Login = module.exports = {
                     <div class="col-xs-12">
                         <input class="form-control" type="password" required="required" autocapitalize="none"
                                placeholder={Conf.tr("Password")}
-                               value="123123"
                                name="password"/>
                         <i class="md md-vpn-key form-control-feedback l-h-34"></i>
                     </div>

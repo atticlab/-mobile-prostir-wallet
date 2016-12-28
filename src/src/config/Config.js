@@ -3,13 +3,12 @@ var Locales = require('../locales/translations.js');
 
 var conf = {
     master_key: 'GAWIB7ETYGSWULO4VB7D6S42YLPGIC7TY7Y2SSJKVOTMQXV5TILYWBUA',
-    horizon_host: 'http://blockchain.euah.cf:80/',
+    horizon_host: 'http://blockchain.euah.pw',
     assets_url: 'assets',
-    keyserver_host: 'http://keys.euah.cf',
+    keyserver_host: 'http://keys.euah.pw',
     keyserver_v_url: '/v2/wallets',
-    api_host       : 'http://api.euah.cf',
-    exchange_host  : 'http://exchange.euah.cf',
-    info_host      : 'http://info.euah.cf'
+    api_host       : 'http://api.euah.pw',
+    asset          : 'EUAH'
 };
 
 conf.phone = {
@@ -19,7 +18,9 @@ conf.phone = {
     prefix:     "+38"
 };
 
+StellarSdk.Network.use(new StellarSdk.Network('euah.network'));
 conf.horizon = new StellarSdk.Server(conf.horizon_host);
+
 conf.locales = Locales;
 
 conf.payments = {
@@ -33,7 +34,5 @@ conf.loc.throwOnMissingTranslation(false);
 conf.tr = conf.loc.translate; //short alias for translation
 
 conf.networkStatus = null;
-
-conf.defaultAsset = 'EUAH';
 
 var Config = module.exports = conf;

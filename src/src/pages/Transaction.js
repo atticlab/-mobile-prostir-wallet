@@ -12,6 +12,26 @@ var Transaction = module.exports = {
             return m.route('/');
         }
 
+        this.myScroll = null;
+        this.initPullToRefresh = function () {
+            if (ctrl.myScroll == null) {
+                var topnavSize = document.getElementById('topnav').offsetHeight;
+                document.getElementById('container').style.top = topnavSize + 10 + "px";
+                document.addEventListener('touchmove', function (e) {
+                    e.preventDefault();
+                }, false);
+                ctrl.myScroll = new IScroll('#container', {
+                    useTransition: true,
+                    startX: 0,
+                    topOffset: 0
+                });
+            }
+        };
+
+        setTimeout(function () {
+            ctrl.initPullToRefresh();
+        }, 500);
+
         this.navbar = new Navbar.controller();
 
         this.transaction = m.prop(false);
@@ -53,7 +73,7 @@ var Transaction = module.exports = {
         return [
             m.component(Navbar),
             <div class="wrapper">
-                <div class="container">
+                <div class="container puller" id="container">
                     <div class="panel panel-border panel-inverse">
                         <div class="panel-heading">
                             <h3 class="panel-title">{Conf.tr("Transaction")}</h3>

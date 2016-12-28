@@ -11,6 +11,26 @@ var Settings = module.exports = {
             return m.route('/');
         }
 
+        this.myScroll = null;
+        this.initPullToRefresh = function () {
+            if (ctrl.myScroll == null) {
+                var topnavSize = document.getElementById('topnav').offsetHeight;
+                document.getElementById('container').style.top = topnavSize + 10 + "px";
+                document.addEventListener('touchmove', function (e) {
+                    e.preventDefault();
+                }, false);
+                ctrl.myScroll = new IScroll('#container', {
+                    useTransition: true,
+                    startX: 0,
+                    topOffset: 0
+                });
+            }
+        };
+
+        setTimeout(function () {
+            ctrl.initPullToRefresh();
+        }, 500);
+        
         //return phone in pattern or prefix
         this.getPhoneWithViewPattern = function (number) {
             if (number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix) {
@@ -127,7 +147,7 @@ var Settings = module.exports = {
     view: function (ctrl) {
         return [m.component(Navbar),
             <div class="wrapper">
-                <div class="container">
+                <div class="container puller" id="container">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="panel panel-color panel-inverse">

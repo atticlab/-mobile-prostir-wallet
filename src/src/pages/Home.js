@@ -167,7 +167,7 @@ module.exports = {
                                             Auth.balances().map(b => {
                                                 return <div class="col-sm-2 p-t-10">
                                             <span class="label label-primary">
-                                                {parseFloat(b.balance).toFixed(2) + " " + Conf.defaultAsset}
+                                                {parseFloat(b.balance).toFixed(2) + " " + Conf.asset}
                                             </span>
                                                 </div>
                                             })
