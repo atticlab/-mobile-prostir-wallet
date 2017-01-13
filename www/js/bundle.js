@@ -3520,10 +3520,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             'en': "Release to refresh",
             'ru': "Отпустите для обновления",
             'uk': "Відпустіть для оновлення"
-        }), _defineProperty(_module$exports, "Card", {
-            'en': "Updating...",
-            'ru': "Обновление...",
-            'uk': "Оновлення..."
         }), _module$exports);
     }, {}], 15: [function (require, module, exports) {
         var Conf = require('../config/Config.js');
@@ -3755,7 +3751,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             controller: function controller() {
                 var ctrl = this;
 
-                var needle_asset = 'EUAH'; //TODO change to multi-asset operations, when time is come
+                var needle_asset = Conf.asset;
 
                 this.keypair = m.prop(false);
                 this.balances = m.prop([]);
@@ -3770,7 +3766,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 this.seed = m.prop(m.route.param('seed') ? m.route.param('seed') : '');
 
                 this.updateCardBalances = function (accountId) {
-                    return Auth.checkConnection().then(Auth.loadAccountById(accountId)).then(function (source) {
+                    return Auth.loadAccountById(accountId).then(function (source) {
 
                         var response = source.balances;
 
@@ -3800,6 +3796,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         ctrl.card_balances_sum(sum * 100); //we need sum in coins for calculations
                         m.endComputation();
                         m.onLoadingEnd();
+                    }).catch(function (err) {
+                        console.log(err);
+                        m.flashError(Conf.tr("UpdateError") + " " + err);
+                        m.onLoadingEnd();
                     });
                 };
 
@@ -3817,7 +3817,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     }
                     //m.startComputation();
                     m.onLoadingStart();
-                    Auth.checkConnection().then(Conf.horizon.loadAccount(ctrl.keypair().accountId())).then(function (source) {
+                    Conf.horizon.loadAccount(ctrl.keypair().accountId()).then(function (source) {
                         var memo = StellarSdk.Memo.text("funding_card");
                         var tx = new StellarSdk.TransactionBuilder(source, { memo: memo }).addOperation(StellarSdk.Operation.payment({
                             destination: Auth.keypair().accountId(),
@@ -3837,7 +3837,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             },
 
             view: function view(ctrl) {
-                return [m.component(Navbar), ctrl.card_balances_sum() !== false ? { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "h2", attrs: {}, children: [Conf.tr("Card")] }, { tag: "div", attrs: { class: "row" }, children: [{ tag: "form", attrs: { class: "col-sm-4", onsubmit: ctrl.processTransfer.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "panel panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [Conf.tr("Scratch card")] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "table", attrs: { class: "table m-b-30" }, children: [Auth.balances().length ? { tag: "tr", attrs: {}, children: [{ tag: "td", attrs: {}, children: [{ tag: "b", attrs: {}, children: [Conf.tr("Your balance"), ":"] }] }, { tag: "td", attrs: {}, children: [{ tag: "b", attrs: {}, children: [Auth.balances().map(function (b) {
+                return [m.component(Navbar), ctrl.card_balances_sum() !== false ? { tag: "div", attrs: { class: "wrapper" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { class: "row" }, children: [{ tag: "form", attrs: { class: "col-sm-4", onsubmit: ctrl.processTransfer.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "panel panel-color panel-inverse" }, children: [{ tag: "div", attrs: { class: "panel-heading" }, children: [{ tag: "h3", attrs: { class: "panel-title" }, children: [Conf.tr("Scratch card")] }] }, { tag: "div", attrs: { class: "panel-body" }, children: [{ tag: "table", attrs: { class: "table m-b-30" }, children: [Auth.balances().length ? { tag: "tr", attrs: {}, children: [{ tag: "td", attrs: {}, children: [{ tag: "b", attrs: {}, children: [Conf.tr("Your balance"), ":"] }] }, { tag: "td", attrs: {}, children: [{ tag: "b", attrs: {}, children: [Auth.balances().map(function (b) {
                                                             return parseFloat(b.balance).toFixed(2) + " " + Conf.asset;
                                                         })] }] }] } : '', { tag: "tr", attrs: {}, children: [{ tag: "td", attrs: {}, children: [Conf.tr("Card balance"), ":"] }, { tag: "td", attrs: {}, children: [ctrl.balances().map(function (b) {
                                                         return parseFloat(b.balance).toFixed(2) + " " + Conf.asset;

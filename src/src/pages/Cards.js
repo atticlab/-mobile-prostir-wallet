@@ -8,7 +8,7 @@ var Cards = module.exports = {
         controller: function () {
             var ctrl = this;
 
-            var needle_asset = 'EUAH'; //TODO change to multi-asset operations, when time is come
+            var needle_asset = Conf.asset;
 
             this.keypair = m.prop(false);
             this.balances = m.prop([]);
@@ -23,8 +23,7 @@ var Cards = module.exports = {
             this.seed = m.prop(m.route.param('seed') ? m.route.param('seed') : '');
 
             this.updateCardBalances = function (accountId) {
-                return Auth.checkConnection()
-                    .then(Auth.loadAccountById(accountId))
+                return Auth.loadAccountById(accountId)
                     .then(source => {
 
                         var response = source.balances;
@@ -55,6 +54,11 @@ var Cards = module.exports = {
                         ctrl.card_balances_sum(sum * 100); //we need sum in coins for calculations
                         m.endComputation();
                         m.onLoadingEnd();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        m.flashError(Conf.tr("UpdateError")+" "+err);
+                        m.onLoadingEnd();
                     });
             };
 
@@ -72,8 +76,7 @@ var Cards = module.exports = {
                 }
                 //m.startComputation();
                 m.onLoadingStart();
-                Auth.checkConnection()
-                    .then(Conf.horizon.loadAccount(ctrl.keypair().accountId()))
+                Conf.horizon.loadAccount(ctrl.keypair().accountId())
                     .then(source => {
                         var memo = StellarSdk.Memo.text("funding_card");
                         var tx = new StellarSdk.TransactionBuilder(source, {memo: memo})
@@ -103,11 +106,12 @@ var Cards = module.exports = {
                 (ctrl.card_balances_sum() !== false) ?
                     <div class="wrapper">
                         <div class="container">
-                            <h2>{Conf.tr("Card")}</h2>
                             <div class="row">
                                 <form class="col-sm-4" onsubmit={ctrl.processTransfer.bind(ctrl)}>
-                                    <div class="panel panel-inverse">
-                                        <div class="panel-heading">{Conf.tr("Scratch card")}</div>
+                                    <div class="panel panel-color panel-inverse">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">{Conf.tr("Scratch card")}</h3>
+                                        </div>
                                         <div class="panel-body">
                                             <table class="table m-b-30">
                                                 {Auth.balances().length ?
