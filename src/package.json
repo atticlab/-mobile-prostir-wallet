@@ -14,8 +14,8 @@
     "localize": "^0.4.7",
     "mithril": "^0.2.5",
     "qrcode-npm": "0.0.3",
-    "stellar-sdk": "git+https://atticlab:Iy0qoqIbLDYgUop0Pegcxpl0MNQbtxXv@bitbucket.org/atticlab/js-smart-sdk.git#nbu",
-    "stellar-wallet-js-sdk": "git+ssh://git@bitbucket.attic.pw:7999/smar/stellar-wallet-js-sdk.git#api",
+    "stellar-sdk": "git+https://github.com/atticlab/smart-sdk-js.git",
+    "stellar-wallet-js-sdk": "git+http://bitbucket.attic.pw/scm/smar/stellar-wallet-js-sdk.git",
     "vanilla-masker": "^1.0.9",
     "dateformat": "^1.0.12"
   },
