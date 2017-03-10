@@ -276,3 +276,58 @@ footer .footer-contact-info .fa {
     height: 0.84em;
 }
 
+/**
+ * PIN input
+ */
+
+.pincode-wrapper {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background: #d6e9ff;
+    text-align: center;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.2),0 1px 5px 0 rgba(0,0,0,0.12);
+    border: 1px solid #aaa;
+}
+
+.pincode-wrapper input {
+    padding-left: 12px !important;
+    border: 1px solid #bbb;
+    height: 34px !important;
+    letter-spacing: 21px;
+    -webkit-text-security: disc;
+}
+
+.pincode-wrapper table.touchtable td {
+    background: #fafafa;
+}
+
+.pincode-wrapper input:focus, .pincode-wrapper input:active {
+    color: #000;
+    background: #fff;
+    border: 1px solid #1395ca;
+}
+
+.pincode-label {
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-transform: initial;
+    padding: 0 12px;
+}
+
+.progress-bar-text {
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.pincode-input-container.touch .touchwrapper .pincode-input-text{
+    letter-spacing: 29px;
+    padding-right: 0;
+}
+
+.pincode-input-container.touch .touchwrapper.touch4 {
+    width: 140px;
+}
+
