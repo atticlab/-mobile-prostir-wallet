@@ -1,1 +1,5 @@
 .idea
+/plugins/android.json
+/plugins/browser.json
+/plugins/ios.json
+.DS_STORE
