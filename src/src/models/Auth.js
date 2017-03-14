@@ -198,7 +198,7 @@ var Auth = {
         m.onLoadingStart();
         return this.checkConnection()
             .then(() => {
-                return StellarWallet.createWalletWithPin({
+                return StellarWallet.createWallet({
                     server: Conf.keyserver_host + '/v2',
                     username: login,
                     password: password,
@@ -235,10 +235,14 @@ var Auth = {
                 })
             })
             .then(function (wallet) {
+
+                console.log("-------- wallet before changePassword in Auth --------");
+                console.log(wallet);
+
                 return wallet.changePassword({
                     newPassword: new_pwd,
                     secretKey: Auth.keypair()._secretKey.toString('base64'),
-                    cb: Auth.loadingCB
+                    cb: progressCb
                 });
             }).then(function (wallet) {
                 Auth.wallet(wallet);

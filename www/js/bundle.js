@@ -5318,7 +5318,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 var accountKeypair = StellarSdk.Keypair.random();
                 m.onLoadingStart();
                 return this.checkConnection().then(function () {
-                    return StellarWallet.createWalletWithPin({
+                    return StellarWallet.createWallet({
                         server: Conf.keyserver_host + '/v2',
                         username: login,
                         password: password,
@@ -5353,10 +5353,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         cb: progressCb
                     });
                 }).then(function (wallet) {
+
+                    console.log("-------- wallet before changePassword in Auth --------");
+                    console.log(wallet);
+
                     return wallet.changePassword({
                         newPassword: new_pwd,
                         secretKey: Auth.keypair()._secretKey.toString('base64'),
-                        cb: Auth.loadingCB
+                        cb: progressCb
                     });
                 }).then(function (wallet) {
                     Auth.wallet(wallet);
@@ -6230,24 +6234,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 this.changePassword = function (e) {
                     e.preventDefault();
 
-                    if (!e.target.oldpassword.value || !e.target.password.value || !e.target.repassword.value) {
+                    var pass = e.target.password.value;
+                    var oldpass = e.target.oldpassword.value;
+
+                    if (!oldpass || !pass || !e.target.repassword.value) {
                         m.flashError(Conf.tr("Please, fill all required fields"));
                         return;
                     }
 
-                    if (e.target.password.value.length < 6) {
+                    if (pass.length < 6) {
                         m.flashError(Conf.tr("Password should have 6 chars min"));
                         return;
                     }
 
-                    if (e.target.password.value != e.target.repassword.value) {
+                    if (pass != e.target.repassword.value) {
                         m.flashError(Conf.tr("Passwords should match"));
                         return;
                     }
 
-                    if (e.target.oldpassword.value == e.target.password.value) {
+                    if (oldpass == pass) {
                         m.flashError(Conf.tr("New password cannot be same as old"));
                         return;
+                    }
+
+                    var regex = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9]))\S{1,}$/;
+                    if (!regex.test(pass)) {
+                        return m.flashError(Conf.tr("Password must contain at least one upper case letter and one digit"));
                     }
 
                     m.onLoadingStart();
@@ -6255,7 +6267,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     ctrl.showProgress(true);
                     m.endComputation();
 
-                    Auth.updatePassword(e.target.oldpassword.value, e.target.password.value, ctrl.progressCb).then(function () {
+                    Auth.updatePassword(oldpass, pass, ctrl.progressCb).then(function () {
                         m.flashSuccess(Conf.tr("Password changed"));
                         window.localStorage.removeItem('encryptedPasswordHash');
                         e.target.reset();
@@ -6676,7 +6688,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     var accountId = e.target.account.value;
                     var memoText = e.target.memo.value.replace(/<\/?[^>]+(>|$)/g, ""); //delete html tags from memo
                     var amount = parseFloat(e.target.amount.value);
-                    var asset = e.target.asset.value;
 
                     if (!amount || amount < 0) {
                         return m.flashError(Conf.tr("Amount is invalid"));
@@ -6688,7 +6699,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                     switch (this.transferType()) {
                         case 'byAccount':
-                            ctrl.processPayment(accountId, memoText, amount, asset);
+                            ctrl.processPayment(accountId, memoText, amount, Conf.asset);
                             break;
 
                         case 'byPhone':
@@ -6703,7 +6714,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                 phone: phoneNum
                             }).then(function (walletData) {
                                 if (walletData && walletData.accountId) {
-                                    ctrl.processPayment(walletData.accountId, memoText, amount, asset);
+                                    ctrl.processPayment(walletData.accountId, memoText, amount, Conf.asset);
                                 }
                             }).catch(function (err) {
                                 return m.flashError(Conf.tr("User not found! Check phone number"));
@@ -6722,7 +6733,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                 email: email
                             }).then(function (walletData) {
                                 if (walletData && walletData.accountId) {
-                                    ctrl.processPayment(walletData.accountId, memoText, amount, asset);
+                                    ctrl.processPayment(walletData.accountId, memoText, amount, Conf.asset);
                                 }
                             }).catch(function (err) {
                                 return m.flashError(Conf.tr("User not found! Check email"));

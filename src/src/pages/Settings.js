@@ -57,24 +57,32 @@ var Settings = module.exports = {
         this.changePassword = function (e) {
             e.preventDefault();
 
-            if (!e.target.oldpassword.value || !e.target.password.value || !e.target.repassword.value) {
+            var pass = e.target.password.value;
+            var oldpass = e.target.oldpassword.value;
+
+            if (!oldpass || !pass || !e.target.repassword.value) {
                 m.flashError(Conf.tr("Please, fill all required fields"));
                 return;
             }
 
-            if (e.target.password.value.length < 6) {
+            if (pass.length < 6) {
                 m.flashError(Conf.tr("Password should have 6 chars min"));
                 return;
             }
 
-            if (e.target.password.value != e.target.repassword.value) {
+            if (pass != e.target.repassword.value) {
                 m.flashError(Conf.tr("Passwords should match"));
                 return;
             }
 
-            if (e.target.oldpassword.value == e.target.password.value) {
+            if (oldpass == pass) {
                 m.flashError(Conf.tr("New password cannot be same as old"));
                 return;
+            }
+
+            let regex = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9]))\S{1,}$/;
+            if (!regex.test(pass)) {
+                return m.flashError(Conf.tr("Password must contain at least one upper case letter and one digit"));
             }
 
             m.onLoadingStart();
@@ -82,7 +90,7 @@ var Settings = module.exports = {
             ctrl.showProgress(true);
             m.endComputation();
 
-            Auth.updatePassword(e.target.oldpassword.value, e.target.password.value, ctrl.progressCb)
+            Auth.updatePassword(oldpass, pass, ctrl.progressCb)
                 .then(function () {
                     m.flashSuccess(Conf.tr("Password changed"));
                     window.localStorage.removeItem('encryptedPasswordHash');

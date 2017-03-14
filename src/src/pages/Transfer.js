@@ -131,7 +131,6 @@ var Invoice = module.exports = {
             let accountId = e.target.account.value;
             let memoText = e.target.memo.value.replace(/<\/?[^>]+(>|$)/g, ""); //delete html tags from memo
             let amount = parseFloat(e.target.amount.value);
-            let asset = e.target.asset.value;
 
             if (!amount || amount < 0) {
                 return m.flashError(Conf.tr("Amount is invalid"));
@@ -143,7 +142,7 @@ var Invoice = module.exports = {
 
             switch (this.transferType()) {
                 case 'byAccount':
-                    ctrl.processPayment(accountId, memoText, amount, asset);
+                    ctrl.processPayment(accountId, memoText, amount, Conf.asset);
                     break;
 
                 case 'byPhone':
@@ -159,7 +158,7 @@ var Invoice = module.exports = {
                     })
                         .then(function (walletData) {
                             if (walletData && walletData.accountId) {
-                                ctrl.processPayment(walletData.accountId, memoText, amount, asset);
+                                ctrl.processPayment(walletData.accountId, memoText, amount, Conf.asset);
                             }
                         })
                         .catch(function (err) {
@@ -180,7 +179,7 @@ var Invoice = module.exports = {
                     })
                         .then(function (walletData) {
                             if (walletData && walletData.accountId) {
-                                ctrl.processPayment(walletData.accountId, memoText, amount, asset);
+                                ctrl.processPayment(walletData.accountId, memoText, amount, Conf.asset);
                             }
                         })
                         .catch(function (err) {
