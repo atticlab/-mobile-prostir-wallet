@@ -1,7 +1,6 @@
 const Conf = require('../config/Config.js');
 const Navbar = require('../components/Navbar.js');
 const Payments = require('../components/Payments.js');
-const Footer = require('../components/Footer.js');
 const Auth = require('../models/Auth.js');
 const PinInput = require('../components/Pin-input');
 const swal = require('sweetalert2');
@@ -30,7 +29,7 @@ module.exports = {
                 return false;
             }
 
-            return Conf.SmartApi.Wallets.encryptAuthData({
+            return StellarWallet.encryptAuthData({
                 passwordHash: Auth.wallet().passwordHash,
                 pin         : ctrl.pin()
             })
@@ -55,7 +54,7 @@ module.exports = {
             if (Auth.checkPinCreated()) {
                 m.onProcedureStart();
 
-                return Conf.SmartApi.Wallets.decryptAuthData({
+                return StellarWallet.decryptAuthData({
                     encryptedPasswordHash: window.localStorage.getItem('encryptedPasswordHash'),
                     pin                  : ctrl.pin()
                 })
@@ -64,7 +63,8 @@ module.exports = {
                         console.log("-------- authData in removePin --------");
                         console.log(authData);
 
-                        return Conf.SmartApi.Wallets.get({
+                        return StellarWallet.getWallet({
+                            server: Conf.keyserver_host + '/v2',
                             username: window.localStorage.getItem('lastLogin'),
                             passwordHash: authData.decryptedPasswordHash,
                         });
@@ -108,7 +108,10 @@ module.exports = {
     view: function (ctrl) {
         return <div class="wrapper-page">
             <div class="text-center logo">
-                <img src="assets/img/logo.svg" alt="Smartmoney logo"/>
+                {((Conf.localeStr == 'uk') || (Conf.localeStr == 'ru')) ?
+                    <img class="logo-img" src="./img/logo-ua-tagline.svg" />
+                    : <img class="logo-img" src="./img/logo-en-tagline.svg" />
+                }
                 <br />
                 <h4>{Auth.checkPinCreated() ? Conf.tr("Remove PIN") : Conf.tr("Create PIN")}</h4>
             </div>

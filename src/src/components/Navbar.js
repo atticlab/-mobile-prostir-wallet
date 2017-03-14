@@ -83,6 +83,15 @@ module.exports = {
                                 </a>
                             </li>
 
+                            {Auth.wallet().passwordHash ?
+                                <li>
+                                    <a href="/pin" config={m.route}><i class="md md-security"></i>{Auth.checkPinCreated() ?
+                                        Conf.tr("Remove PIN") : Conf.tr("Create PIN")}
+                                    </a>
+                                </li>
+                                :
+                                ''}
+
                             <li class="has-submenu">
                                 {m.component(Scanner)}
                             </li>

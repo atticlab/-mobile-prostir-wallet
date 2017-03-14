@@ -2,91 +2,132 @@ var Qr = require('../../node_modules/qrcode-npm/qrcode');
 var Navbar = require('../components/Navbar.js');
 var Auth = require('../models/Auth.js');
 var Conf = require('../config/Config.js');
+var PinInput = require('../components/Pin-input');
+var ProgressBar = require('../components/ProgressBar');
 
 var Sign = module.exports = {
     controller: function () {
+        var ctrl = this;
+
         if (Auth.keypair()) {
             return m.route('/home');
         }
 
-        this.qr = m.prop(false);
+        window.plugins.sim.getSimInfo(simInfo => {
+            if (simInfo.phoneNumber) {
+                ctrl.phone = m.prop(VMasker.toPattern(simInfo.phoneNumber, {pattern: Conf.phone.view_mask, placeholder: "x"}));
+                m.redraw(true);
+            }
+        }, error => {
+            console.log(error);
+        });
+
+        this.progress = m.prop(0);
+        this.showProgress = m.prop(false);
+
+        this.getPhoneWithViewPattern = function (number) {
+            if (number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix) {
+                number = Conf.phone.prefix;
+            }
+            return m.prop(VMasker.toPattern(number, {pattern: Conf.phone.view_mask, placeholder: "x"}));
+        };
+
+        this.addPhoneViewPattern = function (e) {
+            ctrl.phone = ctrl.getPhoneWithViewPattern(e.target.value);
+            setTimeout(function(){e.target.selectionStart = e.target.selectionEnd = 10000}, 0);
+        };
+
+        this.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + Auth.wallet().phone);
+
+        this.progressCB = function (stage) {
+            console.log(stage);
+
+            switch (stage.type) {
+                case 'request':
+                    m.onLoadingStart();
+                    break;
+                case 'progress':
+                    m.startComputation();
+                    ctrl.progress(stage.progress);
+                    m.endComputation();
+                    break;
+                default:
+                    m.onProcedureStart();
+            }
+        };
 
         this.signup = function (e) {
             e.preventDefault();
 
-            var ctrl = this;
+            let pass = e.target.password.value;
 
-            if (!e.target.login.value || !e.target.password.value || !e.target.repassword.value) {
+            if (!e.target.phone.value || !pass || !e.target.repassword.value) {
                 m.flashError(Conf.tr("Please, fill all required fields"));
                 return;
             }
 
-            if (e.target.password.value.length < 6) {
-                m.flashError(Conf.tr("Password should have 6 chars min"));
+            if (pass.length < 8) {
+                m.flashError(Conf.tr("Password should have 8 chars min"));
                 return;
             }
 
-            if (e.target.password.value != e.target.repassword.value) {
+            let regex = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9]))\S{1,}$/;
+            if (!regex.test(pass)) {
+                return m.flashError(Conf.tr("Password must contain at least one upper case letter and one digit"));
+            }
+
+
+            if (pass != e.target.repassword.value) {
                 m.flashError(Conf.tr("Passwords should match"));
                 return;
             }
 
+            let phoneNum = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask).substr(2);
+
+            if (phoneNum.length > 0 && phoneNum.match(/\d/g).length != Conf.phone.length) {
+                return m.flashError(Conf.tr("Invalid phone"));
+            }
+
+            m.startComputation();
+            ctrl.showProgress(true);
+            m.endComputation();
+
             m.onLoadingStart();
-            Auth.registration(e.target.login.value, e.target.password.value)
-                .then(() => {
-                        /*var qr = Qr.qrcode(4, 'M');
-                        qr.addData(e.target.password.value);
-                        qr.make();
-                        var imgTag = qr.createImgTag(4);
-                        m.startComputation();
-                        ctrl.qr(m.trust(imgTag));
-                        m.endComputation();*/
-                        Auth.login(e.target.login.value, e.target.password.value)
-                            .then(function () {
-                                m.onLoadingEnd();
-                                m.route('/home');
-                            })
-                            .catch(err => {
-                                m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
-                            })
-                    },
-                    err => {
-                        m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
-                    })
-                .then(() => {
-                    m.onLoadingEnd();
+            Auth.registration(phoneNum, pass, ctrl.progressCB)
+                .then((wallet) => {
+                    console.log("-------- wallet --------");
+                    console.log(wallet);
+                    console.info('success');
+
+                    console.log("-------- wallet.passwordHash --------");
+                    console.info(wallet.passwordHash);
+
+                    Auth.loginByPasswordHash(phoneNum, wallet.passwordHash)
+                        .then(function () {
+                            m.onLoadingEnd();
+                            m.onProcedureEnd();
+                            ctrl.showProgress(false);
+                            window.localStorage.setItem('lastLogin', wallet.username);
+                            window.localStorage.removeItem('encryptedPasswordHash');
+                            m.route('/pin');
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            m.startComputation();
+                            ctrl.showProgress(false);
+                            ctrl.progress(0);
+                            m.endComputation();
+                            m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
+                        })
+                })
+                .catch(err => {
+                    console.error(err);
+                    m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
                 })
         };
     },
 
     view: function (ctrl) {
-        if (ctrl.qr()) {
-            var code = ctrl.qr();
-            ctrl.qr(false);
-            var img = code.substring((code.indexOf('="') + 2), (code.lastIndexOf('=="') + 2));
-            return <div class="wrapper-page">
-                <div>
-                    <div class="panel panel-color panel-success">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{Conf.tr("Registration successful")}</h3>
-                            <p class="panel-sub-title font-13">{Conf.tr("Print this QR-code and keep it in secure place. This is the only possible way to recover your password")}!</p>
-                        </div>
-                        <div class="panel-body">
-                            <div class="text-center">
-                                {code}
-                                <br/>
-                                <a href={img} download="qr_password.gif">{Conf.tr("Save code")}</a>
-                                <br/>
-                                <br/>
-                                <a href="/" config={m.route}
-                                   class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5">{Conf.tr("Log in")}</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-
         return <div class="wrapper-page">
 
             <div class="text-center">
@@ -98,43 +139,59 @@ var Sign = module.exports = {
                 </a>
             </div>
 
-            <form class="form-horizontal m-t-20" onsubmit={ctrl.signup.bind(ctrl)}>
+            {ctrl.showProgress() ?
+                <div class="form-group m-t-10">
+                    {m(ProgressBar, {value: ctrl.progress, text: Conf.tr("Encrypting your account for security")})}
+                </div>
+                :
+                <form class="form-horizontal m-t-20" onsubmit={ctrl.signup.bind(ctrl)}>
 
-                <div class="form-group">
-                    <div class="col-xs-12">
-                        <input class="form-control" type="text" required="required" placeholder={Conf.tr("Username")}
-                               autocapitalize="none"
-                               name="login" pattern="[A-Za-z0-9_-]{3,}"
-                               title={Conf.tr("Characters and numbers allowed")}/>
-                        <i class="md md-account-circle form-control-feedback l-h-34"></i>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="tel" name="phone" required="required"
+                                   placeholder={Conf.tr("Enter your mobile phone number: ") + Conf.phone.view_mask}
+                                   title={Conf.tr("Ukrainian phone number format allowed: +38 (050) 123-45-67")}
+                                   oninput={ctrl.addPhoneViewPattern.bind(ctrl)}
+                                   value={ctrl.phone()}
+                            />
+                            <i class="md md-account-circle form-control-feedback l-h-34"></i>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="col-xs-12">
-                        <input class="form-control" type="password" required="required"
-                               autocapitalize="none"
-                               placeholder={Conf.tr("Password")} name="password" pattern=".{6,}"
-                               title={Conf.tr("6 characters minimum")}/>
-                        <i class="md md-vpn-key form-control-feedback l-h-34"></i>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="password" required="required"
+                                   autocapitalize="none"
+                                   placeholder={Conf.tr("Password")} name="password" pattern=".{6,}"
+                                   title={Conf.tr("8 characters minimum")}/>
+                            <i class="md md-vpn-key form-control-feedback l-h-34"></i>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="col-xs-12">
-                        <input class="form-control" type="password" required="required"
-                               autocapitalize="none"
-                               placeholder={Conf.tr("Retype Password")} name="repassword" pattern=".{6,}"
-                               title={Conf.tr("6 characters minimum")}/>
-                        <i class="md md-vpn-key form-control-feedback l-h-34"></i>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="password" required="required"
+                                   autocapitalize="none"
+                                   placeholder={Conf.tr("Retype Password")} name="repassword" pattern=".{6,}"
+                                   title={Conf.tr("8 characters minimum")}/>
+                            <i class="md md-vpn-key form-control-feedback l-h-34"></i>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group m-t-20 text-center">
-                    <button
-                        class="btn btn-inverse btn-lg btn-custom waves-effect w-md waves-light m-b-5">{Conf.tr("Sign up")}</button>
-                </div>
-            </form>
+                    <div class="form-group m-t-20">
+                        <div class="col-xs-6">
+                            <a href="/" config={m.route}
+                               class="btn btn-default btn-custom waves-effect w-md waves-light m-b-5">{Conf.tr("Back")}</a>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <button class="btn btn-primary btn-custom waves-effect w-md waves-light m-b-5"
+                                    type="submit">{Conf.tr("Sign up")}
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            }
         </div>
     }
 };

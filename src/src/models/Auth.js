@@ -75,18 +75,18 @@ var Auth = {
                 return account;
             })
     },
-    loadingCB: function (params, stage) {
+    loadingCB: function (stage) {
         m.startComputation();
         if (stage.type == 'request') {
-            m.onLoadingStart(stage.prevTime + ' ' + stage.func);
+            m.onLoadingStart();
         } else {
-            m.onIdleStart(stage.prevTime + ' ' + stage.func);
+            m.onProcedureStart();
         }
         m.endComputation();
     },
-    login: function (login, password) {
+    login: function (login, password, progressCb) {
         var master = null;
-        m.onIdleStart();
+        m.onProcedureStart();
         return this.loadAccountById(Conf.master_key)
             .then(function (master_info) {
                 master = master_info;
@@ -94,15 +94,15 @@ var Auth = {
                     server: Conf.keyserver_host + '/v2',
                     username: login,
                     password: password,
-                    cb: Auth.loadingCB
+                    cb: progressCb
                 });
 
             })
             .then(function (wallet) {
-                m.onIdleEnd();
+                m.onProcedureEnd();
                 m.onLoadingEnd();
                 var is_admin = false;
-                m.onIdleStart();
+                m.onProcedureStart();
                 if ((typeof master != 'undefined') && (typeof master.signers != 'undefined')) {
                     master.signers.forEach(function (signer) {
                         if (signer.weight == StellarSdk.xdr.SignerType.signerAdmin().value &&
@@ -112,60 +112,128 @@ var Auth = {
                     });
 
                     if (is_admin) {
-                        m.onIdleEnd();
+                        m.onProcedureEnd();
                         throw new Error('Login/password combination is invalid');
                     }
-
                 }
 
                 return wallet;
             })
-            .then(function (wallet) {
-                m.startComputation();
-                Auth.wallet(wallet);
-                Auth.keypair(StellarSdk.Keypair.fromSeed(wallet.getKeychainData()));
-                Auth.username(wallet.username);
-                Auth.api(new StellarWallet.Api(Conf.api_host, Auth.keypair()));
-                m.endComputation();
-                m.onIdleEnd();
-            });
+            .then(Auth.initAuthData);
     },
 
-    registration: function (login, password) {
-        m.onIdleStart();
+    loginByPin: function (pin, username, passwordHash) {
+        m.onProcedureStart();
+        return StellarWallet.decryptAuthData({
+            encryptedPasswordHash: passwordHash,
+            pin: pin
+        })
+            .then(authData => {
+                console.log("-------- authData in Auth.loginByPin() --------");
+                console.log(authData);
+
+                return StellarWallet.getWallet({
+                    server: Conf.keyserver_host + '/v2',
+                    username: username,
+                    passwordHash: authData.decryptedPasswordHash,
+                    cb: Auth.loadingCB
+                });
+            })
+            .then(Auth.initAuthData)
+    },
+
+    loginByPasswordHash: function (login, passwordHash) {
+        var master = null;
+        m.onProcedureStart();
+        return this.loadAccountById(Conf.master_key)
+            .then(function (master_info) {
+                master = master_info;
+                return StellarWallet.getWallet({
+                    server: Conf.keyserver_host + '/v2',
+                    username: login,
+                    passwordHash: passwordHash,
+                    cb: Auth.loadingCB
+                });
+            })
+            .then(function (wallet) {
+                m.onProcedureEnd();
+                m.onLoadingEnd();
+                var is_admin = false;
+                m.onProcedureStart();
+                if ((typeof master != 'undefined') && (typeof master.signers != 'undefined')) {
+                    master.signers.forEach(function (signer) {
+                        if (signer.weight == StellarSdk.xdr.SignerType.signerAdmin().value &&
+                            signer.public_key == StellarSdk.Keypair.fromSeed(wallet.getKeychainData()).accountId()) {
+                            is_admin = true;
+                        }
+                    });
+
+                    if (is_admin) {
+                        m.onProcedureEnd();
+                        throw new Error('Login/password combination is invalid');
+                    }
+                }
+
+                return wallet;
+            })
+            .then(Auth.initAuthData);
+    },
+
+    initAuthData: function (wallet) {
+        console.log("-------- in initAuthData() --------");
+        console.log(wallet);
+
+        m.startComputation();
+        Auth.wallet(wallet);
+        Auth.keypair(StellarSdk.Keypair.fromSeed(wallet.getKeychainData()));
+        Auth.username(wallet.username);
+        Auth.api(new StellarWallet.Api(Conf.api_host, Auth.keypair()));
+        m.endComputation();
+        m.onProcedureEnd();
+    },
+
+    registration: function (login, password, progressCb) {
+        m.onProcedureStart();
         var accountKeypair = StellarSdk.Keypair.random();
         m.onLoadingStart();
         return this.checkConnection()
-            .then(StellarWallet.createWallet({
-                server: Conf.keyserver_host + '/v2',
-                username: login,
-                password: password,
-                accountId: accountKeypair.accountId(),
-                publicKey: accountKeypair.rawPublicKey().toString('base64'),
-                keychainData: accountKeypair.seed(),
-                mainData: 'mainData',
-                kdfParams: {
-                    algorithm: 'scrypt',
-                    bits: 256,
-                    n: Math.pow(2, 11),
-                    r: 8,
-                    p: 1
-                },
-                cb: Auth.loadingCB
-            }));
+            .then(() => {
+                return StellarWallet.createWalletWithPin({
+                    server: Conf.keyserver_host + '/v2',
+                    username: login,
+                    password: password,
+                    accountId: accountKeypair.accountId(),
+                    publicKey: accountKeypair.rawPublicKey().toString('base64'),
+                    keychainData: accountKeypair.seed(),
+                    mainData: 'mainData',
+                    kdfParams   : {
+                        algorithm: 'scrypt',
+                        bits     : 256,
+                        n        : 2,
+                        r        : 8,
+                        p        : 1,
+                        passwordHashAlgorithm: 'sha256',
+                        hashRounds: Math.pow(2, 19)
+                    },
+                    cb: progressCb
+                })
+            });
     },
 
     logout: function () {
         window.location.reload();
     },
 
-    updatePassword: function (old_pwd, new_pwd) {
+    updatePassword: function (old_pwd, new_pwd, progressCb) {
         return this.checkConnection()
-            .then(StellarWallet.getWallet({
-                server: Conf.keyserver_host + '/v2',
-                username: Auth.username(),
-                password: old_pwd
-            }))
+            .then(() => {
+                return StellarWallet.getWallet({
+                    server: Conf.keyserver_host + '/v2',
+                    username: Auth.username(),
+                    password: old_pwd,
+                    cb: progressCb
+                })
+            })
             .then(function (wallet) {
                 return wallet.changePassword({
                     newPassword: new_pwd,
@@ -231,6 +299,14 @@ var Auth = {
 
                 return assets_list;
             });
+    },
+
+    checkPinCreated: function () {
+        return !!(window.localStorage.getItem('encryptedPasswordHash'));
+    },
+
+    getLastLogin: function () {
+        return window.localStorage.getItem('lastLogin');
     }
 };
 

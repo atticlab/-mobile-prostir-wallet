@@ -1,6 +1,7 @@
 var Conf = require('../config/Config.js');
 var Navbar = require('../components/Navbar.js');
 var Auth = require('../models/Auth.js');
+var ProgressBar = require('../components/ProgressBar');
 
 var Settings = module.exports = {
 
@@ -10,6 +11,23 @@ var Settings = module.exports = {
         if (!Auth.keypair()) {
             return m.route('/');
         }
+
+        this.progressCb = function (stage) {
+            console.log(stage);
+
+            switch (stage.type) {
+                case 'request':
+                    m.onLoadingStart();
+                    break;
+                case 'progress':
+                    m.startComputation();
+                    ctrl.progress(stage.progress);
+                    m.endComputation();
+                    break;
+                default:
+                    m.onProcedureStart();
+            }
+        };
 
         this.myScroll = null;
         this.initPullToRefresh = function () {
@@ -27,23 +45,13 @@ var Settings = module.exports = {
             }
         };
 
+        this.progress = m.prop(0);
+        this.showProgress = m.prop(false);
+
         setTimeout(function () {
             ctrl.initPullToRefresh();
         }, 500);
         
-        //return phone in pattern or prefix
-        this.getPhoneWithViewPattern = function (number) {
-            if (number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix) {
-                number = Conf.phone.prefix;
-            }
-            return m.prop(VMasker.toPattern(number, {pattern: Conf.phone.view_mask, placeholder: "x"}));
-        };
-
-        this.addPhoneViewPattern = function (e) {
-            ctrl.phone = ctrl.getPhoneWithViewPattern(e.target.value);
-        };
-
-        this.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + Auth.wallet().phone);
         this.email = m.prop(Auth.wallet().email || '');
 
         this.changePassword = function (e) {
@@ -71,28 +79,31 @@ var Settings = module.exports = {
 
             m.onLoadingStart();
             m.startComputation();
+            ctrl.showProgress(true);
+            m.endComputation();
 
-            Auth.updatePassword(e.target.oldpassword.value, e.target.password.value)
+            Auth.updatePassword(e.target.oldpassword.value, e.target.password.value, ctrl.progressCb)
                 .then(function () {
                     m.flashSuccess(Conf.tr("Password changed"));
+                    window.localStorage.removeItem('encryptedPasswordHash');
                     e.target.reset();
                 })
                 .catch(function (err) {
+                    console.error(err);
                     m.flashError(err.message ? Conf.tr(err.message) : Conf.tr("Cannot change password"));
                 })
                 .then(function () {
-                    m.onLoadingEnd();
+                    m.startComputation();
+                    ctrl.showProgress(false);
+                    ctrl.progress(0);
                     m.endComputation();
                 })
         };
 
         this.bindData = function (e) {
             e.preventDefault();
-            //reformat phone to database format
-            e.target.phone.value = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask);
-            var phone_number = e.target.phone.value.substr(2) ? e.target.phone.value.substr(2) : '';
 
-            if (e.target.email.value != Auth.wallet().email || phone_number != Auth.wallet().phone) {
+            if (e.target.email.value != Auth.wallet().email) {
 
                 m.onLoadingStart();
 
@@ -105,16 +116,7 @@ var Settings = module.exports = {
                         return m.flashError(Conf.tr("Invalid email"));
                     }
                 }
-                dataToUpdate.email = e.target.email.value
-
-                //validate phone
-                if (phone_number.length > 0) {
-                    if (phone_number.match(/\d/g).length != Conf.phone.length) {
-                        ctrl.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + phone_number);
-                        return m.flashError(Conf.tr("Invalid phone"));
-                    }
-                }
-                dataToUpdate.phone = phone_number;
+                dataToUpdate.email = e.target.email.value;
 
                 Auth.update(dataToUpdate)
                     .then(function () {
@@ -133,9 +135,7 @@ var Settings = module.exports = {
                     })
                     .then(function () {
                         m.startComputation();
-                        Auth.wallet().phone = dataToUpdate.phone;
                         Auth.wallet().email = dataToUpdate.email;
-                        ctrl.phone = ctrl.getPhoneWithViewPattern(Conf.phone.prefix + Auth.wallet().phone);
                         ctrl.email = m.prop(Auth.wallet().email || '');
                         m.onLoadingEnd();
                         m.endComputation();
@@ -148,92 +148,91 @@ var Settings = module.exports = {
         return [m.component(Navbar),
             <div class="wrapper">
                 <div class="container puller" id="container">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="panel panel-color panel-inverse">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">{Conf.tr("Change password")}</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <form class="form-horizontal" onsubmit={ctrl.changePassword.bind(ctrl)}>
-                                        <div class="form-group">
-                                            <div class="col-xs-12">
-                                                <label for="">{Conf.tr("Old password")}:</label>
-                                                <input class="form-control" type="password" required="required"
-                                                       name="oldpassword"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="col-xs-12">
-                                                <label for="">{Conf.tr("New password")}:</label>
-                                                <input class="form-control" type="password" required="required"
-                                                       name="password"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="col-xs-12">
-                                                <label for="">{Conf.tr("Repeat new password")}:</label>
-                                                <input class="form-control" type="password" required="required"
-                                                       name="repassword"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group m-t-20">
-                                            <div class="col-sm-7">
-                                                <button class="btn btn-primary btn-custom w-md waves-effect waves-light"
-                                                        type="submit">
-                                                    {Conf.tr("Change")}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                    {ctrl.showProgress() ?
+                        <div class="form-group m-t-20">
+                            {m(ProgressBar, {value: ctrl.progress, text: Conf.tr("Encrypting your new password")})}
                         </div>
-                        <div class="col-lg-6">
-                            <div class="panel panel-color panel-inverse">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">{Conf.tr("Change additional data")}</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <form class="form-horizontal" onsubmit={ctrl.bindData.bind(ctrl)}>
-                                        <div class="form-group">
-                                            <div class="col-xs-12">
-                                                <label for="">{Conf.tr("Email")}:</label>
-                                                <input class="form-control" type="text" name="email"
-                                                       oninput={m.withAttr("value", ctrl.email)} value={ctrl.email()}/>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="col-xs-12">
-                                                <label for="">{Conf.tr("Phone")}:</label>
-                                                <input class="form-control" type="text" name="phone"
-                                                       placeholder={Conf.phone.view_mask}
-                                                       oninput={ctrl.addPhoneViewPattern.bind(ctrl)}
-                                                       value={ctrl.phone()}/>
-                                            </div>
-                                        </div>
-                                        {
-
-                                            ctrl.phone() != Auth.wallet().phone || ctrl.email() != Auth.wallet().email ?
-                                                <div class="form-group m-t-20">
-                                                    <div class="col-sm-7">
-                                                        <button
-                                                            class="btn btn-primary btn-custom w-md waves-effect waves-light"
-                                                            type="submit">{Conf.tr("Save")}</button>
-                                                    </div>
+                        :
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="panel panel-color panel-inverse">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">{Conf.tr("Change password")}</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <form class="form-horizontal" onsubmit={ctrl.changePassword.bind(ctrl)}>
+                                            <div class="form-group">
+                                                <div class="col-xs-12">
+                                                    <label for="">{Conf.tr("Old password")}:</label>
+                                                    <input class="form-control" type="password" required="required"
+                                                           name="oldpassword"/>
                                                 </div>
-                                                :
-                                                ''
-                                        }
-                                    </form>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-xs-12">
+                                                    <label for="">{Conf.tr("New password")}:</label>
+                                                    <input class="form-control" type="password" required="required"
+                                                           name="password"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-xs-12">
+                                                    <label for="">{Conf.tr("Repeat new password")}:</label>
+                                                    <input class="form-control" type="password" required="required"
+                                                           name="repassword"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group m-t-20">
+                                                <div class="col-sm-7">
+                                                    <button
+                                                        class="btn btn-primary btn-custom w-md waves-effect waves-light"
+                                                        type="submit">
+                                                        {Conf.tr("Change")}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="panel panel-color panel-inverse">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">{Conf.tr("Change additional data")}</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <form class="form-horizontal" onsubmit={ctrl.bindData.bind(ctrl)}>
+                                            <div class="form-group">
+                                                <div class="col-xs-12">
+                                                    <label for="">{Conf.tr("Email")}:</label>
+                                                    <input class="form-control" type="text" name="email"
+                                                           oninput={m.withAttr("value", ctrl.email)}
+                                                           value={ctrl.email()}/>
+                                                </div>
+                                            </div>
+
+                                            {
+
+                                                ctrl.email() != Auth.wallet().email ?
+                                                    <div class="form-group m-t-20">
+                                                        <div class="col-sm-7">
+                                                            <button
+                                                                class="btn btn-primary btn-custom w-md waves-effect waves-light"
+                                                                type="submit">{Conf.tr("Save")}</button>
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    ''
+                                            }
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
 

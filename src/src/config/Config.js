@@ -4,7 +4,7 @@ var Locales = require('../locales/translations.js');
 var conf = {
     master_key: 'GAWIB7ETYGSWULO4VB7D6S42YLPGIC7TY7Y2SSJKVOTMQXV5TILYWBUA',
     horizon_host: 'http://blockchain.euah.pw',
-    assets_url: 'assets',
+    assets_url: '/assets',
     keyserver_host: 'http://keys.euah.pw',
     keyserver_v_url: '/v2/wallets',
     api_host       : 'http://api.euah.pw',

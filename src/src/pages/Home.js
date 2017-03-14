@@ -1,7 +1,6 @@
 var Conf = require('../config/Config.js');
 var Navbar = require('../components/Navbar.js');
 var Payments = require('../components/Payments.js');
-var Footer = require('../components/Footer.js');
 var Auth = require('../models/Auth.js');
 
 module.exports = {
@@ -203,8 +202,6 @@ module.exports = {
                     </div>
                 </div>
             </div>
-            ,
-            m.component(Footer)
         ]
     }
 };

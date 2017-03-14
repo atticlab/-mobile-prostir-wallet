@@ -138,10 +138,10 @@ module.exports = {
         'ru': "Пожалуйста, заполните все обязательные поля",
         'uk': "Будь ласка, заповніть всі обов'язкові поля"
     },
-    "Password should have 6 chars min": {
-        'en': "Password should have 6 chars min",
-        'ru': "Минимальная длина пароля - 6 символов",
-        'uk': "Мінімальна довжина пароля - 6 символів"
+    "Password should have 8 chars min": {
+        'en': "Password should have 8 chars min",
+        'ru': "Минимальная длина пароля - 8 символов",
+        'uk': "Мінімальна довжина пароля - 8 символів"
     },
     "Passwords should match": {
         'en': "Passwords should match",
@@ -183,10 +183,10 @@ module.exports = {
         'ru': "Символы и цифры разрешены",
         'uk': "Символи та цифри дозволені"
     },
-    "6 characters minimum": {
-        'en': "6 characters minimum",
-        'ru': "Минимум 6 символов",
-        'uk': "Мінімум 6 символів"
+    "8 characters minimum": {
+        'en': "8 characters minimum",
+        'ru': "Минимум 8 символов",
+        'uk': "Мінімум 8 символів"
     },
     "Log in": {
         'en': "Log in",

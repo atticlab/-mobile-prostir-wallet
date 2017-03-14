@@ -4,19 +4,20 @@ var Auth = require('../models/Auth.js');
 
 var Invoice = module.exports = {
 
-  controller: function () {
-    var ctrl = this;
+    controller: function () {
+        var ctrl = this;
 
-    //return phone in pattern or prefix
-    this.getPhoneWithViewPattern = function (number) {
-      if (number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix) {
-        number = Conf.phone.prefix;
-      }
-      return m.prop(VMasker.toPattern(number, {pattern: Conf.phone.view_mask, placeholder: "x"}));
-    };
+        //return phone in pattern or prefix
+        this.getPhoneWithViewPattern = function (number) {
+            if (number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix) {
+                number = Conf.phone.prefix;
+            }
+            return m.prop(VMasker.toPattern(number, {pattern: Conf.phone.view_mask, placeholder: "x"}));
+        };
 
         this.addPhoneViewPattern = function (e) {
             ctrl.infoPhone = ctrl.getPhoneWithViewPattern(e.target.value);
+            setTimeout(function(){e.target.selectionStart = e.target.selectionEnd = 10000}, 0);
         };
 
         this.infoAsset = m.prop(m.prop(m.route.param('asset') ? m.route.param('asset') : ''));
@@ -31,25 +32,25 @@ var Invoice = module.exports = {
             return m.route('/');
         }
 
-          this.myScroll = null;
-          this.initPullToRefresh = function () {
-              if (ctrl.myScroll == null) {
-                  var topnavSize = document.getElementById('topnav').offsetHeight;
-                  document.getElementById('container').style.top = topnavSize + 10 + "px";
-                  document.addEventListener('touchmove', function (e) {
-                      e.preventDefault();
-                  }, false);
-                  ctrl.myScroll = new IScroll('#container', {
-                      useTransition: true,
-                      startX: 0,
-                      topOffset: 0
-                  });
-              }
-          };
+        this.myScroll = null;
+        this.initPullToRefresh = function () {
+            if (ctrl.myScroll == null) {
+                var topnavSize = document.getElementById('topnav').offsetHeight;
+                document.getElementById('container').style.top = topnavSize + 10 + "px";
+                document.addEventListener('touchmove', function (e) {
+                    e.preventDefault();
+                }, false);
+                ctrl.myScroll = new IScroll('#container', {
+                    useTransition: true,
+                    startX       : 0,
+                    topOffset    : 0
+                });
+            }
+        };
 
-          setTimeout(function () {
-              ctrl.initPullToRefresh();
-          }, 500);
+        setTimeout(function () {
+            ctrl.initPullToRefresh();
+        }, 500);
 
         this.changeTransferType = function (e) {
             e.preventDefault();
@@ -72,7 +73,7 @@ var Invoice = module.exports = {
                     this.infoMemo('');
             }
             m.endComputation();
-        }
+        };
 
         this.getInvoice = function (e) {
             e.preventDefault();
@@ -121,20 +122,16 @@ var Invoice = module.exports = {
                 .then(() => {
                     m.onLoadingEnd();
                 })
-        }
+        };
 
-        this.processPayment = function (e) {
+
+        this.commitPayment = function (e) {
             e.preventDefault();
-            var phoneNum = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask).substr(2);
-            var email = e.target.email.value.toLowerCase();
-            var accountId = e.target.account.value;
-            var memoText = e.target.memo.value.replace(/<\/?[^>]+(>|$)/g, ""); //delete html tags from memo
-            var amount = parseFloat(e.target.amount.value);
 
-            // validate phone
-            if (phoneNum.length > 0 && phoneNum.match(/\d/g).length != Conf.phone.length) {
-                return m.flashError(Conf.tr("Invalid phone"));
-            }
+            let accountId = e.target.account.value;
+            let memoText = e.target.memo.value.replace(/<\/?[^>]+(>|$)/g, ""); //delete html tags from memo
+            let amount = parseFloat(e.target.amount.value);
+            let asset = e.target.asset.value;
 
             if (!amount || amount < 0) {
                 return m.flashError(Conf.tr("Amount is invalid"));
@@ -144,64 +141,56 @@ var Invoice = module.exports = {
                 return m.flashError(Conf.tr("Memo text is too long"));
             }
 
-            if (this.transferType() == 'byPhone') {
-                var formData = new FormData();
-                formData.append("phone", phoneNum);
-                memoText = 'by_phone';
+            switch (this.transferType()) {
+                case 'byAccount':
+                    ctrl.processPayment(accountId, memoText, amount, asset);
+                    break;
 
-                try {
-                    // TODO: move to wallet-sdk
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", Conf.keyserver_host + Conf.keyserver_v_url + '/get_wallet_data', false); // false for synchronous request
-                    xhr.send(formData);
+                case 'byPhone':
+                    let phoneNum = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask).substr(2);
 
-                    var response = JSON.parse(xhr.responseText);
-
-                    if (response.status == 'fail') {
-                        switch (response.code) {
-                            case 'not_found':
-                                return m.flashError(Conf.tr("User not found! Check phone number"));
-                            default:
-                                return m.flashError(Conf.tr("Connection error"));
-                        }
+                    if (phoneNum.length > 0 && phoneNum.match(/\d/g).length != Conf.phone.length) {
+                        return m.flashError(Conf.tr("Invalid phone"));
                     }
 
-                    accountId = response.accountId;
+                    StellarWallet.getWalletDataByParams({
+                        server: Conf.keyserver_host + "/v2",
+                        phone : phoneNum
+                    })
+                        .then(function (walletData) {
+                            if (walletData && walletData.accountId) {
+                                ctrl.processPayment(walletData.accountId, memoText, amount, asset);
+                            }
+                        })
+                        .catch(function (err) {
+                            return m.flashError(Conf.tr("User not found! Check phone number"));
+                        });
+                    break;
 
-                } catch (e) {
-                    return m.flashError(Conf.tr("Connection error"));
-                }
-            }
+                case 'byEmail':
+                    let email = e.target.email.value.toLowerCase();
 
-            if (this.transferType() == 'byEmail') {
-                var formData = new FormData();
-                formData.append("email", email);
-                memoText = 'by_email';
-
-                try {
-                    // TODO: move to wallet-sdk
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", Conf.keyserver_host + Conf.keyserver_v_url + '/get_wallet_data', false); // false for synchronous request
-                    xhr.send(formData);
-
-                    var response = JSON.parse(xhr.responseText);
-
-                    if (response.status == 'fail') {
-                        switch (response.code) {
-                            case 'not_found':
-                                return m.flashError(Conf.tr("User not found! Check phone number"));
-                            default:
-                                return m.flashError(Conf.tr("Connection error"));
-                        }
+                    if (email === '') {
+                        return m.flashError(Conf.tr("Please fill all the fields"));
                     }
 
-                    accountId = response.accountId;
-
-                } catch (e) {
-                    return m.flashError(Conf.tr("Connection error"));
-                }
+                    StellarWallet.getWalletDataByParams({
+                        server: Conf.keyserver_host + "/v2",
+                        email : email
+                    })
+                        .then(function (walletData) {
+                            if (walletData && walletData.accountId) {
+                                ctrl.processPayment(walletData.accountId, memoText, amount, asset);
+                            }
+                        })
+                        .catch(function (err) {
+                            return m.flashError(Conf.tr("User not found! Check email"));
+                        });
+                    break;
             }
+        };
 
+        this.processPayment = function (accountId, memoText, amount, asset) {
             if (!StellarSdk.Keypair.isValidPublicKey(accountId)) {
                 return m.flashError(Conf.tr("Account is invalid"));
             }
@@ -214,14 +203,14 @@ var Invoice = module.exports = {
             m.onLoadingStart();
 
             return Conf.horizon.loadAccount(Auth.keypair().accountId())
+            // TODO: Do not add memo to tx if it's empty
                 .then(function (source) {
-                    // TODO: Do not add memo to tx if it's empty
-                    var memo = StellarSdk.Memo.text(memoText);
-                    var tx = new StellarSdk.TransactionBuilder(source, {memo: memo})
+                    let memo = StellarSdk.Memo.text(memoText);
+                    let tx = new StellarSdk.TransactionBuilder(source, {memo: memo})
                         .addOperation(StellarSdk.Operation.payment({
                             destination: accountId,
-                            amount: amount.toString(),
-                            asset: new StellarSdk.Asset(Conf.asset, Conf.master_key)
+                            amount     : amount.toString(),
+                            asset      : new StellarSdk.Asset(asset, Conf.master_key)
                         }))
                         .build();
 
@@ -233,7 +222,6 @@ var Invoice = module.exports = {
                     m.flashSuccess(Conf.tr("Transfer successful"));
                 })
                 .catch(function (err) {
-                    console.log(err);
                     m.flashError(Conf.tr("Cannot make transfer"));
                 })
                 .then(function () {
@@ -244,7 +232,7 @@ var Invoice = module.exports = {
                     ctrl.infoEmail('');
                     m.endComputation();
                 });
-        }
+        };
     },
 
     view: function (ctrl) {
@@ -252,7 +240,7 @@ var Invoice = module.exports = {
             <div class="wrapper">
                 <div class="container puller" id="container">
                     <div class="row">
-                        <form class="col-lg-6" onsubmit={ctrl.processPayment.bind(ctrl)}>
+                        <form class="col-lg-6" onsubmit={ctrl.commitPayment.bind(ctrl)}>
                             <div class="panel panel-color panel-inverse">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">{Conf.tr("Transfer money")}</h3>

@@ -5,27 +5,27 @@ m.onLoadingStart = function (stage) {
     /*if (typeof stage != 'undefined') {
         document.getElementById('data-stage').innerHTML = stage;
     }*/
-    m.onIdleEnd();
+    m.onProcedureEnd();
     document.getElementById('spinner').style.display = 'block';
 };
 m.onLoadingEnd = function () {
     document.getElementById('spinner').style.display = 'none';
 };
-m.onIdleStart = function (stage) {
+m.onProcedureStart = function (stage) {
     /*if (typeof stage != 'undefined') {
         document.getElementById('idle-stage').innerHTML = stage;
     }*/
     m.onLoadingEnd();
     document.getElementById('spinner').style.display = 'block';
 };
-m.onIdleEnd = function () {
+m.onProcedureEnd = function () {
     document.getElementById('spinner').style.display = 'none';
 };
 
 // Wrapper for notification which stops animation
 m.flashError = function (msg) {
     m.onLoadingEnd();
-    m.onIdleEnd();
+    m.onProcedureEnd();
     $.Notification.notify('error', 'top left', Conf.tr("Error"), msg);
 };
 m.flashApiError = function (err) {
@@ -34,13 +34,13 @@ m.flashApiError = function (err) {
         return;
     }
     m.onLoadingEnd();
-    m.onIdleEnd();
+    m.onProcedureEnd();
     var msg = err.message ? Conf.tr(err.message) + (err.description ? ': ' + Conf.tr(err.description) : '') : Conf.tr('Unknown error. Contact support');
     $.Notification.notify('error', 'top left', Conf.tr("Error"), msg);
 };
 m.flashSuccess = function (msg) {
     m.onLoadingEnd();
-    m.onIdleEnd();
+    m.onProcedureEnd();
     $.Notification.notify('success', 'top left', Conf.tr("Success"), msg);
 };
 
@@ -75,7 +75,8 @@ var app = {
             "/settings": require('./pages/Settings.js'),
             "/transaction/:trans_id/:target_acc/:amount/:asset": require('./pages/Transaction.js'),
             "/cards": require('./pages/Cards.js'),
-            "/payments": require('./pages/Payments.js')
+            "/payments": require('./pages/Payments.js'),
+            "/pin": require('./pages/Pin.js')
         });
 
         app.receivedEvent('spinner');

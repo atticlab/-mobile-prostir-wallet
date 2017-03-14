@@ -1,6 +1,5 @@
 var Conf = require('../config/Config.js');
 var Navbar = require('../components/Navbar.js');
-var Footer = require('../components/Footer.js');
 var Auth = require('../models/Auth.js');
 var DateFormat = require('dateformat');
 
@@ -130,8 +129,6 @@ var Transaction = module.exports = {
                     </div>
                 </div>
             </div>
-            ,
-            m.component(Footer)
         ]
     }
 };
