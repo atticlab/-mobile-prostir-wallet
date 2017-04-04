@@ -6,20 +6,20 @@ m.onLoadingStart = function (stage) {
         document.getElementById('data-stage').innerHTML = stage;
     }*/
     m.onProcedureEnd();
-    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('data-spinner').style.display = 'block';
 };
 m.onLoadingEnd = function () {
-    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('data-spinner').style.display = 'none';
 };
 m.onProcedureStart = function (stage) {
     /*if (typeof stage != 'undefined') {
         document.getElementById('idle-stage').innerHTML = stage;
     }*/
     m.onLoadingEnd();
-    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('data-spinner').style.display = 'block';
 };
 m.onProcedureEnd = function () {
-    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('data-spinner').style.display = 'none';
 };
 
 // Wrapper for notification which stops animation
@@ -79,7 +79,7 @@ var app = {
             "/pin": require('./pages/Pin.js')
         });
 
-        app.receivedEvent('spinner');
+        app.receivedEvent('data-spinner');
     },
 
     // Update DOM on a Received Event

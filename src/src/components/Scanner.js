@@ -23,8 +23,13 @@ var Scanner = module.exports = {
                             xhr.open('GET',
                                 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyDqY4a5m2DS-pV9LwENP_kofNb0FaXORrg&shortUrl=' + result.text);
                             xhr.onload = function () {
-                                var params = JSON.parse(xhr.responseText);
-                                var p = params['longUrl'].split('?')[1].split('&');
+                                try {
+                                    var params = JSON.parse(xhr.responseText);
+                                    var p = params['longUrl'].split('?')[1].split('&');
+                                } catch (err) {
+                                    m.flashError(Conf.tr('Invalid QR-code!'));
+                                    return m.route('/');
+                                }
                                 var result = {};
                                 p.forEach(function (pair) {
                                     pair = pair.split('=');
@@ -35,7 +40,12 @@ var Scanner = module.exports = {
                             };
                             xhr.send();
                         } else {
-                            var params = JSON.parse(result.text);
+                            try {
+                                var params = JSON.parse(result.text);
+                            } catch (err) {
+                                m.flashError(Conf.tr('Invalid QR-code!'));
+                                return m.route('/');
+                            }
 
                             switch (parseInt(params.t)) {
                                 case QR_TYPE_SEND_MONEY :

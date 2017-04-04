@@ -27,10 +27,7 @@ module.exports = {
                 <div class="container">
 
                     <a href="/" config={m.route} class="logo">
-                        {((Conf.localeStr == 'uk') || (Conf.localeStr == 'ru')) ?
-                            <img src="./assets/img/white_yellow_ua.svg" alt=""/>
-                            : <img src="./assets/img/white_yellow_en.svg" alt="" style="margin-top: 11px !important"/>
-                        }
+                        <img src="./assets/img/logo_blue-with-yellow.png" style="margin-top: 7px;" alt=""/>
                     </a>
 
                     <div class="menu-extras">

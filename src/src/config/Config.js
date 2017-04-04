@@ -27,6 +27,11 @@ conf.payments = {
     onpage: 10
 };
 
+conf.sms = {
+    resendInterval: 3*60*1000
+};
+
+
 conf.loc = new Localize(conf.locales);
 conf.loc.throwOnMissingTranslation(false);
 /*****/ conf.localeStr = (typeof navigator.language != 'undefined') ? navigator.language.substring(0,2) : "uk";

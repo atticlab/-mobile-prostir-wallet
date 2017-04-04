@@ -13,8 +13,6 @@ var Settings = module.exports = {
         }
 
         this.progressCb = function (stage) {
-            console.log(stage);
-
             switch (stage.type) {
                 case 'request':
                     m.onLoadingStart();

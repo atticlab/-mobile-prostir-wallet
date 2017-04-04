@@ -4089,7 +4089,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             },
 
             view: function view(ctrl) {
-                return { tag: "header", attrs: { id: "topnav" }, children: [{ tag: "div", attrs: { class: "topbar-main" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "a", attrs: { href: "/", config: m.route, class: "logo" }, children: [Conf.localeStr == 'uk' || Conf.localeStr == 'ru' ? { tag: "img", attrs: { src: "./assets/img/white_yellow_ua.svg", alt: "" } } : { tag: "img", attrs: { src: "./assets/img/white_yellow_en.svg", alt: "", style: "margin-top: 11px !important" } }] }, { tag: "div", attrs: { class: "menu-extras" }, children: [{ tag: "ul", attrs: { class: "nav navbar-nav navbar-right pull-right hidden-xs" }, children: [{ tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "#", onclick: Auth.logout }, children: [{ tag: "i", attrs: { class: "fa fa-power-off m-r-5" } }, Conf.tr("Logout")] }] }] }, { tag: "div", attrs: { class: "menu-item" }, children: [{ tag: "a", attrs: { onclick: ctrl.toggleVisible.bind(ctrl),
+                return { tag: "header", attrs: { id: "topnav" }, children: [{ tag: "div", attrs: { class: "topbar-main" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "a", attrs: { href: "/", config: m.route, class: "logo" }, children: [{ tag: "img", attrs: { src: "./assets/img/logo_blue-with-yellow.png", style: "margin-top: 7px;", alt: "" } }] }, { tag: "div", attrs: { class: "menu-extras" }, children: [{ tag: "ul", attrs: { class: "nav navbar-nav navbar-right pull-right hidden-xs" }, children: [{ tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "#", onclick: Auth.logout }, children: [{ tag: "i", attrs: { class: "fa fa-power-off m-r-5" } }, Conf.tr("Logout")] }] }] }, { tag: "div", attrs: { class: "menu-item" }, children: [{ tag: "a", attrs: { onclick: ctrl.toggleVisible.bind(ctrl),
                                             class: ctrl.visible() ? 'open navbar-toggle' : 'navbar-toggle' }, children: [{ tag: "div", attrs: { class: "lines" }, children: [{ tag: "span", attrs: {} }, { tag: "span", attrs: {} }, { tag: "span", attrs: {} }] }] }] }] }] }] }, { tag: "div", attrs: { class: "navbar-custom" }, children: [{ tag: "div", attrs: { class: "container" }, children: [{ tag: "div", attrs: { id: "navigation", style: ctrl.visible() ? 'display:block;' : '' }, children: [{ tag: "ul", attrs: { class: "navigation-menu", id: "mobile-spec-menu" }, children: [{ tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "/", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-dashboard" } }, Conf.tr("Dashboard")] }] }, { tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "/payments", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-list" } }, Conf.tr("Payments")] }] }, { tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "/transfer", config: m.route }, children: [{ tag: "i", attrs: {
                                                     class: "fa fa-money" } }, Conf.tr("Transfer money")] }] }, { tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "/invoice", config: m.route }, children: [{ tag: "i", attrs: {
                                                     class: "md md-payment" } }, Conf.tr("Create invoice")] }] }, { tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "/settings", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-settings" } }, Conf.tr("Settings")] }] }, Auth.wallet().passwordHash ? { tag: "li", attrs: {}, children: [{ tag: "a", attrs: { href: "/pin", config: m.route }, children: [{ tag: "i", attrs: { class: "md md-security" } }, Auth.checkPinCreated() ? Conf.tr("Remove PIN") : Conf.tr("Create PIN")] }] } : '', { tag: "li", attrs: { class: "has-submenu" }, children: [m.component(Scanner)] }, { tag: "li", attrs: { class: "visible-xs" }, children: [{ tag: "a", attrs: { href: "#", onclick: Auth.logout }, children: [{ tag: "i", attrs: { class: "fa fa-power-off m-r-5" } }, Conf.tr("Logout")] }] }] }] }] }] }] };
@@ -4219,8 +4219,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                             var xhr = new XMLHttpRequest();
                             xhr.open('GET', 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyDqY4a5m2DS-pV9LwENP_kofNb0FaXORrg&shortUrl=' + result.text);
                             xhr.onload = function () {
-                                var params = JSON.parse(xhr.responseText);
-                                var p = params['longUrl'].split('?')[1].split('&');
+                                try {
+                                    var params = JSON.parse(xhr.responseText);
+                                    var p = params['longUrl'].split('?')[1].split('&');
+                                } catch (err) {
+                                    m.flashError(Conf.tr('Invalid QR-code!'));
+                                    return m.route('/');
+                                }
                                 var result = {};
                                 p.forEach(function (pair) {
                                     pair = pair.split('=');
@@ -4231,7 +4236,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                             };
                             xhr.send();
                         } else {
-                            var params = JSON.parse(result.text);
+                            try {
+                                var params = JSON.parse(result.text);
+                            } catch (err) {
+                                m.flashError(Conf.tr('Invalid QR-code!'));
+                                return m.route('/');
+                            }
 
                             switch (parseInt(params.t)) {
                                 case QR_TYPE_SEND_MONEY:
@@ -4308,6 +4318,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             onpage: 10
         };
 
+        conf.sms = {
+            resendInterval: 3 * 60 * 1000
+        };
+
         conf.loc = new Localize(conf.locales);
         conf.loc.throwOnMissingTranslation(false);
         /*****/conf.localeStr = typeof navigator.language != 'undefined' ? navigator.language.substring(0, 2) : "uk";
@@ -4334,20 +4348,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 document.getElementById('data-stage').innerHTML = stage;
             }*/
             m.onProcedureEnd();
-            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('data-spinner').style.display = 'block';
         };
         m.onLoadingEnd = function () {
-            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('data-spinner').style.display = 'none';
         };
         m.onProcedureStart = function (stage) {
             /*if (typeof stage != 'undefined') {
                 document.getElementById('idle-stage').innerHTML = stage;
             }*/
             m.onLoadingEnd();
-            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('data-spinner').style.display = 'block';
         };
         m.onProcedureEnd = function () {
-            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('data-spinner').style.display = 'none';
         };
 
         // Wrapper for notification which stops animation
@@ -4406,7 +4420,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     "/pin": require('./pages/Pin.js')
                 });
 
-                app.receivedEvent('spinner');
+                app.receivedEvent('data-spinner');
             },
 
             // Update DOM on a Received Event
@@ -4436,7 +4450,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         };
 
         app.initialize();
-    }, { "./config/Config.js": 13, "./pages/Cards.js": 18, "./pages/Home.js": 19, "./pages/Invoice.js": 20, "./pages/Login.js": 21, "./pages/Logout.js": 22, "./pages/Payments.js": 23, "./pages/Pin.js": 24, "./pages/Settings.js": 25, "./pages/Sign.js": 26, "./pages/Transaction.js": 27, "./pages/Transfer.js": 28 }], 16: [function (require, module, exports) {
+    }, { "./config/Config.js": 13, "./pages/Cards.js": 19, "./pages/Home.js": 20, "./pages/Invoice.js": 21, "./pages/Login.js": 22, "./pages/Logout.js": 23, "./pages/Payments.js": 24, "./pages/Pin.js": 25, "./pages/Settings.js": 26, "./pages/Sign.js": 27, "./pages/Transaction.js": 28, "./pages/Transfer.js": 29 }], 16: [function (require, module, exports) {
         var _module$exports;
 
         module.exports = (_module$exports = {
@@ -5313,15 +5327,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 m.onProcedureEnd();
             },
 
-            registration: function registration(login, password, progressCb) {
-                m.onProcedureStart();
-                var accountKeypair = StellarSdk.Keypair.random();
-                m.onLoadingStart();
+            registration: function registration(accountKeypair, login, password, phone, progressCb) {
                 return this.checkConnection().then(function () {
                     return StellarWallet.createWallet({
                         server: Conf.keyserver_host + '/v2',
                         username: login,
                         password: password,
+                        phone: phone,
                         accountId: accountKeypair.accountId(),
                         publicKey: accountKeypair.rawPublicKey().toString('base64'),
                         keychainData: accountKeypair.seed(),
@@ -5340,6 +5352,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 });
             },
 
+            createSms: function createSms(phone, accountId) {
+                return StellarWallet.SMS.createSms({
+                    server: Conf.api_host,
+                    phone: phone,
+                    account_id: accountId
+                });
+            },
+
+            submitOTP: function submitOTP(phone, accountId, otp) {
+                return StellarWallet.SMS.submitOtp({
+                    server: Conf.api_host,
+                    phone: phone,
+                    account_id: accountId,
+                    otp: parseInt(otp)
+                });
+            },
+
+            resendSms: function resendSms(phone, accountId) {
+                return StellarWallet.SMS.resendSms({
+                    server: Conf.api_host,
+                    phone: phone,
+                    account_id: accountId
+                });
+            },
+
             logout: function logout() {
                 window.location.reload();
             },
@@ -5353,10 +5390,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         cb: progressCb
                     });
                 }).then(function (wallet) {
-
-                    console.log("-------- wallet before changePassword in Auth --------");
-                    console.log(wallet);
-
                     return wallet.changePassword({
                         newPassword: new_pwd,
                         secretKey: Auth.keypair()._secretKey.toString('base64'),
@@ -5429,6 +5462,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         module.exports = Auth;
     }, { "../config/Config.js": 13, "../errors/Errors.js": 14 }], 18: [function (require, module, exports) {
+        var Conf = require('../config/Config.js');
+        var Auth = require('../models/Auth.js');
+
+        var Helpers = {
+
+            getTimeFromSeconds: function getTimeFromSeconds(sec) {
+                var dt = new Date();
+                dt.setTime(sec * 1000);
+                var minutes = dt.getMinutes();
+                var seconds = dt.getSeconds();
+                if (minutes < 10) {
+                    minutes = "0" + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = "0" + seconds;
+                }
+                return minutes + ":" + seconds;
+            }
+
+        };
+        module.exports = Helpers;
+    }, { "../config/Config.js": 13, "../models/Auth.js": 17 }], 19: [function (require, module, exports) {
         var Conf = require('../config/Config.js');
         var Navbar = require('../components/Navbar.js');
         var Auth = require('../models/Auth.js');
@@ -5538,7 +5593,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }
 
         };
-    }, { "../components/Navbar.js": 8, "../config/Config.js": 13, "../models/Auth.js": 17 }], 19: [function (require, module, exports) {
+    }, { "../components/Navbar.js": 8, "../config/Config.js": 13, "../models/Auth.js": 17 }], 20: [function (require, module, exports) {
         var Conf = require('../config/Config.js');
         var Navbar = require('../components/Navbar.js');
         var Payments = require('../components/Payments.js');
@@ -5648,7 +5703,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                             class: "btn btn-primary btn-custom waves-effect w-md btn-sm waves-light" }, children: [Conf.tr("All transactions")] }] }] }] }] }] }];
             }
         };
-    }, { "../components/Navbar.js": 8, "../components/Payments.js": 9, "../config/Config.js": 13, "../models/Auth.js": 17 }], 20: [function (require, module, exports) {
+    }, { "../components/Navbar.js": 8, "../components/Payments.js": 9, "../config/Config.js": 13, "../models/Auth.js": 17 }], 21: [function (require, module, exports) {
         var Qr = require('qrcode-npm/qrcode');
         var Conf = require('../config/Config.js');
         var Navbar = require('../components/Navbar.js');
@@ -5759,7 +5814,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                                 onclick: ctrl.newForm.bind(ctrl) }, children: [Conf.tr("Create new")] }] }] }] }] }] }] }];
             }
         };
-    }, { "../components/Navbar.js": 8, "../config/Config.js": 13, "../models/Auth.js": 17, "qrcode-npm/qrcode": 6 }], 21: [function (require, module, exports) {
+    }, { "../components/Navbar.js": 8, "../config/Config.js": 13, "../models/Auth.js": 17, "qrcode-npm/qrcode": 6 }], 22: [function (require, module, exports) {
         var Navbar = require('../components/Navbar.js');
         var Auth = require('../models/Auth.js');
         var Conf = require('../config/Config.js');
@@ -5799,8 +5854,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     }, 0);
                 };
 
-                this.login = lastLogin ? ctrl.getPhoneWithViewPattern(Conf.phone.prefix + lastLogin) : ctrl.getPhoneWithViewPattern(Conf.phone.prefix);
-
                 this.attempts = m.prop(window.localStorage.getItem("pinAttempts") || 0);
                 this.progress = m.prop(0);
                 this.showProgress = m.prop(false);
@@ -5828,15 +5881,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 this.signin = function (e) {
                     e.preventDefault();
 
-                    var login = VMasker.toPattern(e.target.login.value, Conf.phone.db_mask).substr(2);
-
-                    if (login.length > 0 && login.match(/\d/g).length != Conf.phone.length) {
-                        return m.flashError(Conf.tr("Invalid phone"));
-                    }
-
                     ctrl.showProgress(true);
 
-                    Auth.login(login, e.target.password.value, ctrl.progressCB).then(function () {
+                    Auth.login(e.target.login.value, e.target.password.value, ctrl.progressCB).then(function () {
                         ctrl.showProgress(false);
                         window.localStorage.setItem('lastLogin', Auth.wallet().username);
                         window.localStorage.removeItem('encryptedPasswordHash');
@@ -5923,25 +5970,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             },
 
             view: function view(ctrl) {
-                return { tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "text-center" }, children: [{ tag: "a", attrs: { href: "index.html", class: "logo logo-lg" }, children: [Conf.localeStr == 'uk' || Conf.localeStr == 'ru' ? { tag: "img", attrs: { class: "logo-img", src: "./img/logo-ua-tagline.svg" } } : { tag: "img", attrs: { class: "logo-img", src: "./img/logo-en-tagline.svg" } }] }, { tag: "small", attrs: {}, children: [ctrl.appVersion()] }, { tag: "h4", attrs: {}, children: [Conf.tr('Login')] }] }, ctrl.showLoginByPin() ? { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.loginByPin.bind(ctrl) }, children: [m(PinInput, { pin: ctrl.pin, cb: ctrl.inputCompleteCB,
-                            options: {
-                                label: true,
-                                labelText: Conf.tr("Enter PIN to sign in to your account")
-                            } }), { tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-xs-6" }, children: [{ tag: "button", attrs: { class: "btn btn-inverse btn-custom waves-effect w-md waves-light m-b-5",
-                                        type: "button", onclick: ctrl.forgetPin }, children: [Conf.tr("Forget PIN")] }] }, { tag: "div", attrs: { class: "col-xs-6 text-right" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom waves-effect w-md waves-light m-b-5",
-                                        type: "submit" }, children: [Conf.tr("Login")] }] }] }] } : { tag: "div", attrs: {}, children: [ctrl.showProgress() ? { tag: "div", attrs: { class: "form-group m-t-10" }, children: [m(ProgressBar, { value: ctrl.progress, text: Conf.tr("Decrypting your account for signing in") })] } : { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.signin.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "tel", name: "login", required: "required",
-                                            placeholder: Conf.tr("Enter your mobile phone number: ") + Conf.phone.view_mask,
-                                            title: Conf.tr("Ukrainian phone number format allowed: +38 (050) 123-45-67"),
-                                            oninput: ctrl.addPhoneViewPattern.bind(ctrl),
-                                            value: ctrl.login() }
-                                    }, { tag: "i", attrs: { class: "md md-account-circle form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "required", autocapitalize: "none",
-                                            placeholder: Conf.tr("Password"),
-                                            name: "password" } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-xs-6" }, children: [{ tag: "a", attrs: { href: "/sign", config: m.route,
-                                            class: "btn btn-default btn-custom waves-effect w-md waves-light m-b-5" }, children: [Conf.tr("Create an account")] }] }, { tag: "div", attrs: { class: "col-xs-6 text-right" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom waves-effect w-md waves-light m-b-5",
-                                            type: "submit" }, children: [Conf.tr("Log in")] }] }] }] }] }] };
+                return { tag: "div", attrs: { class: "wrapper-center-form" }, children: [{ tag: "div", attrs: { class: "form-center" }, children: [{ tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "text-center" }, children: [{ tag: "span", attrs: { class: "logo-img-helper" } }, { tag: "a", attrs: { href: "index.html", class: "logo logo-lg" }, children: [{ tag: "img", attrs: { class: "logo-img", src: "./assets/img/logo_blue-with-yellow.png" } }] }, { tag: "br", attrs: {} }, { tag: "small", attrs: {}, children: [ctrl.appVersion()] }, { tag: "h4", attrs: {}, children: [Conf.tr('Login')] }] }, ctrl.showLoginByPin() ? { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.loginByPin.bind(ctrl) }, children: [m(PinInput, { pin: ctrl.pin, cb: ctrl.inputCompleteCB,
+                                    options: {
+                                        label: true,
+                                        labelText: Conf.tr("Enter PIN to sign in to your account")
+                                    } }), { tag: "div", attrs: { class: "form-group m-t-20 text-center" }, children: [{ tag: "div", attrs: { class: "col-xs-6 text-left" }, children: [{ tag: "button", attrs: { class: "btn btn-inverse btn-custom waves-effect w-md waves-light m-b-5",
+                                                type: "button", onclick: ctrl.forgetPin }, children: [Conf.tr("Forget PIN")] }] }, { tag: "div", attrs: { class: "col-xs-6 text-right" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom waves-effect w-md waves-light m-b-5",
+                                                type: "submit" }, children: [Conf.tr("Login")] }] }] }] } : { tag: "div", attrs: {}, children: [ctrl.showProgress() ? { tag: "div", attrs: { class: "form-group m-t-10" }, children: [m(ProgressBar, { value: ctrl.progress, text: Conf.tr("Decrypting your account for signing in") })] } : { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.signin.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "text", required: "required", placeholder: Conf.tr("Username"),
+                                                    autocapitalize: "none",
+                                                    name: "login", autofocus: true,
+                                                    onchange: m.withAttr("value", ctrl.username),
+                                                    value: ctrl.username() } }, { tag: "i", attrs: { class: "md md-account-circle form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "required", autocapitalize: "none",
+                                                    placeholder: Conf.tr("Password"),
+                                                    name: "password" } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-xs-6" }, children: [{ tag: "a", attrs: { href: "/sign", config: m.route,
+                                                    class: "btn btn-default btn-custom waves-effect w-md waves-light m-b-5" }, children: [Conf.tr("Create an account")] }] }, { tag: "div", attrs: { class: "col-xs-6 text-right" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom waves-effect w-md waves-light m-b-5",
+                                                    type: "submit" }, children: [Conf.tr("Log in")] }] }] }] }] }] }] }] };
             }
         };
-    }, { "../components/Navbar.js": 8, "../components/Pin-input": 10, "../components/ProgressBar": 11, "../config/Config.js": 13, "../models/Auth.js": 17 }], 22: [function (require, module, exports) {
+    }, { "../components/Navbar.js": 8, "../components/Pin-input": 10, "../components/ProgressBar": 11, "../config/Config.js": 13, "../models/Auth.js": 17 }], 23: [function (require, module, exports) {
         var Auth = require('../models/Auth.js');
 
         var Logout = module.exports = {
@@ -5952,7 +5998,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             view: function view(ctrl) {}
         };
-    }, { "../models/Auth.js": 17 }], 23: [function (require, module, exports) {
+    }, { "../models/Auth.js": 17 }], 24: [function (require, module, exports) {
         var Conf = require('../config/Config.js');
         var Navbar = require('../components/Navbar.js');
         var Auth = require('../models/Auth.js');
@@ -6061,7 +6107,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                             onclick: ctrl.loadMorePayments.bind(ctrl) }, children: [Conf.tr("Show older")] }] } : '', { tag: "div", attrs: { class: "clearfix" } }] }] }] }] }];
             }
         };
-    }, { "../components/Navbar.js": 8, "../components/Payments.js": 9, "../config/Config.js": 13, "../models/Auth.js": 17 }], 24: [function (require, module, exports) {
+    }, { "../components/Navbar.js": 8, "../components/Payments.js": 9, "../config/Config.js": 13, "../models/Auth.js": 17 }], 25: [function (require, module, exports) {
         var Conf = require('../config/Config.js');
         var Navbar = require('../components/Navbar.js');
         var Payments = require('../components/Payments.js');
@@ -6164,17 +6210,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             },
 
             view: function view(ctrl) {
-                return { tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "text-center logo" }, children: [Conf.localeStr == 'uk' || Conf.localeStr == 'ru' ? { tag: "img", attrs: { class: "logo-img", src: "./img/logo-ua-tagline.svg" } } : { tag: "img", attrs: { class: "logo-img", src: "./img/logo-en-tagline.svg" } }, { tag: "br", attrs: {} }, { tag: "h4", attrs: {}, children: [Auth.checkPinCreated() ? Conf.tr("Remove PIN") : Conf.tr("Create PIN")] }] }, { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.submit.bind(ctrl) }, children: [m(PinInput, { pin: ctrl.pin, cb: ctrl.inputCompleteCB, options: {
-                                label: true,
-                                labelText: !Auth.checkPinCreated() ? Conf.tr("Please create a PIN for encrypting your account. This allows you to quickly and safely sign in to your account without waiting for account decrypting next time.") : Conf.tr("Enter your PIN to remove it")
-                            } }), { tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-xs-6" }, children: [!Auth.checkPinCreated() ? { tag: "button", attrs: { class: "btn btn-warning btn-custom waves-effect w-md waves-light m-b-5",
-                                        type: "button", onclick: ctrl.cancel.bind(ctrl) }, children: [Conf.tr("Cancel")] } : { tag: "a", attrs: { href: "/home", config: m.route,
-                                        class: "btn btn-inverse btn-custom waves-effect w-md waves-light m-b-5" }, children: [Conf.tr("Back")] }] }, { tag: "div", attrs: { class: "col-xs-6 text-right" }, children: [Auth.checkPinCreated() ? { tag: "button", attrs: { class: "btn btn-danger btn-custom waves-effect w-md waves-light m-b-5",
-                                        type: "button", onclick: ctrl.removePin.bind(ctrl) }, children: [Conf.tr("Remove PIN")] } : { tag: "button", attrs: { class: "btn btn-primary btn-custom waves-effect w-md waves-light m-b-5",
-                                        type: "submit" }, children: [Conf.tr("Create PIN")] }] }] }] }] };
+                return { tag: "div", attrs: { class: "wrapper-center-form" }, children: [{ tag: "div", attrs: { class: "form-center" }, children: [{ tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "text-center logo" }, children: [{ tag: "img", attrs: { class: "logo-img", src: "./assets/img/logo_blue-with-yellow.png" } }, { tag: "br", attrs: {} }, { tag: "h4", attrs: {}, children: [Auth.checkPinCreated() ? Conf.tr("Remove PIN") : Conf.tr("Create PIN")] }] }, { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.submit.bind(ctrl) }, children: [m(PinInput, { pin: ctrl.pin, cb: ctrl.inputCompleteCB, options: {
+                                        label: true,
+                                        labelText: !Auth.checkPinCreated() ? Conf.tr("Please create a PIN for encrypting your account. This allows you to quickly and safely sign in to your account without waiting for account decrypting next time.") : Conf.tr("Enter your PIN to remove it")
+                                    } }), { tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-xs-6" }, children: [!Auth.checkPinCreated() ? { tag: "button", attrs: { class: "btn btn-warning btn-custom waves-effect w-md waves-light m-b-5",
+                                                type: "button", onclick: ctrl.cancel.bind(ctrl) }, children: [Conf.tr("Cancel")] } : { tag: "a", attrs: { href: "/home", config: m.route,
+                                                class: "btn btn-inverse btn-custom waves-effect w-md waves-light m-b-5" }, children: [Conf.tr("Back")] }] }, { tag: "div", attrs: { class: "col-xs-6 text-right" }, children: [Auth.checkPinCreated() ? { tag: "button", attrs: { class: "btn btn-danger btn-custom waves-effect w-md waves-light m-b-5",
+                                                type: "button", onclick: ctrl.removePin.bind(ctrl) }, children: [Conf.tr("Remove PIN")] } : { tag: "button", attrs: { class: "btn btn-primary btn-custom waves-effect w-md waves-light m-b-5",
+                                                type: "submit" }, children: [Conf.tr("Create PIN")] }] }] }] }] }] }] };
             }
         };
-    }, { "../components/Navbar.js": 8, "../components/Payments.js": 9, "../components/Pin-input": 10, "../config/Config.js": 13, "../models/Auth.js": 17, "sweetalert2": 7 }], 25: [function (require, module, exports) {
+    }, { "../components/Navbar.js": 8, "../components/Payments.js": 9, "../components/Pin-input": 10, "../config/Config.js": 13, "../models/Auth.js": 17, "sweetalert2": 7 }], 26: [function (require, module, exports) {
         var Conf = require('../config/Config.js');
         var Navbar = require('../components/Navbar.js');
         var Auth = require('../models/Auth.js');
@@ -6336,17 +6382,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                                             type: "submit" }, children: [Conf.tr("Save")] }] }] } : ''] }] }] }] }] }] }] }];
             }
         };
-    }, { "../components/Navbar.js": 8, "../components/ProgressBar": 11, "../config/Config.js": 13, "../models/Auth.js": 17 }], 26: [function (require, module, exports) {
-        var Qr = require('../../node_modules/qrcode-npm/qrcode');
+    }, { "../components/Navbar.js": 8, "../components/ProgressBar": 11, "../config/Config.js": 13, "../models/Auth.js": 17 }], 27: [function (require, module, exports) {
         var Navbar = require('../components/Navbar.js');
         var Auth = require('../models/Auth.js');
         var Conf = require('../config/Config.js');
-        var PinInput = require('../components/Pin-input');
         var ProgressBar = require('../components/ProgressBar');
+        var Helpers = require('../models/Helpers');
 
         var Sign = module.exports = {
             controller: function controller() {
                 var ctrl = this;
+                this.showSmsSubmit = m.prop(false);
+                this.signParams = m.prop(false);
+                this.resendSmsLabel = m.prop(false);
+                this.leaveSecondsToResend = m.prop(0);
+
+                this.progress = m.prop(0);
+                this.showProgress = m.prop(false);
 
                 if (Auth.keypair()) {
                     return m.route('/home');
@@ -6354,15 +6406,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                 window.plugins.sim.getSimInfo(function (simInfo) {
                     if (simInfo.phoneNumber) {
+                        m.startComputation();
                         ctrl.phone = m.prop(VMasker.toPattern(simInfo.phoneNumber, { pattern: Conf.phone.view_mask, placeholder: "x" }));
-                        m.redraw(true);
+                        m.endComputation();
                     }
                 }, function (error) {
                     console.log(error);
                 });
-
-                this.progress = m.prop(0);
-                this.showProgress = m.prop(false);
 
                 this.getPhoneWithViewPattern = function (number) {
                     if (number.substr(0, Conf.phone.prefix.length) != Conf.phone.prefix) {
@@ -6397,43 +6447,149 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     }
                 };
 
-                this.signup = function (e) {
+                //start countdown for resend sms
+                setInterval(function () {
+                    if (ctrl.leaveSecondsToResend() > 0) {
+                        m.startComputation();
+                        ctrl.leaveSecondsToResend(parseInt(ctrl.leaveSecondsToResend() - 1));
+                        m.endComputation();
+                    }
+                }, 1000);
+
+                this.waitForResendShow = function () {
+                    m.startComputation();
+                    ctrl.leaveSecondsToResend(parseInt(Conf.sms.resendInterval / 1000));
+                    m.endComputation();
+
+                    setTimeout(function () {
+                        m.startComputation();
+                        ctrl.resendSmsLabel(true);
+                        m.endComputation();
+                    }, Conf.sms.resendInterval);
+                };
+
+                this.sendSignSms = function (e) {
                     e.preventDefault();
 
-                    var pass = e.target.password.value;
+                    var login = e.target.login.value;
+                    var password = e.target.password.value;
+                    var rePassword = e.target.repassword.value;
+                    var phone = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask).substr(2);
 
-                    if (!e.target.phone.value || !pass || !e.target.repassword.value) {
-                        m.flashError(Conf.tr("Please, fill all required fields"));
-                        return;
-                    }
-
-                    if (pass.length < 8) {
-                        m.flashError(Conf.tr("Password should have 8 chars min"));
-                        return;
-                    }
-
-                    var regex = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9]))\S{1,}$/;
-                    if (!regex.test(pass)) {
-                        return m.flashError(Conf.tr("Password must contain at least one upper case letter and one digit"));
-                    }
-
-                    if (pass != e.target.repassword.value) {
-                        m.flashError(Conf.tr("Passwords should match"));
-                        return;
-                    }
-
-                    var phoneNum = VMasker.toPattern(e.target.phone.value, Conf.phone.db_mask).substr(2);
-
-                    if (phoneNum.length > 0 && phoneNum.match(/\d/g).length != Conf.phone.length) {
+                    if (phone.length > 0 && phone.match(/\d/g).length != Conf.phone.length) {
                         return m.flashError(Conf.tr("Invalid phone"));
                     }
 
+                    if (!login || !password || !rePassword || !phone) {
+                        return m.flashError(Conf.tr("Please, fill all required fields"));
+                    }
+
+                    if (login.length < 3) {
+                        return m.flashError(Conf.tr("Login should have 3 chars min"));
+                    }
+
+                    var pattern = /^([A-Za-z0-9_-]{1,})$/;
+
+                    if (!pattern.test(login)) {
+                        return m.flashError(Conf.tr("Login should contain only latin characters, numbers, - and _"));
+                    }
+
+                    if (password.length < 8) {
+                        return m.flashError(Conf.tr("Password should have 8 chars min"));
+                    }
+
+                    if (password != rePassword) {
+                        return m.flashError(Conf.tr("Passwords should match"));
+                    }
+
+                    var regex = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9]))\S{1,}$/;
+                    if (!regex.test(password)) {
+                        return m.flashError(Conf.tr("Password must contain at least one upper case letter and one digit"));
+                    }
+
+                    m.onLoadingStart();
+                    var accountKeypair = StellarSdk.Keypair.random();
+                    ctrl.waitForResendShow();
                     m.startComputation();
+                    ctrl.signParams({
+                        'login': login,
+                        'phone': phone,
+                        'password': password,
+                        'rePassword': rePassword,
+                        'accountKeypair': accountKeypair
+                    });
+                    m.endComputation();
+
+                    Auth.createSms(phone, accountKeypair.accountId()).then(function (result) {
+                        m.startComputation();
+                        ctrl.showSmsSubmit(true);
+                        m.endComputation();
+                    }).catch(function (err) {
+                        m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
+                    }).then(function () {
+                        m.onLoadingEnd();
+                    });
+                };
+
+                this.submitOTP = function (e) {
+                    e.preventDefault();
+                    var otp = e.target.otp.value;
+                    if (!otp) {
+                        return m.flashError(Conf.tr("Please, fill all required fields"));
+                    }
+
+                    if (otp.length < 6) {
+                        return m.flashError(Conf.tr("One time password should have 6 chars min"));
+                    }
+
+                    var pattern = /^([0-9]{1,})$/;
+
+                    if (!pattern.test(otp)) {
+                        return m.flashError(Conf.tr("One time password should contain only numbers"));
+                    }
+                    m.onLoadingStart();
+
+                    var params = ctrl.signParams();
+                    Auth.submitOTP(params.phone, params.accountKeypair.accountId(), otp).then(function (result) {
+                        if (result.data.items.is_confirmed) {
+                            return ctrl.signup();
+                        }
+                    }).then(function (result) {
+                        m.onLoadingEnd();
+                    }).catch(function (err) {
+                        m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
+                    });
+                };
+
+                this.resendSms = function (e) {
+                    e.preventDefault();
+                    m.onLoadingStart();
+                    var params = ctrl.signParams();
+                    Auth.resendSms(params.phone, params.accountKeypair.accountId()).then(function (result) {
+                        if (result.items) {
+                            m.flashSuccess(Conf.tr('Sms resended'));
+                        }
+                    }).catch(function (err) {
+                        m.flashError(err.message ? Conf.tr(err.message) : Conf.tr('Service error. Please contact support'));
+                    }).then(function () {
+                        m.startComputation();
+                        ctrl.resendSmsLabel(false);
+                        m.endComputation();
+                        ctrl.waitForResendShow();
+                        m.onLoadingEnd();
+                    });
+                };
+
+                this.signup = function () {
+                    m.startComputation();
+                    ctrl.showSmsSubmit(false);
                     ctrl.showProgress(true);
                     m.endComputation();
 
                     m.onLoadingStart();
-                    Auth.registration(phoneNum, pass, ctrl.progressCB).then(function (wallet) {
+                    var params = ctrl.signParams();
+
+                    Auth.registration(params.accountKeypair, params.login, params.password, params.phone, ctrl.progressCB).then(function (wallet) {
                         console.log("-------- wallet --------");
                         console.log(wallet);
                         console.info('success');
@@ -6441,10 +6597,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         console.log("-------- wallet.passwordHash --------");
                         console.info(wallet.passwordHash);
 
-                        Auth.loginByPasswordHash(phoneNum, wallet.passwordHash).then(function () {
+                        Auth.loginByPasswordHash(params.login, wallet.passwordHash).then(function () {
                             m.onLoadingEnd();
                             m.onProcedureEnd();
+                            m.startComputation();
                             ctrl.showProgress(false);
+                            ctrl.progress(0);
+                            m.endComputation();
                             window.localStorage.setItem('lastLogin', wallet.username);
                             window.localStorage.removeItem('encryptedPasswordHash');
                             m.route('/pin');
@@ -6464,23 +6623,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             },
 
             view: function view(ctrl) {
-                return { tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "text-center" }, children: [{ tag: "a", attrs: { href: "index.html", class: "logo logo-lg" }, children: [Conf.localeStr == 'uk' || Conf.localeStr == 'ru' ? { tag: "img", attrs: { class: "logo-img", src: "./img/logo-ua-tagline.svg" } } : { tag: "img", attrs: { class: "logo-img", src: "./img/logo-en-tagline.svg" } }] }] }, ctrl.showProgress() ? { tag: "div", attrs: { class: "form-group m-t-10" }, children: [m(ProgressBar, { value: ctrl.progress, text: Conf.tr("Encrypting your account for security") })] } : { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.signup.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "tel", name: "phone", required: "required",
-                                        placeholder: Conf.tr("Enter your mobile phone number: ") + Conf.phone.view_mask,
-                                        title: Conf.tr("Ukrainian phone number format allowed: +38 (050) 123-45-67"),
-                                        oninput: ctrl.addPhoneViewPattern.bind(ctrl),
-                                        value: ctrl.phone() }
-                                }, { tag: "i", attrs: { class: "md md-account-circle form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "required",
-                                        autocapitalize: "none",
-                                        placeholder: Conf.tr("Password"), name: "password", pattern: ".{6,}",
-                                        title: Conf.tr("8 characters minimum") } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "required",
-                                        autocapitalize: "none",
-                                        placeholder: Conf.tr("Retype Password"), name: "repassword", pattern: ".{6,}",
-                                        title: Conf.tr("8 characters minimum") } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-xs-6" }, children: [{ tag: "a", attrs: { href: "/", config: m.route,
-                                        class: "btn btn-default btn-custom waves-effect w-md waves-light m-b-5" }, children: [Conf.tr("Back")] }] }, { tag: "div", attrs: { class: "col-xs-6 text-right" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom waves-effect w-md waves-light m-b-5",
-                                        type: "submit" }, children: [Conf.tr("Sign up")] }] }] }] }] };
+                if (ctrl.showSmsSubmit()) {
+                    return Sign.viewSmsSubmit(ctrl);
+                }
+
+                if (ctrl.showProgress()) {
+                    return Sign.viewProgress(ctrl);
+                }
+
+                return { tag: "div", attrs: { class: "wrapper-center-form" }, children: [{ tag: "div", attrs: { class: "form-center" }, children: [{ tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "text-center" }, children: [{ tag: "a", attrs: { href: "index.html", class: "logo logo-lg" }, children: [{ tag: "img", attrs: { class: "logo-img", src: "./assets/img/logo_yellow-with-blue.png" } }] }] }, { tag: "br", attrs: {} }, { tag: "form", attrs: { class: "form-horizontal m-t-20", onsubmit: ctrl.sendSignSms.bind(ctrl) }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "text",
+                                                placeholder: Conf.tr("Username"),
+                                                autocapitalize: "none", autofocus: true,
+                                                name: "login",
+                                                title: Conf.tr("Characters and numbers allowed") } }, { tag: "i", attrs: { class: "md md-account-circle form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "tel", name: "phone", required: "required",
+                                                placeholder: Conf.tr("Enter your mobile phone number: ") + Conf.phone.view_mask,
+                                                title: Conf.tr("Ukrainian phone number format allowed: +38 (050) 123-45-67"),
+                                                oninput: ctrl.addPhoneViewPattern.bind(ctrl),
+                                                value: ctrl.phone() }
+                                        }, { tag: "i", attrs: { class: "md md-account-circle form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "required",
+                                                autocapitalize: "none",
+                                                placeholder: Conf.tr("Password"), name: "password", pattern: ".{6,}",
+                                                title: Conf.tr("8 characters minimum") } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "password", required: "required",
+                                                autocapitalize: "none",
+                                                placeholder: Conf.tr("Retype Password"), name: "repassword", pattern: ".{6,}",
+                                                title: Conf.tr("8 characters minimum") } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "form-group m-t-20" }, children: [{ tag: "div", attrs: { class: "col-xs-6 text-left" }, children: [{ tag: "a", attrs: { href: "/", config: m.route,
+                                                class: "btn btn-default btn-custom waves-effect w-md waves-light m-b-5" }, children: [Conf.tr("Back")] }] }, { tag: "div", attrs: { class: "col-xs-6 text-right" }, children: [{ tag: "button", attrs: { class: "btn btn-primary btn-custom waves-effect w-md waves-light m-b-5",
+                                                type: "submit" }, children: [Conf.tr("Sign up")] }] }] }] }] }] }] };
+            },
+
+            viewSmsSubmit: function viewSmsSubmit(ctrl) {
+                return { tag: "div", attrs: { class: "wrapper-center-form" }, children: [{ tag: "div", attrs: { class: "form-center" }, children: [{ tag: "div", attrs: { class: "wrapper-page" }, children: [{ tag: "div", attrs: { class: "auth-form" }, children: [{ tag: "div", attrs: { class: "text-center" }, children: [{ tag: "h3", attrs: {}, children: [Conf.tr("Submit with a code from sms")] }] }, { tag: "form", attrs: { class: "form-horizontal m-t-30", onsubmit: ctrl.submitOTP.bind(ctrl) }, children: [{ tag: "div", attrs: { id: "by-login", class: "tab-pane active" }, children: [{ tag: "div", attrs: { class: "form-group" }, children: [{ tag: "div", attrs: { class: "col-xs-12" }, children: [{ tag: "input", attrs: { class: "form-control", type: "text",
+                                                        placeholder: Conf.tr("Code"),
+                                                        autocapitalize: "none",
+                                                        name: "otp",
+                                                        title: Conf.tr("Only numbers allowed") } }, { tag: "i", attrs: { class: "md md-vpn-key form-control-feedback l-h-34" } }] }] }, { tag: "div", attrs: { class: "text-center" }, children: [ctrl.resendSmsLabel() ? { tag: "div", attrs: { class: "m-t-10" }, children: [{ tag: "a", attrs: { href: "#", onclick: ctrl.resendSms.bind(ctrl), class: "" }, children: [Conf.tr("Resend sms")] }] } : { tag: "p", attrs: { class: "text-muted" }, children: [Conf.tr('Wait for request new SMS'), ": ", Helpers.getTimeFromSeconds(ctrl.leaveSecondsToResend())] }] }, { tag: "div", attrs: { class: "form-group m-t-20 text-center" }, children: [{ tag: "button", attrs: {
+                                                    class: "form-control btn btn-primary btn-lg btn-custom waves-effect w-md waves-light m-b-5" }, children: [Conf.tr("Create")] }] }] }] }] }] }] }] };
+            },
+
+            viewProgress: function viewProgress(ctrl) {
+                return { tag: "div", attrs: { class: "wrapper-center-form" }, children: [{ tag: "div", attrs: { class: "form-center" }, children: [{ tag: "div", attrs: { class: "form-group m-t-10" }, children: [m(ProgressBar, { value: ctrl.progress, text: Conf.tr("Encrypting your account for security") })] }] }] };
             }
         };
-    }, { "../../node_modules/qrcode-npm/qrcode": 6, "../components/Navbar.js": 8, "../components/Pin-input": 10, "../components/ProgressBar": 11, "../config/Config.js": 13, "../models/Auth.js": 17 }], 27: [function (require, module, exports) {
+    }, { "../components/Navbar.js": 8, "../components/ProgressBar": 11, "../config/Config.js": 13, "../models/Auth.js": 17, "../models/Helpers": 18 }], 28: [function (require, module, exports) {
         var Conf = require('../config/Config.js');
         var Navbar = require('../components/Navbar.js');
         var Auth = require('../models/Auth.js');
@@ -6556,7 +6740,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                     }, children: [{ tag: "span", attrs: { class: "fa fa-repeat" } }, " ", Conf.tr("Repeat")] }] }] }] }] }];
             }
         };
-    }, { "../components/Navbar.js": 8, "../config/Config.js": 13, "../models/Auth.js": 17, "dateformat": 2 }], 28: [function (require, module, exports) {
+    }, { "../components/Navbar.js": 8, "../config/Config.js": 13, "../models/Auth.js": 17, "dateformat": 2 }], 29: [function (require, module, exports) {
         var Conf = require('../config/Config.js');
         var Navbar = require('../components/Navbar.js');
         var Auth = require('../models/Auth.js');

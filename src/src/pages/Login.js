@@ -35,10 +35,6 @@ var Login = module.exports = {
             setTimeout(function(){e.target.selectionStart = e.target.selectionEnd = 10000}, 0);
         };
 
-        this.login = lastLogin ?
-            ctrl.getPhoneWithViewPattern(Conf.phone.prefix + lastLogin) :
-            ctrl.getPhoneWithViewPattern(Conf.phone.prefix);
-
         this.attempts = m.prop(window.localStorage.getItem("pinAttempts") || 0);
         this.progress = m.prop(0);
         this.showProgress = m.prop(false);
@@ -66,15 +62,10 @@ var Login = module.exports = {
         this.signin = function(e) {
             e.preventDefault();
 
-            let login = VMasker.toPattern(e.target.login.value, Conf.phone.db_mask).substr(2);
-
-            if (login.length > 0 && login.match(/\d/g).length != Conf.phone.length) {
-                return m.flashError(Conf.tr("Invalid phone"));
-            }
 
             ctrl.showProgress(true);
 
-            Auth.login(login, e.target.password.value, ctrl.progressCB)
+            Auth.login(e.target.login.value, e.target.password.value, ctrl.progressCB)
                 .then(function () {
                     ctrl.showProgress(false);
                     window.localStorage.setItem('lastLogin', Auth.wallet().username);
@@ -165,16 +156,16 @@ var Login = module.exports = {
     },
 
     view: function (ctrl) {
-        return <div class="wrapper-page">
+        return <div class="wrapper-center-form">
+        <div class="form-center">
+        <div class="wrapper-page">
 
             <div class="text-center">
+                <span class="logo-img-helper"></span>
                 <a href="index.html" class="logo logo-lg">
-                    {((Conf.localeStr == 'uk') || (Conf.localeStr == 'ru')) ?
-                        <img class="logo-img" src="./img/logo-ua-tagline.svg" />
-                        : <img class="logo-img" src="./img/logo-en-tagline.svg" />
-                    }
+                    <img class="logo-img" src="./assets/img/logo_blue-with-yellow.png" />
                 </a>
-
+                <br/>
                 <small>{ctrl.appVersion()}</small>
                 <h4>{Conf.tr('Login')}</h4>
             </div>
@@ -187,8 +178,8 @@ var Login = module.exports = {
                             labelText: Conf.tr("Enter PIN to sign in to your account")
                         }})}
 
-                    <div class="form-group m-t-20">
-                        <div class="col-xs-6">
+                    <div class="form-group m-t-20 text-center">
+                        <div class="col-xs-6 text-left">
                             <button class="btn btn-inverse btn-custom waves-effect w-md waves-light m-b-5"
                                     type="button" onclick={ctrl.forgetPin}>{Conf.tr("Forget PIN")}
                             </button>
@@ -211,12 +202,11 @@ var Login = module.exports = {
 
                             <div class="form-group">
                                 <div class="col-xs-12">
-                                    <input class="form-control" type="tel" name="login" required="required"
-                                           placeholder={Conf.tr("Enter your mobile phone number: ") + Conf.phone.view_mask}
-                                           title={Conf.tr("Ukrainian phone number format allowed: +38 (050) 123-45-67")}
-                                           oninput={ctrl.addPhoneViewPattern.bind(ctrl)}
-                                           value={ctrl.login()}
-                                    />
+                                    <input class="form-control" type="text" required="required" placeholder={Conf.tr("Username")}
+                                           autocapitalize="none"
+                                           name="login" autofocus
+                                           onchange={m.withAttr("value", ctrl.username)}
+                                           value={ctrl.username()}/>
                                     <i class="md md-account-circle form-control-feedback l-h-34"></i>
                                 </div>
                             </div>
@@ -245,6 +235,8 @@ var Login = module.exports = {
                     }
                 </div>
             }
+        </div>
+        </div>
         </div>
     }
 };

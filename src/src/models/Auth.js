@@ -129,9 +129,6 @@ var Auth = {
             pin: pin
         })
             .then(authData => {
-                console.log("-------- authData in Auth.loginByPin() --------");
-                console.log(authData);
-
                 return StellarWallet.getWallet({
                     server: Conf.keyserver_host + '/v2',
                     username: username,
@@ -180,9 +177,6 @@ var Auth = {
     },
 
     initAuthData: function (wallet) {
-        console.log("-------- in initAuthData() --------");
-        console.log(wallet);
-
         m.startComputation();
         Auth.wallet(wallet);
         Auth.keypair(StellarSdk.Keypair.fromSeed(wallet.getKeychainData()));
@@ -192,16 +186,14 @@ var Auth = {
         m.onProcedureEnd();
     },
 
-    registration: function (login, password, progressCb) {
-        m.onProcedureStart();
-        var accountKeypair = StellarSdk.Keypair.random();
-        m.onLoadingStart();
+    registration: function (accountKeypair, login, password, phone, progressCb) {
         return this.checkConnection()
             .then(() => {
                 return StellarWallet.createWallet({
                     server: Conf.keyserver_host + '/v2',
                     username: login,
                     password: password,
+                    phone: phone,
                     accountId: accountKeypair.accountId(),
                     publicKey: accountKeypair.rawPublicKey().toString('base64'),
                     keychainData: accountKeypair.seed(),
@@ -220,6 +212,31 @@ var Auth = {
             });
     },
 
+    createSms: function(phone, accountId) {
+        return StellarWallet.SMS.createSms({
+            server: Conf.api_host,
+            phone: phone,
+            account_id: accountId
+        });
+    },
+
+    submitOTP: function(phone, accountId, otp) {
+        return StellarWallet.SMS.submitOtp({
+            server: Conf.api_host,
+            phone: phone,
+            account_id: accountId,
+            otp: parseInt(otp)
+        });
+    },
+
+    resendSms: function(phone, accountId) {
+        return StellarWallet.SMS.resendSms({
+            server: Conf.api_host,
+            phone: phone,
+            account_id: accountId,
+        });
+    },
+
     logout: function () {
         window.location.reload();
     },
@@ -235,10 +252,6 @@ var Auth = {
                 })
             })
             .then(function (wallet) {
-
-                console.log("-------- wallet before changePassword in Auth --------");
-                console.log(wallet);
-
                 return wallet.changePassword({
                     newPassword: new_pwd,
                     secretKey: Auth.keypair()._secretKey.toString('base64'),

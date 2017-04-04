@@ -4,7 +4,7 @@ var gulp = require('gulp'),
     babel = require('gulp-babel');
 
 gulp.task('bundle', function() {
-    gulp.src('src/app.js')
+    return gulp.src('src/app.js')
         .pipe(browserify({
             transform: ['mithrilify']
         }))
@@ -13,6 +13,9 @@ gulp.task('bundle', function() {
         }))
         .pipe(rename('bundle.js'))
         .pipe(gulp.dest('../www/js/'))
+        .on("end", function () {
+            console.log("Done!");
+        });
 });
 
 

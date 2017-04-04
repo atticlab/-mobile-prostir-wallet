@@ -331,3 +331,22 @@ footer .footer-contact-info .fa {
     width: 140px;
 }
 
+.logo-img {
+    width: 90%;
+    height: auto;
+}
+
+.wrapper-center-form {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+.form-center {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+html, body, #app {
+    height: 100%;
+}

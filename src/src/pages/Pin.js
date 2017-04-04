@@ -59,10 +59,6 @@ module.exports = {
                     pin                  : ctrl.pin()
                 })
                     .then(authData => {
-
-                        console.log("-------- authData in removePin --------");
-                        console.log(authData);
-
                         return StellarWallet.getWallet({
                             server: Conf.keyserver_host + '/v2',
                             username: window.localStorage.getItem('lastLogin'),
@@ -106,12 +102,11 @@ module.exports = {
     },
 
     view: function (ctrl) {
-        return <div class="wrapper-page">
+        return <div class="wrapper-center-form">
+            <div class="form-center">
+        <div class="wrapper-page">
             <div class="text-center logo">
-                {((Conf.localeStr == 'uk') || (Conf.localeStr == 'ru')) ?
-                    <img class="logo-img" src="./img/logo-ua-tagline.svg" />
-                    : <img class="logo-img" src="./img/logo-en-tagline.svg" />
-                }
+                <img class="logo-img" src="./assets/img/logo_blue-with-yellow.png" />
                 <br />
                 <h4>{Auth.checkPinCreated() ? Conf.tr("Remove PIN") : Conf.tr("Create PIN")}</h4>
             </div>
@@ -151,6 +146,8 @@ module.exports = {
                     </div>
                 </div>
             </form>
+        </div>
+        </div>
         </div>
     }
 };
